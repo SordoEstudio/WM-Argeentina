@@ -1,0 +1,344 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/layout/Cta.astro';
+import ContentTag from '../components/review/ContentTag.astro';
+import { Icon } from 'astro-icon/components';
+
+// Textos confirmados por el cliente (doc DISEÑO DE LA PAGINA 2026)
+const mision =
+  'Acercamos tecnología y conocimiento al diagnóstico argentino, construyendo relaciones de largo plazo con clientes y compañías internacionales y acompañando cada solución con un servicio posventa especializado, para contribuir a mejores decisiones para los pacientes y al desarrollo de nuestro país.';
+
+const vision =
+  'Ser el socio estratégico de referencia para clientes y compañías internacionales en el mercado argentino de diagnóstico, reconocidos por nuestra trayectoria, especialización, servicio y capacidad para transformar tecnología en valor para la salud.';
+
+const proposito =
+  'Contribuir a que la comunidad médica y bioquímica disponga de tecnología confiable que permita obtener información diagnóstica de calidad y tomar mejores decisiones para los pacientes.';
+
+const valores: { nombre: string; texto: string; icon: string }[] = [
+  { nombre: 'Calidad',      texto: 'Hacemos las cosas bien porque nuestro trabajo forma parte de decisiones que importan.',                               icon: 'lucide:award' },
+  { nombre: 'Cliente',      texto: 'Escuchamos, comprendemos y construimos relaciones de largo plazo.',                                                  icon: 'lucide:users' },
+  { nombre: 'Servicio',     texto: 'Acompañamos la tecnología durante todo su ciclo de vida.',                                                           icon: 'lucide:headset' },
+  { nombre: 'Conocimiento', texto: 'La especialización y el aprendizaje continuo guían nuestro trabajo.',                                                icon: 'lucide:book-open' },
+  { nombre: 'Confianza',    texto: 'Construimos alianzas transparentes y sostenibles.',                                                                   icon: 'lucide:shield-check' },
+  { nombre: 'Compromiso',   texto: 'Crecemos contribuyendo a nuestros clientes, los pacientes y la sociedad de la que formamos parte.',                  icon: 'lucide:handshake' },
+];
+---
+
+<Base
+  title="Nosotros"
+  description="Más de 30 años acompañando al diagnóstico de laboratorio en Argentina. Conocé nuestra historia, misión, visión y valores."
+>
+  <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.75), rgba(0,79,146,0.75)), url('https://images.unsplash.com/photo-1576765608741-911f44c98546?w=1400&h=500&fit=crop&auto=format&q=80')">
+    <div class="container">
+      <h1>Nosotros</h1>
+      <p class="lead">Más de 30 años contribuyendo a diagnósticos confiables y decisiones clínicas más seguras.</p>
+    </div>
+  </section>
+
+  <!-- Modelo (RF-30) -->
+  <section class="section" aria-labelledby="modelo-heading">
+    <div class="container content-grid">
+      <div>
+        <h2 id="modelo-heading">
+          Nuestro modelo
+          <ContentTag status="falta" label="Falta texto" note="Descripción del modelo WM Argentina (red de representación y valor diferencial)" />
+        </h2>
+        <p class="review-placeholder">Descripción del modelo de WM Argentina — a completar por el equipo.</p>
+        <p class="review-placeholder">Hablar de la red de representación y el valor diferencial.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trayectoria (RF-30) -->
+  <section class="section section--soft" aria-labelledby="trayectoria-heading">
+    <div class="container content-grid">
+      <h2 id="trayectoria-heading">Nuestra trayectoria</h2>
+      <p class="trayectoria-lead">Más de 30 años contribuyendo al diagnóstico de laboratorio en Argentina.</p>
+      <p>
+        Más de 30 años de trayectoria, presencia en todo el país y un equipo de profesionales especializados
+        respaldan nuestro compromiso con la calidad, bajo certificaciones y habilitaciones vigentes.
+      </p>
+      <p class="review-placeholder">
+        Hitos y crecimiento histórico — a completar por WM Argentina.
+        <ContentTag status="falta" label="Falta: hitos históricos" note="Historia detallada de la empresa: años clave, crecimiento y expansión (P-08)" />
+      </p>
+      <figure class="trayectoria-img">
+        <div class="trayectoria-img-wrap">
+          <img
+            src="https://images.unsplash.com/photo-1576670159375-8beb7c963ead?w=1200&h=450&fit=crop&auto=format&q=80"
+            alt="Equipo de laboratorio clínico — imagen provisoria"
+            width="1200"
+            height="450"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="trayectoria-stat">
+            <span class="stat-number">+30</span>
+            <span class="stat-label">
+              años en diagnóstico<br />de laboratorio
+              <ContentTag status="ok" label="Confirmado" note="Dato confirmado en el documento de contenido (T-13)" />
+            </span>
+          </div>
+        </div>
+        <figcaption>
+          <ContentTag status="validar" label="Imagen provisoria" note="Reemplazar con foto real del equipo o instalaciones de WM Argentina (P-18)" />
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Misión, visión, propósito -->
+  <section class="section" aria-labelledby="mvp-heading">
+    <div class="container">
+      <h2 id="mvp-heading" class="sr-only">Misión, visión y propósito</h2>
+      <div class="mvp-grid">
+        <div class="mvp-card">
+          <Icon name="lucide:target" size={32} class="mvp-icon" aria-hidden="true" />
+          <h3>Misión <ContentTag status="ok" label="Confirmado" /></h3>
+          <p>{mision}</p>
+        </div>
+        <div class="mvp-card">
+          <Icon name="lucide:eye" size={32} class="mvp-icon" aria-hidden="true" />
+          <h3>Visión <ContentTag status="ok" label="Confirmado" /></h3>
+          <p>{vision}</p>
+        </div>
+        <div class="mvp-card">
+          <Icon name="lucide:heart" size={32} class="mvp-icon" aria-hidden="true" />
+          <h3>Propósito <ContentTag status="ok" label="Confirmado" /></h3>
+          <p>{proposito}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Valores (RF-30: 6 valores) -->
+  <section class="section section--soft" aria-labelledby="valores-heading">
+    <div class="container">
+      <h2 id="valores-heading">Nuestros valores</h2>
+      <ul class="valores-grid" role="list">
+        {valores.map((v) => (
+          <li class="valor-card">
+            <Icon name={v.icon} size={22} class="valor-icon" aria-hidden="true" />
+            <strong class="valor-nombre">{v.nombre}</strong>
+            <p class="valor-texto">{v.texto}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Certificaciones (P-08) -->
+  <section class="section" aria-labelledby="cert-heading">
+    <div class="container">
+      <h2 id="cert-heading">
+        Certificaciones y presencia
+        <ContentTag status="falta" label="Falta — P-08" note="Certificaciones y habilitaciones vigentes. Presencia en todo el país." />
+      </h2>
+      <p class="review-placeholder">
+        Certificaciones y habilitaciones vigentes — a completar por WM Argentina (P-08).
+      </p>
+    </div>
+  </section>
+
+  <Cta
+    title="Más de 30 años respaldando decisiones clínicas."
+    body="Conocé las soluciones que ofrecemos y hablá con nuestro equipo."
+    primary={{ label: 'Conocer nuestras soluciones', href: '/soluciones' }}
+    secondary={{ label: 'Contactar un especialista', href: '/contacto' }}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background-color: var(--wm-blue);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .section {
+    padding-block: 4rem;
+  }
+
+  .section--soft {
+    background: var(--wm-bg-soft);
+  }
+
+  .content-grid {
+    max-width: 800px;
+  }
+
+  .trayectoria-lead {
+    font-size: 1.125rem;
+    color: var(--wm-blue);
+    font-weight: 500;
+    margin: 0 0 1rem;
+  }
+
+  .trayectoria-img {
+    margin: 2.5rem 0 0;
+  }
+
+  .trayectoria-img-wrap {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .trayectoria-img img {
+    width: 100%;
+    height: 300px;
+    display: block;
+    object-fit: cover;
+  }
+
+  .trayectoria-img figcaption {
+    padding: 0.5rem 0 0;
+  }
+
+  .trayectoria-stat {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    background: rgba(0, 79, 146, 0.9);
+    border-radius: var(--radius);
+    color: #fff;
+  }
+
+  .stat-number {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.35;
+  }
+
+  .mvp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .mvp-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 560px) {
+    .mvp-grid { grid-template-columns: 1fr; }
+  }
+
+  .mvp-card {
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .mvp-icon {
+    color: var(--wm-teal);
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--wm-teal) 12%, transparent);
+    border-radius: 50%;
+    padding: 0.625rem;
+    box-sizing: content-box;
+  }
+
+  .mvp-card h3 {
+    color: var(--wm-blue);
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  .mvp-card p {
+    margin: 0;
+    color: var(--wm-text-muted);
+    line-height: 1.65;
+  }
+
+  .valores-grid {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .valores-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 560px) {
+    .valores-grid { grid-template-columns: 1fr; }
+  }
+
+  .valor-card {
+    padding: 1.5rem;
+    border: 1px solid var(--wm-border);
+    background: var(--wm-bg-soft);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .valor-icon {
+    color: var(--wm-teal);
+    background: color-mix(in srgb, var(--wm-teal) 12%, transparent);
+    border-radius: 50%;
+    padding: 0.5rem;
+    box-sizing: content-box;
+    flex-shrink: 0;
+  }
+
+  .valor-nombre {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--wm-blue);
+  }
+
+  .valor-texto {
+    margin: 0;
+    color: var(--wm-text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  /* Solo en modo revisión: highlight de los placeholders */
+  :global([data-review]) .review-placeholder,
+  .review-placeholder {
+    color: var(--wm-text-muted);
+    font-style: italic;
+  }
+</style>

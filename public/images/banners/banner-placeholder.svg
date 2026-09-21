@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 560" fill="none">
+  <rect width="1440" height="560" fill="#003d72"/>
+  <rect width="1440" height="560" fill="url(#grad)"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1440" y2="560" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#004f92" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#002d5a" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+  <text x="720" y="265" font-family="Ubuntu, sans-serif" font-size="28" fill="rgba(255,255,255,0.35)" text-anchor="middle" dy="0.35em">TODO-CLIENTE</text>
+  <text x="720" y="310" font-family="Ubuntu, sans-serif" font-size="18" fill="rgba(255,255,255,0.25)" text-anchor="middle" dy="0.35em">Imagen del banner (P-17)</text>
+</svg>

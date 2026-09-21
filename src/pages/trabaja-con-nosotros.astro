@@ -1,0 +1,422 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/layout/Cta.astro';
+import ContentTag from '../components/review/ContentTag.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+const openJobs = (await getCollection('jobs')).filter((j) => j.data.status === 'open');
+
+const culturaRasgos: { icon: string; nombre: string }[] = [
+  { icon: 'lucide:book-open',   nombre: 'Conocimiento' },
+  { icon: 'lucide:handshake',   nombre: 'Compromiso'   },
+  { icon: 'lucide:award',       nombre: 'Profesionalismo' },
+  { icon: 'lucide:heart',       nombre: 'Empatía'      },
+];
+---
+
+<Base
+  title="Trabajá con Nosotros"
+  description="Sumá tu talento a WM Argentina. Conocé nuestra cultura, las búsquedas abiertas y cómo ser parte del equipo."
+>
+  <!-- Hero -->
+  <section
+    class="page-hero"
+    style="background-image: linear-gradient(rgba(0,79,146,0.80), rgba(0,79,146,0.80)), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1400&h=500&fit=crop&auto=format&q=80')"
+  >
+    <div class="container">
+      <h1>Trabajá con Nosotros</h1>
+      <p class="lead">
+        Ser parte de WM es ser parte de una cadena de valor que contribuye a mejorar la vida de las personas.
+      </p>
+    </div>
+  </section>
+
+  <!-- Cultura (RF-33) -->
+  <section class="section" aria-labelledby="cultura-heading">
+    <div class="container cultura-layout">
+      <h2 id="cultura-heading">Nuestra cultura</h2>
+      <p class="cultura-lead">
+        Nuestro trabajo acerca tecnología a bioquímicos, médicos, laboratorios y bancos de sangre.
+      </p>
+      <blockquote class="cultura-quote">
+        "Detrás de nuestro trabajo hay un paciente, una familia esperando un resultado; un médico para tomar decisiones."
+      </blockquote>
+      <p>
+        Buscamos personas que quieran aportar conocimiento, compromiso y profesionalismo a una actividad donde
+        la calidad importa pero por sobre todo la empatía con las personas.
+      </p>
+      <ul class="cultura-rasgos" role="list">
+        {culturaRasgos.map((r) => (
+          <li class="rasgo-pill">
+            <Icon name={r.icon} size={18} class="rasgo-icon" aria-hidden="true" />
+            <span>{r.nombre}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Áreas profesionales -->
+  <section class="section section--soft" aria-labelledby="areas-heading">
+    <div class="container">
+      <h2 id="areas-heading">
+        Áreas profesionales
+        <ContentTag status="falta" label="Falta — P-22" note="Descripción de las áreas profesionales de WM Argentina (P-22)" />
+      </h2>
+      <p class="review-placeholder">
+        TODO-CLIENTE (P-22) — Descripción de las áreas donde se trabaja en WM Argentina
+        (comercial, servicio técnico, administración, logística, etc.).
+      </p>
+    </div>
+  </section>
+
+  <!-- Búsquedas abiertas -->
+  <section class="section" aria-labelledby="jobs-heading">
+    <div class="container">
+      <h2 id="jobs-heading">Búsquedas abiertas</h2>
+      {openJobs.length > 0 ? (
+        <ul class="jobs-list" role="list">
+          {openJobs.map((job) => (
+            <li class="job-card">
+              <div class="job-card__info">
+                <span class="job-card__area">
+                  {job.data.area !== 'TODO-CLIENTE' ? job.data.area : 'Área a confirmar'}
+                </span>
+                <h3 class="job-card__title">{job.data.title}</h3>
+                <p class="job-card__location">
+                  <Icon name="lucide:map-pin" size={13} aria-hidden="true" />
+                  {job.data.location !== 'TODO-CLIENTE' ? job.data.location : 'Ubicación a confirmar'}
+                </p>
+              </div>
+              <a href="#formulario" class="btn btn-outline">Postularme</a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="empty-state">
+          <Icon name="lucide:inbox" size={32} class="empty-icon" aria-hidden="true" />
+          <p>No hay búsquedas abiertas en este momento.</p>
+          <p class="empty-sub">Si querés sumarte al equipo, dejanos tu CV en el formulario.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Desarrollo profesional -->
+  <section class="section section--soft" aria-labelledby="desarrollo-heading">
+    <div class="container cultura-layout">
+      <h2 id="desarrollo-heading">
+        Desarrollo profesional
+        <ContentTag status="falta" label="Falta — P-22" note="Texto sobre desarrollo y crecimiento en WM Argentina (P-22)" />
+      </h2>
+      <p class="review-placeholder">
+        TODO-CLIENTE (P-22) — Texto sobre desarrollo y crecimiento en WM Argentina.
+      </p>
+    </div>
+  </section>
+
+  <!-- Formulario (D-16: campos pendientes de confirmar) -->
+  <section class="section" id="formulario" aria-labelledby="form-heading">
+    <div class="container form-layout">
+      <h2 id="form-heading">Quiero ser parte de WM</h2>
+      <p class="form-intro">
+        Sumate a una cadena de valor que contribuye a mejorar la vida de las personas.
+        En WM Argentina trabajamos acercando tecnología y conocimiento a laboratorios,
+        profesionales e instituciones de salud. Buscamos personas que quieran desarrollarse
+        en una compañía donde la especialización, el compromiso y la calidad forman parte
+        de nuestro trabajo cotidiano.
+      </p>
+      <p class="form-note">Envianos tu CV con una breve presentación.</p>
+
+      <form
+        method="post"
+        action="mailto:TODO-CLIENTE"
+        enctype="text/plain"
+        aria-label="Formulario Trabajá con Nosotros"
+      >
+        <div class="form-grid">
+          <div class="field">
+            <label for="nombre">Nombre <span aria-label="obligatorio">*</span></label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="area">Área de interés</label>
+            <input type="text" id="area" name="area" />
+          </div>
+          <div class="field field--wide">
+            <label for="mensaje">Mensaje / presentación <span aria-label="obligatorio">*</span></label>
+            <textarea id="mensaje" name="mensaje" required rows="5" maxlength="2000" placeholder="Contanos sobre vos y qué te interesa de WM Argentina…"></textarea>
+          </div>
+        </div>
+
+        <p class="privacy-note">
+          TODO-CLIENTE (D-19, P-27) — Aviso de privacidad y política de datos pendiente.
+        </p>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <Cta
+    title="¿Querés saber más sobre WM Argentina?"
+    body="Conocé nuestras soluciones o contactate con el equipo."
+    primary={{ label: 'Conocer nuestras soluciones', href: '/soluciones' }}
+    secondary={{ label: 'Contactar un especialista', href: '/contacto' }}
+  />
+</Base>
+
+
+<style>
+  /* ─── Hero ──────────────────────────────────────────────── */
+  .page-hero {
+    background-color: var(--wm-blue);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding-block: 5rem 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* ─── Sections ───────────────────────────────────────────── */
+  .section {
+    padding-block: 4rem;
+  }
+
+  .section--soft {
+    background: var(--wm-bg-soft);
+  }
+
+  .cultura-layout {
+    max-width: 760px;
+  }
+
+  /* ─── Cultura ────────────────────────────────────────────── */
+  .cultura-lead {
+    font-size: 1.0625rem;
+    color: var(--wm-text);
+    margin: 0 0 1.25rem;
+  }
+
+  .cultura-quote {
+    border-left: 4px solid var(--wm-teal);
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    background: color-mix(in srgb, var(--wm-teal) 6%, transparent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 1.0625rem;
+    font-style: italic;
+    color: var(--wm-blue);
+    line-height: 1.6;
+  }
+
+  .cultura-rasgos {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .rasgo-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--wm-blue);
+  }
+
+  .rasgo-icon {
+    color: var(--wm-teal);
+    flex-shrink: 0;
+  }
+
+  /* ─── Jobs ───────────────────────────────────────────────── */
+  .jobs-list {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .job-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    flex-wrap: wrap;
+  }
+
+  .job-card__area {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--wm-teal);
+    display: block;
+    margin-bottom: 0.375rem;
+  }
+
+  .job-card__title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--wm-blue);
+    margin: 0 0 0.25rem;
+  }
+
+  .job-card__location {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin: 0;
+  }
+
+  .empty-state {
+    margin-top: 1.5rem;
+    text-align: center;
+    padding: 3rem 2rem;
+    border: 1px dashed var(--wm-border);
+    border-radius: var(--radius);
+    color: var(--wm-text-muted);
+  }
+
+  .empty-icon {
+    color: var(--wm-border);
+    margin-bottom: 0.75rem;
+  }
+
+  .empty-state p {
+    margin: 0 0 0.25rem;
+  }
+
+  .empty-sub {
+    font-size: 0.9375rem;
+    opacity: 0.8;
+  }
+
+  /* ─── Form ───────────────────────────────────────────────── */
+  .form-layout {
+    max-width: 700px;
+  }
+
+  .form-intro {
+    color: var(--wm-text);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .form-note {
+    color: var(--wm-text-muted);
+    font-style: italic;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .field--wide { grid-column: 1 / -1; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  label {
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  label span { color: var(--wm-blue); }
+
+  input, textarea {
+    border: 1px solid var(--wm-border);
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    background: var(--wm-bg);
+    color: var(--wm-text);
+    width: 100%;
+  }
+
+  input:focus, textarea:focus {
+    outline: 2px solid var(--wm-blue);
+    outline-offset: 1px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .privacy-note {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    font-style: italic;
+    margin: 1rem 0;
+  }
+
+  .form-success {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #e6f4ea;
+    border-radius: var(--radius);
+    color: #1a5c2a;
+  }
+
+  .form-error {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fde8e8;
+    border-radius: var(--radius);
+    color: #9b1c1c;
+  }
+
+  .review-placeholder {
+    color: var(--wm-text-muted);
+    font-style: italic;
+  }
+</style>

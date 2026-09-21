@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Página no encontrada" robots="noindex,nofollow">
+  <section class="not-found">
+    <div class="container">
+      <p class="code" aria-hidden="true">404</p>
+      <h1>Página no encontrada</h1>
+      <p>La página que buscás no existe o fue movida. Podés volver al inicio o explorar nuestras soluciones.</p>
+      <div class="actions">
+        <a href="/" class="btn btn-primary">Ir al inicio</a>
+        <a href="/soluciones" class="btn btn-outline">Ver soluciones</a>
+        <a href="/contacto" class="btn btn-outline">Contactar</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    display: flex;
+    align-items: center;
+    min-height: 60dvh;
+    padding-block: 6rem;
+    text-align: center;
+  }
+
+  .container {
+    margin: auto;
+  }
+
+  .code {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--wm-blue-tint);
+    margin: 0 0 0.5rem;
+    line-height: 1;
+  }
+
+  h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--wm-blue);
+    margin: 0 0 1rem;
+  }
+
+  p {
+    color: var(--wm-text-muted);
+    max-width: 50ch;
+    margin: 0 auto 2rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+</style>

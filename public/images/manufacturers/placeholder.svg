@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none">
+  <rect width="240" height="80" rx="8" fill="#f0f4f8"/>
+  <rect x="1" y="1" width="238" height="78" rx="7" stroke="#d0dce8" stroke-width="1"/>
+  <text x="120" y="35" font-family="Ubuntu, sans-serif" font-size="11" fill="#6b8099" text-anchor="middle" dy="0.35em">TODO-CLIENTE</text>
+  <text x="120" y="53" font-family="Ubuntu, sans-serif" font-size="10" fill="#9ab0c4" text-anchor="middle" dy="0.35em">Logo pendiente (P-07)</text>
+</svg>

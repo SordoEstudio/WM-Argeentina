@@ -1,0 +1,261 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { buildSearchIndex } from '../lib/catalog';
+
+const allProducts = await getCollection('products');
+const searchIndex = buildSearchIndex(allProducts);
+const lines = await getCollection('lines');
+const manufacturers = await getCollection('manufacturers');
+---
+
+<Base title="Buscar" description="Buscador de productos, instrumentos, analitos y empresas representadas de WM Argentina.">
+  <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <section class="page-hero">
+    <div class="container">
+      <h1>Buscador</h1>
+      <p class="lead">Buscá por nombre de producto, ensayo, analito, instrumento o empresa.</p>
+    </div>
+  </section>
+
+  <!-- Búsqueda de catálogo (JSON index, instantánea) -->
+  <section class="section" aria-labelledby="catalog-heading">
+    <div class="container">
+      <h2 id="catalog-heading" class="section-heading">Catálogo de productos</h2>
+      <div class="search-box">
+        <label for="main-search" class="sr-only">Buscar en catálogo</label>
+        <input
+          type="search"
+          id="main-search"
+          class="search-input"
+          placeholder="Escribí el nombre del producto, analito o instrumento…"
+          autofocus
+          aria-controls="search-results"
+          aria-expanded="false"
+        />
+      </div>
+
+      <div id="search-results" role="region" aria-live="polite" aria-label="Resultados de catálogo">
+        <p class="search-hint">Escribí al menos 2 caracteres para ver resultados.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Búsqueda de contenido del sitio (Pagefind, post-build) -->
+  <section class="section section--soft" aria-labelledby="site-heading" id="sitio">
+    <div class="container">
+      <h2 id="site-heading" class="section-heading">Contenido del sitio</h2>
+      <p class="section-lead">Novedades, servicios, soluciones y más.</p>
+      <div id="pagefind-search"></div>
+      <p id="pagefind-unavailable" class="search-hint" hidden>
+        El buscador de contenido no está disponible en modo desarrollo. Ejecutá <code>npm run build</code> para habilitarlo.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script define:vars={{ searchIndex, lines: lines.map(l => ({ id: l.data.id, slug: l.data.slug, name: l.data.name })), manufacturers: manufacturers.map(m => ({ id: m.data.id, name: m.data.name })) }}>
+  const input = document.getElementById('main-search');
+  const results = document.getElementById('search-results');
+
+  function kindLabel(kind) {
+    const labels = {
+      instrument: 'Instrumento',
+      reagent: 'Reactivo',
+      control: 'Control',
+      calibrator: 'Calibrador',
+      consumable: 'Consumible',
+      software: 'Software',
+      accessory: 'Accesorio',
+    };
+    return labels[kind] ?? kind;
+  }
+
+  function getLineName(lineId) {
+    return lines.find(l => l.id === lineId)?.name ?? lineId;
+  }
+
+  function search(q) {
+    const query = q.toLowerCase().trim();
+    if (query.length < 2) {
+      results.innerHTML = '<p class="search-hint">Escribí al menos 2 caracteres para ver resultados.</p>';
+      input?.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
+    const hits = searchIndex.filter(item => {
+      return (
+        item.name.toLowerCase().includes(query) ||
+        item.application.toLowerCase().includes(query) ||
+        item.analytes.some(a => a.toLowerCase().includes(query))
+      );
+    });
+
+    if (hits.length === 0) {
+      results.innerHTML = '<p class="no-results">No se encontraron resultados para esa búsqueda.</p>';
+      input?.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
+    input?.setAttribute('aria-expanded', 'true');
+
+    const grouped = {};
+    hits.forEach(item => {
+      if (!grouped[item.kind]) grouped[item.kind] = [];
+      grouped[item.kind].push(item);
+    });
+
+    let html = `<p class="results-count">${hits.length} resultado${hits.length !== 1 ? 's' : ''}</p>`;
+    html += '<ul class="results-list" role="list">';
+    hits.forEach(item => {
+      html += `
+        <li>
+          <a href="/productos/${item.slug}" class="result-item">
+            <span class="result-kind">${kindLabel(item.kind)}</span>
+            <span class="result-name">${item.name}</span>
+            <span class="result-line">${getLineName(item.lineId)}</span>
+          </a>
+        </li>
+      `;
+    });
+    html += '</ul>';
+    results.innerHTML = html;
+  }
+
+  input?.addEventListener('input', (e) => {
+    const t = e.target;
+    if (t instanceof HTMLInputElement) search(t.value);
+  });
+
+  // Pagefind: content search (only available after a production build)
+  async function initPagefind() {
+    const unavailableNote = document.getElementById('pagefind-unavailable');
+    try {
+      // @ts-ignore — pagefind generated at build time
+      const { PagefindUI } = await import('/pagefind/pagefind-ui.js');
+      new PagefindUI({
+        element: '#pagefind-search',
+        showSubResults: true,
+        resetStyles: false,
+      });
+    } catch {
+      if (unavailableNote) unavailableNote.hidden = false;
+    }
+  }
+
+  initPagefind();
+</script>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead { font-size: 1.125rem; opacity: 0.9; margin: 0; max-width: 60ch; }
+
+  .section { padding-block: 4rem; }
+  .section--soft { background: var(--wm-bg-soft); }
+
+  .section-heading { font-size: 1.375rem; color: var(--wm-blue); margin: 0 0 1.25rem; }
+  .section-lead { color: var(--wm-text-muted); margin: -0.75rem 0 1.5rem; }
+
+  /* Pagefind UI color overrides to match WM tokens */
+  :root {
+    --pagefind-ui-primary: var(--wm-blue);
+    --pagefind-ui-text: var(--wm-text);
+    --pagefind-ui-background: var(--wm-bg);
+    --pagefind-ui-border: var(--wm-border);
+    --pagefind-ui-tag: var(--wm-teal);
+    --pagefind-ui-font: var(--font-sans);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: var(--radius);
+  }
+
+  .search-box {
+    margin-bottom: 2rem;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 640px;
+    padding: 0.875rem 1.25rem;
+    border: 2px solid var(--wm-border);
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    background: var(--wm-bg);
+    color: var(--wm-text);
+    transition: border-color 0.15s;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--wm-blue);
+  }
+
+  .search-hint,
+  .no-results {
+    color: var(--wm-text-muted);
+  }
+
+  .results-count {
+    font-size: 0.9375rem;
+    color: var(--wm-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .results-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .result-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--wm-bg-soft);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--wm-text);
+    transition: background 0.15s;
+  }
+
+  .result-item:hover {
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+  }
+
+  .result-kind {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: var(--wm-teal);
+  }
+
+  .result-name { font-weight: 500; }
+
+  .result-line {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 639px) {
+    .result-item {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

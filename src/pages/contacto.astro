@@ -1,0 +1,361 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.data.order);
+const manufacturers = (await getCollection('manufacturers')).sort((a, b) => a.data.order - b.data.order);
+
+---
+
+<Base
+  title="Contacto"
+  description="Contactá al equipo de WM Argentina para consultas comerciales sobre soluciones de diagnóstico."
+>
+  <section class="page-hero">
+    <div class="container">
+      <h1>Contacto</h1>
+      <p class="lead">Consultanos sobre nuestros sistemas y productos. Un especialista se va a poner en contacto con vos.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container form-layout">
+      <!-- Aviso fabricantes (RF-42) -->
+      <aside class="partner-notice" role="note" aria-label="Fabricantes internacionales">
+        <div class="partner-notice__content">
+          <div class="partner-notice__text">
+            <strong class="partner-notice__title">¿Sos un fabricante internacional?</strong>
+            <p>Este formulario es para clientes locales. Si buscás un socio para ingresar al mercado argentino, tenemos una sección dedicada para vos.</p>
+          </div>
+          <a href="/su-socio-en-argentina" class="btn partner-notice__btn">
+            Su Socio en Argentina →
+          </a>
+        </div>
+      </aside>
+
+      <form
+        id="contact-form"
+        method="post"
+        action="/api/contact"
+        novalidate
+        aria-label="Formulario de contacto"
+      >
+        <!-- Honeypot (anti-spam, invisible para humanos) -->
+        <div style="display:none" aria-hidden="true">
+          <label for="_hp">Dejá este campo vacío</label>
+          <input type="text" id="_hp" name="_hp" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="nombre">Nombre <span aria-label="obligatorio">*</span></label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="institucion">Institución / empresa <span aria-label="obligatorio">*</span></label>
+            <input type="text" id="institucion" name="institucion" required autocomplete="organization" />
+          </div>
+
+          <div class="field">
+            <label for="cargo">Cargo</label>
+            <input type="text" id="cargo" name="cargo" autocomplete="organization-title" />
+          </div>
+
+          <div class="field">
+            <label for="provincia">Provincia</label>
+            <select id="provincia" name="provincia" autocomplete="address-level1">
+              <option value="">Seleccioná una provincia</option>
+              <option>Buenos Aires</option>
+              <option>CABA</option>
+              <option>Catamarca</option>
+              <option>Chaco</option>
+              <option>Chubut</option>
+              <option>Córdoba</option>
+              <option>Corrientes</option>
+              <option>Entre Ríos</option>
+              <option>Formosa</option>
+              <option>Jujuy</option>
+              <option>La Pampa</option>
+              <option>La Rioja</option>
+              <option>Mendoza</option>
+              <option>Misiones</option>
+              <option>Neuquén</option>
+              <option>Río Negro</option>
+              <option>Salta</option>
+              <option>San Juan</option>
+              <option>San Luis</option>
+              <option>Santa Cruz</option>
+              <option>Santa Fe</option>
+              <option>Santiago del Estero</option>
+              <option>Tierra del Fuego</option>
+              <option>Tucumán</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="email">Correo electrónico <span aria-label="obligatorio">*</span></label>
+            <input type="email" id="email" name="email" required autocomplete="email" inputmode="email" />
+          </div>
+
+          <div class="field">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" autocomplete="tel" inputmode="tel" />
+          </div>
+
+          <div class="field">
+            <label for="solucion">Solución de interés</label>
+            <select id="solucion" name="solucion">
+              <option value="">Seleccioná una solución</option>
+              {lines.map((l) => (
+                <option value={l.data.slug}>{l.data.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="empresa">Empresa representada</label>
+            <select id="empresa" name="empresa">
+              <option value="">Seleccioná una empresa</option>
+              {manufacturers.map((m) => (
+                <option value={m.data.slug}>{m.data.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="field field--wide">
+            <label for="tipoConsulta">Tipo de consulta</label>
+            <!-- D-17: opciones pendientes de confirmar con el cliente -->
+            <select id="tipoConsulta" name="tipoConsulta">
+              <option value="">Seleccioná un tipo</option>
+              <option value="comercial">Consulta comercial</option>
+              <option value="soporte">Soporte técnico</option>
+              <option value="capacitacion">Capacitación</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="field field--wide">
+            <label for="mensaje">Mensaje <span aria-label="obligatorio">*</span></label>
+            <textarea id="mensaje" name="mensaje" required rows="5" maxlength="2000"></textarea>
+          </div>
+        </div>
+
+        <div id="form-status" role="status" aria-live="polite"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Enviar consulta</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // RF-41: preselect ?solucion= / ?empresa= from URL at runtime (not at SSG build time)
+  const params = new URLSearchParams(window.location.search);
+  const solucionParam = params.get('solucion');
+  const empresaParam = params.get('empresa');
+  if (solucionParam) {
+    const sel = document.getElementById('solucion');
+    if (sel instanceof HTMLSelectElement) sel.value = solucionParam;
+  }
+  if (empresaParam) {
+    const sel = document.getElementById('empresa');
+    if (sel instanceof HTMLSelectElement) sel.value = empresaParam;
+  }
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('[type=submit]') as HTMLButtonElement;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        body: new FormData(form),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        form.reset();
+        if (status) {
+          status.className = 'form-success';
+          status.textContent = 'Tu consulta fue enviada. Nos ponemos en contacto a la brevedad.';
+        }
+      } else {
+        if (status) {
+          status.className = 'form-error';
+          status.textContent = 'Ocurrió un error. Por favor revisá los campos e intentá de nuevo.';
+        }
+        btn.disabled = false;
+      }
+    } catch {
+      if (status) {
+        status.className = 'form-error';
+        status.textContent = 'Error de conexión. Por favor intentá de nuevo.';
+      }
+      btn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .section {
+    padding-block: 4rem;
+  }
+
+  .form-layout {
+    max-width: 800px;
+  }
+
+  .partner-notice {
+    background: var(--wm-blue);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .partner-notice__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .partner-notice__text {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .partner-notice__title {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 0.375rem;
+  }
+
+  .partner-notice__text p {
+    margin: 0;
+    font-size: 0.9375rem;
+    opacity: 0.88;
+    line-height: 1.5;
+  }
+
+  .partner-notice__btn {
+    background: #fff;
+    color: var(--wm-blue);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.65rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .partner-notice__btn:hover {
+    background: var(--wm-teal-tint);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .form-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .field--wide {
+    grid-column: 1 / -1;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  label {
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  label span {
+    color: var(--wm-blue);
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid var(--wm-border);
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    background: var(--wm-bg);
+    color: var(--wm-text);
+    width: 100%;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid var(--wm-blue);
+    outline-offset: 1px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .form-success {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #e6f4ea;
+    border-radius: var(--radius);
+    color: #1a5c2a;
+  }
+
+  .form-error {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fde8e8;
+    border-radius: var(--radius);
+    color: #9b1c1c;
+  }
+</style>

@@ -1,0 +1,165 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/layout/Cta.astro';
+import Breadcrumb from '../../components/catalog/Breadcrumb.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({ params: { slug: post.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const posts = await getCollection('posts');
+const post = posts.find((p) => p.data.slug === slug);
+
+if (!post) return Astro.redirect('/novedades', 301);
+
+const sectionLabels: Record<string, string> = {
+  novedades: 'Novedades',
+  eventos: 'Eventos',
+  cientifico: 'Contenido Científico',
+  empresas: 'Empresas Representadas',
+};
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const breadcrumb = [
+  { name: 'Novedades y Conocimiento', href: '/novedades' },
+  { name: post.data.title, href: `/novedades/${slug}` },
+];
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  datePublished: post.data.date,
+  description: post.data.excerpt !== 'TODO-CLIENTE' ? post.data.excerpt : undefined,
+  ...(post.data.image ? { image: `${siteUrl}${post.data.image}` } : {}),
+  publisher: {
+    '@type': 'Organization',
+    name: 'WM Argentina',
+    url: siteUrl || 'https://www.wmargentina.com.ar',
+  },
+};
+---
+
+<Base
+  title={post.data.seo?.title ?? post.data.title}
+  description={post.data.seo?.description ?? (post.data.excerpt !== 'TODO-CLIENTE' ? post.data.excerpt : '')}
+  ogType="article"
+  structuredData={articleSchema}
+>
+  <article>
+    <header class="page-hero">
+      <div class="container">
+        <Breadcrumb items={breadcrumb} siteUrl={siteUrl} light />
+        <div class="post-meta">
+          <span class="post-section">{sectionLabels[post.data.section] ?? post.data.section}</span>
+          <time datetime={post.data.date}>
+            {new Date(post.data.date).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+        </div>
+        <h1>{post.data.title}</h1>
+        {post.data.excerpt !== 'TODO-CLIENTE' && (
+          <p class="lead">{post.data.excerpt}</p>
+        )}
+      </div>
+    </header>
+
+    <!-- Imagen principal del post (RF-32) -->
+    {post.data.image && (
+      <div class="post-cover">
+        <div class="container">
+          <img
+            src={post.data.image}
+            alt={post.data.image.includes('placeholder') ? '' : `Imagen: ${post.data.title}`}
+            width="800"
+            height="450"
+            loading="eager"
+            decoding="async"
+            class="post-cover__img"
+          />
+        </div>
+      </div>
+    )}
+
+    <section class="section">
+      <div class="container">
+        <div class="post-body">
+          {post.data.body !== 'TODO-CLIENTE' ? (
+            <p>{post.data.body}</p>
+          ) : (
+            <p class="placeholder">TODO-CLIENTE — Contenido de la publicación (P-21).</p>
+          )}
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <Cta
+    title="¿Querés seguir explorando?"
+    body="Leé más novedades o hablá con nuestro equipo especializado."
+    primary={{ label: 'Volver a Novedades', href: '/novedades' }}
+    secondary={{ label: 'Contactar un especialista', href: '/contacto' }}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    opacity: 0.85;
+  }
+
+  .post-section {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--wm-teal);
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    margin: 0 0 0.75rem;
+    max-width: 800px;
+  }
+
+  .lead { font-size: 1.125rem; opacity: 0.9; margin: 0; max-width: 72ch; }
+
+  .post-cover {
+    background: var(--wm-bg-soft);
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--wm-border);
+  }
+
+  .post-cover__img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: var(--radius);
+    display: block;
+  }
+
+  .section { padding-block: 4rem; }
+
+  .post-body {
+    max-width: 720px;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .placeholder {
+    color: var(--wm-text-muted);
+    font-style: italic;
+  }
+</style>

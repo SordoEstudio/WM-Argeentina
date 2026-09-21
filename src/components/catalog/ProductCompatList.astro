@@ -1,0 +1,81 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  heading: string;
+  products: CollectionEntry<'products'>[];
+  showKind?: boolean;
+}
+
+const { heading, products, showKind = false } = Astro.props;
+---
+
+{products.length > 0 && (
+  <div class="compat-section">
+    <h2>{heading}</h2>
+    <ul class="compat-list" role="list">
+      {products.map((p) => (
+        <li>
+          <a href={`/productos/${p.data.slug}`} class="compat-item">
+            <span class="compat-item__name">{p.data.name}</span>
+            {showKind && (
+              <span class="compat-item__kind">{p.data.kind}</span>
+            )}
+            {!showKind && p.data.application && p.data.application !== 'TODO-CLIENTE' && (
+              <span class="compat-item__meta">{p.data.application}</span>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  .compat-section {
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .compat-section h2 {
+    font-size: 1.25rem;
+    color: var(--wm-blue);
+    margin: 0 0 1rem;
+  }
+
+  .compat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .compat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    background: var(--wm-bg-soft);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--wm-text);
+    transition: background 0.15s;
+  }
+
+  .compat-item:hover {
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+  }
+
+  .compat-item__name { font-weight: 500; }
+
+  .compat-item__meta,
+  .compat-item__kind {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    text-transform: capitalize;
+  }
+</style>

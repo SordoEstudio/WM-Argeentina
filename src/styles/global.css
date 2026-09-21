@@ -1,0 +1,118 @@
+@import './tokens.css';
+
+/* Ubuntu web font (T-10 — a confirmar P-03) */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--wm-text);
+  background: var(--wm-bg);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--wm-blue);
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Focus visible — accesibilidad */
+:focus-visible {
+  outline: 3px solid var(--wm-blue);
+  outline-offset: 2px;
+}
+
+/* Contenedor principal */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Visually hidden (accesibilidad) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Botones base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: var(--tap-min);
+  padding: 0.625rem 1.5rem;
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--wm-blue);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #003d71;
+  color: #fff;
+}
+
+/* Nota contraste: teal sobre blanco ratio 3.8:1 — no apto para texto chico.
+   Usar btn-teal solo para texto grande o iconos (ver docs/06 §4). */
+.btn-outline {
+  background: transparent;
+  color: var(--wm-blue);
+  border-color: var(--wm-blue);
+}
+
+.btn-outline:hover {
+  background: var(--wm-blue-tint);
+}

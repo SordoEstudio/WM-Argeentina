@@ -1,0 +1,54 @@
+---
+// Logo.astro — usa los PNGs reales del manual de marca.
+// Reglas B.01–B.03: sin deformación, sin cambio de color, área de seguridad respetada.
+
+interface Props {
+  variant?: 'color' | 'color-full' | 'vertical-color' | 'white' | 'black';
+  showTagline?: boolean;
+  width?: number;
+  class?: string;
+}
+
+const {
+  variant = 'color',
+  showTagline = true,
+  width = 160,
+  class: className = '',
+} = Astro.props;
+
+// color-full = isologo_horizontal_color.png (isologo completo a color, con pie)
+// vertical-color = isologo_vertical_color.png (vertical con pie, a color)
+const src =
+  variant === 'white'
+    ? '/images/brand/logo-horizontal-blanco.png'
+    : variant === 'color-full'
+      ? '/images/brand/isologo-horizontal-color.png'
+      : variant === 'vertical-color'
+        ? '/images/brand/isologo-vertical-color.png'
+        : showTagline
+          ? '/images/brand/logo-horizontal-color.png'
+          : '/images/brand/logo-horizontal-sin-pie.png';
+
+// Relaciones de aspecto aproximadas según el PNG
+// Horizontal con tagline: ~3.2:1 | Sin tagline: ~4.9:1 | Vertical: ~0.75:1
+const ratio = variant === 'vertical-color' ? 0.75 : !showTagline ? 4.9 : 3.2;
+const height = Math.round(width / ratio);
+---
+
+<img
+  src={src}
+  width={width}
+  height={height}
+  alt="WM Argentina"
+  class:list={['logo-img', className]}
+  loading="eager"
+  decoding="async"
+/>
+
+<style>
+  .logo-img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+</style>

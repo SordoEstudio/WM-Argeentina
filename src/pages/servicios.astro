@@ -1,0 +1,157 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/layout/Cta.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+
+const serviceIcons: Record<string, string> = {
+  'asesoramiento': 'lucide:message-circle',
+  'aplicaciones': 'lucide:flask-conical',
+  'instalacion-puesta-en-marcha': 'lucide:settings',
+  'capacitacion': 'lucide:graduation-cap',
+  'servicio-tecnico': 'lucide:wrench',
+  'integracion-conectividad': 'lucide:plug',
+};
+---
+
+<Base
+  title="Servicios"
+  description="Asesoramiento, aplicaciones, instalación, capacitación, servicio técnico e integración. WM Argentina acompaña todo el ciclo del diagnóstico."
+>
+  <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.75), rgba(0,79,146,0.75)), url('https://images.unsplash.com/photo-1575468130797-aa950b68aeec?w=1400&h=500&fit=crop&auto=format&q=80')">
+    <div class="container">
+      <h1>Servicios</h1>
+      <p class="lead">Acompañamos todo el ciclo: desde la instalación hasta la integración con sistemas de información.</p>
+    </div>
+  </section>
+
+  <!-- 6 servicios expandibles (RF-31) -->
+  <section class="section" aria-labelledby="services-heading">
+    <div class="container">
+      <h2 id="services-heading" class="sr-only">Nuestros servicios</h2>
+      <div class="services-list">
+        {services.map((service) => {
+          const iconName = serviceIcons[service.data.slug] ?? 'lucide:circle-dot';
+          return (
+          <details class="service-item">
+            <summary class="service-summary">
+              <span class="service-summary-inner">
+                <Icon name={iconName} size={20} class="service-lead-icon" aria-hidden="true" />
+                <span>{service.data.name}</span>
+              </span>
+              <span class="service-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="service-body">
+              <p>{service.data.body !== 'TODO-CLIENTE' ? service.data.body : service.data.summary}</p>
+            </div>
+          </details>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    title="¿Necesitás soporte o asesoramiento técnico?"
+    body="Nuestro equipo especializado está disponible para ayudarte en cada etapa."
+    primary={{ label: 'Contactar un especialista', href: '/contacto' }}
+    secondary={{ label: 'Conocer nuestras soluciones', href: '/soluciones' }}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background-color: var(--wm-blue);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .section {
+    padding-block: 4rem;
+  }
+
+  .services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 800px;
+  }
+
+  .service-item {
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .service-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    color: var(--wm-text);
+    list-style: none;
+    min-height: var(--tap-min);
+    gap: 1rem;
+  }
+
+  .service-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .service-summary:hover {
+    background: var(--wm-bg-soft);
+    color: var(--wm-blue);
+  }
+
+  .service-summary-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .service-lead-icon {
+    color: var(--wm-teal);
+    flex-shrink: 0;
+  }
+
+  .service-toggle {
+    font-size: 1.5rem;
+    color: var(--wm-teal);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+
+  details[open] .service-toggle {
+    transform: rotate(45deg);
+  }
+
+  .service-body {
+    padding: 0 1.5rem 1.25rem;
+    color: var(--wm-text-muted);
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .service-body p {
+    margin: 1rem 0 0;
+  }
+</style>

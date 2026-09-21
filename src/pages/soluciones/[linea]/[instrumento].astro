@@ -1,0 +1,191 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cta from '../../../components/layout/Cta.astro';
+import Breadcrumb from '../../../components/catalog/Breadcrumb.astro';
+import ProductCompatList from '../../../components/catalog/ProductCompatList.astro';
+import { getCollection, getEntry } from 'astro:content';
+import { buildReverseCompat, compatibleProducts } from '../../../lib/catalog';
+
+export async function getStaticPaths() {
+  const allProducts = await getCollection('products');
+  const instruments = allProducts.filter((p) => p.data.kind === 'instrument');
+  return instruments.map((inst) => ({
+    params: { linea: inst.data.lineId, instrumento: inst.data.slug },
+  }));
+}
+
+const { linea, instrumento } = Astro.params;
+
+const line = await getEntry('lines', linea!);
+const allProducts = await getCollection('products');
+
+const instrument = allProducts.find(
+  (p) => p.data.slug === instrumento && p.data.kind === 'instrument',
+);
+
+if (!instrument || !line) {
+  return Astro.redirect(`/soluciones/${linea}`, 301);
+}
+
+const reverseCompat = buildReverseCompat(allProducts);
+
+const reagents = compatibleProducts(allProducts, reverseCompat, instrument.data.id, 'reagent');
+const controls = compatibleProducts(allProducts, reverseCompat, instrument.data.id, 'control');
+const calibrators = compatibleProducts(allProducts, reverseCompat, instrument.data.id, 'calibrator');
+const consumables = compatibleProducts(allProducts, reverseCompat, instrument.data.id, 'consumable');
+const software = compatibleProducts(allProducts, reverseCompat, instrument.data.id, 'software');
+
+// D-23: canonical apunta a la ficha única del instrumento
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonicalHref = `${siteUrl}/productos/${instrument.data.slug}`;
+
+const breadcrumb = [
+  { name: 'Soluciones', href: '/soluciones' },
+  { name: line.data.name, href: `/soluciones/${linea}` },
+  { name: instrument.data.name, href: `/soluciones/${linea}/${instrumento}` },
+];
+
+// First PDF document for brochure CTA
+const brochureDoc = instrument.data.documents.find((d) => d.type === 'brochure' || d.type === 'pdf');
+---
+
+<Base
+  title={`${instrument.data.name} — ${line.data.name}`}
+  description={instrument.data.seo?.description ?? instrument.data.summary ?? ''}
+  canonical={canonicalHref}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumb items={breadcrumb} siteUrl={siteUrl} light />
+      <h1>{instrument.data.name}</h1>
+      {instrument.data.summary && instrument.data.summary !== 'TODO-CLIENTE' && (
+        <p class="lead">{instrument.data.summary}</p>
+      )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- Descripción -->
+      {instrument.data.description && instrument.data.description !== 'TODO-CLIENTE' && (
+        <div class="description">
+          <p>{instrument.data.description}</p>
+        </div>
+      )}
+
+      <!-- Aplicaciones -->
+      {instrument.data.application && instrument.data.application !== 'TODO-CLIENTE' && (
+        <div class="subsection">
+          <h2>Aplicaciones</h2>
+          <p>{instrument.data.application}</p>
+        </div>
+      )}
+
+      <!-- Reactivos compatibles (RF-12) -->
+      <ProductCompatList heading="Reactivos compatibles" products={reagents} />
+
+      <!-- Controles y calibradores (RF-12) -->
+      <ProductCompatList heading="Controles y calibradores" products={[...controls, ...calibrators]} showKind />
+
+      <!-- Consumibles (RF-12) -->
+      <ProductCompatList heading="Consumibles" products={consumables} />
+
+      <!-- Software / conectividad (RF-12) -->
+      <ProductCompatList heading="Software y conectividad" products={software} />
+
+      <!-- Documentación (RF-12, RF-17) -->
+      {instrument.data.documents.length > 0 && (
+        <div class="subsection">
+          <h2>Documentación</h2>
+          <ul class="docs-list" role="list">
+            {instrument.data.documents.map((doc) => (
+              <li>
+                <a href={doc.url} target="_blank" rel="noopener noreferrer" class="doc-link">
+                  {doc.title}
+                  <span class="doc-type">{doc.type.toUpperCase()}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Enlace a ficha completa -->
+      <p class="ficha-link">
+        <a href={`/productos/${instrument.data.slug}`}>Ver ficha completa del instrumento →</a>
+      </p>
+    </div>
+  </section>
+
+  <Cta
+    title="¿Tenés consultas sobre este equipo?"
+    body="Nuestro equipo técnico puede asesorarte sobre instalación, configuración y soporte."
+    primary={{ label: 'Contactar un especialista', href: `/contacto?solucion=${linea}` }}
+    secondary={brochureDoc ? { label: 'Descargar brochure (PDF)', href: brochureDoc.url } : undefined}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead { font-size: 1.125rem; opacity: 0.9; margin: 0; max-width: 60ch; }
+
+  .section { padding-block: 4rem; }
+
+  .description { max-width: 72ch; margin-bottom: 3rem; }
+
+  .subsection {
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .subsection h2 {
+    font-size: 1.25rem;
+    color: var(--wm-blue);
+    margin: 0 0 1rem;
+  }
+
+  .docs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--wm-blue);
+    font-weight: 500;
+  }
+
+  .doc-type {
+    font-size: 0.75rem;
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .ficha-link {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .ficha-link a { color: var(--wm-blue); font-weight: 500; }
+</style>

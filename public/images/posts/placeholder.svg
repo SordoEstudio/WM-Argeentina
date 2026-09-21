@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <rect width="800" height="450" fill="#e8eef4"/>
+  <rect x="1" y="1" width="798" height="448" rx="3" stroke="#d0dce8" stroke-width="1"/>
+  <rect x="320" y="175" width="160" height="100" rx="8" fill="#c8d8e8"/>
+  <rect x="345" y="195" width="110" height="65" rx="4" fill="#b0c4d8"/>
+  <circle cx="370" cy="220" r="15" fill="#98b0c8"/>
+  <text x="400" y="315" font-family="Ubuntu, sans-serif" font-size="14" fill="#6b8099" text-anchor="middle" dy="0.35em">TODO-CLIENTE (P-21)</text>
+</svg>

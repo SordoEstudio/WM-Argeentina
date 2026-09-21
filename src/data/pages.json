@@ -1,0 +1,94 @@
+[
+  {
+    "id": "home-es",
+    "locale": "es",
+    "blocks": {
+      "homeBanners": [
+        {
+          "image": "https://images.unsplash.com/photo-1646956141021-d687dcfe5fb9?w=1400&h=600&fit=crop&auto=format&q=80",
+          "title": "TODO-CLIENTE — Título banner 1",
+          "text": "TODO-CLIENTE — Texto del banner 1.",
+          "cta": [
+            { "label": "Conocer soluciones", "href": "/soluciones" }
+          ],
+          "order": 1,
+          "active": true
+        },
+        {
+          "image": "https://images.unsplash.com/photo-1578496479530-799fd6d0803a?w=1400&h=600&fit=crop&auto=format&q=80",
+          "title": "TODO-CLIENTE — Título banner 2",
+          "text": "TODO-CLIENTE — Texto del banner 2.",
+          "cta": [
+            { "label": "Contactar un especialista", "href": "/contacto" }
+          ],
+          "order": 2,
+          "active": true
+        },
+        {
+          "image": "https://images.unsplash.com/photo-1764066531610-5457f1bc5419?w=1400&h=600&fit=crop&auto=format&q=80",
+          "title": "¿Fabricante internacional?",
+          "text": "Desarrolle su mercado en Argentina con más de 30 años de experiencia local.",
+          "cta": [
+            { "label": "Su Socio en Argentina", "href": "/su-socio-en-argentina" }
+          ],
+          "order": 3,
+          "active": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "su-socio-es",
+    "locale": "es",
+    "blocks": {
+      "hero": {
+        "title": "Desarrolle su mercado en Argentina.",
+        "lead": "Experiencia local, especialización técnica y alcance nacional para desarrollar tecnologías internacionales en el mercado argentino.",
+        "body": "En WM Argentina construimos relaciones de largo plazo con compañías internacionales. Más de 30 años en el mercado del diagnóstico nos permiten comprender sus actores, particularidades y oportunidades."
+      },
+      "whyWm": [
+        { "title": "+30 años de experiencia",                   "body": "TODO-CLIENTE — Ampliar descripción" },
+        { "title": "Cobertura nacional",                        "body": "TODO-CLIENTE — Ampliar descripción" },
+        { "title": "Mercado público y privado",                 "body": "TODO-CLIENTE — Ampliar descripción" },
+        { "title": "Especialización técnica",                   "body": "TODO-CLIENTE — Ampliar descripción" },
+        { "title": "Soporte local de excelencia",              "body": "TODO-CLIENTE — Ampliar descripción" },
+        { "title": "Experiencia con compañías internacionales", "body": "TODO-CLIENTE — Ampliar descripción" }
+      ],
+      "stages": [
+        { "title": "Ingreso al mercado", "body": "TODO-CLIENTE" },
+        { "title": "Desarrollo comercial", "body": "TODO-CLIENTE" },
+        { "title": "Lanzamiento", "body": "TODO-CLIENTE" },
+        { "title": "Implementación", "body": "TODO-CLIENTE" },
+        { "title": "Soporte", "body": "TODO-CLIENTE" },
+        { "title": "Crecimiento", "body": "TODO-CLIENTE" }
+      ]
+    }
+  },
+  {
+    "id": "su-socio-en",
+    "locale": "en",
+    "blocks": {
+      "hero": {
+        "title": "Develop your market in Argentina.",
+        "lead": "Local experience, technical expertise and nationwide reach to develop international technologies in the Argentine market.",
+        "body": "At WM Argentina we build long-term relationships with international companies. Over 30 years in the diagnostics market give us a deep understanding of its players, particularities and opportunities."
+      },
+      "whyWm": [
+        { "title": "30+ years of experience",                          "body": "TODO-CLIENTE — Expand description" },
+        { "title": "Nationwide coverage",                              "body": "TODO-CLIENTE — Expand description" },
+        { "title": "Public and private market",                        "body": "TODO-CLIENTE — Expand description" },
+        { "title": "Technical expertise",                              "body": "TODO-CLIENTE — Expand description" },
+        { "title": "Excellence in local support",                      "body": "TODO-CLIENTE — Expand description" },
+        { "title": "Experience with international companies",          "body": "TODO-CLIENTE — Expand description" }
+      ],
+      "stages": [
+        { "title": "Market entry", "body": "TODO-CLIENTE" },
+        { "title": "Commercial development", "body": "TODO-CLIENTE" },
+        { "title": "Launch", "body": "TODO-CLIENTE" },
+        { "title": "Implementation", "body": "TODO-CLIENTE" },
+        { "title": "Support", "body": "TODO-CLIENTE" },
+        { "title": "Growth", "body": "TODO-CLIENTE" }
+      ]
+    }
+  }
+]

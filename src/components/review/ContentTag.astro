@@ -1,0 +1,66 @@
+---
+/**
+ * ContentTag — visible solo con PUBLIC_REVIEW_MODE=true.
+ * Muestra el estado de validación de un bloque de contenido al cliente.
+ */
+const REVIEW = import.meta.env.PUBLIC_REVIEW_MODE === 'true';
+
+type Status = 'ok' | 'validar' | 'falta';
+
+interface Props {
+  status: Status;
+  label?: string;
+  /** Aparece como tooltip al hacer hover */
+  note?: string;
+}
+
+const { status, label, note } = Astro.props;
+
+const defaults: Record<Status, string> = {
+  ok:     'Confirmado',
+  validar: 'Validar',
+  falta:  'Falta',
+};
+
+const icons: Record<Status, string> = {
+  ok:     '✓',
+  validar: '!',
+  falta:  '✕',
+};
+---
+
+{REVIEW && (
+  <span
+    class:list={['ct', `ct--${status}`]}
+    title={note ?? defaults[status]}
+    role="status"
+    aria-label={`Contenido: ${label ?? defaults[status]}`}
+  >
+    <span class="ct-icon" aria-hidden="true">{icons[status]}</span>
+    <span class="ct-text">{label ?? defaults[status]}</span>
+  </span>
+)}
+
+<style>
+  .ct {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-left: 0.4rem;
+    white-space: nowrap;
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+    cursor: default;
+  }
+  .ct--ok      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+  .ct--validar { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
+  .ct--falta   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  .ct-icon     { font-style: normal; font-size: 0.75rem; line-height: 1; }
+</style>

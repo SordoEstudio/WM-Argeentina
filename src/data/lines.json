@@ -1,0 +1,12 @@
+[
+  { "id": "anatomia-patologica", "slug": "anatomia-patologica", "name": "Anatomía Patológica", "summary": "TODO-CLIENTE", "order": 1 },
+  { "id": "hemostasia", "slug": "hemostasia", "name": "Hemostasia", "summary": "TODO-CLIENTE", "order": 2 },
+  { "id": "quimica-seca", "slug": "quimica-seca", "name": "Química Seca", "summary": "TODO-CLIENTE", "order": 3 },
+  { "id": "hematologia", "slug": "hematologia", "name": "Hematología", "summary": "TODO-CLIENTE", "order": 4 },
+  { "id": "inmunologia", "slug": "inmunologia", "name": "Inmunología", "summary": "TODO-CLIENTE", "order": 5 },
+  { "id": "biologia-molecular", "slug": "biologia-molecular", "name": "Biología Molecular", "summary": "TODO-CLIENTE", "order": 6 },
+  { "id": "banco-de-sangre", "slug": "banco-de-sangre", "name": "Banco de Sangre", "summary": "TODO-CLIENTE", "order": 7 },
+  { "id": "diagnostico-veterinario", "slug": "diagnostico-veterinario", "name": "Diagnóstico Veterinario", "summary": "TODO-CLIENTE", "order": 8 },
+  { "id": "cadena-de-frio", "slug": "cadena-de-frio", "name": "Cadena de Frío", "summary": "TODO-CLIENTE", "order": 9 },
+  { "id": "sistemas-informaticos", "slug": "sistemas-informaticos", "name": "Sistemas Informáticos", "summary": "TODO-CLIENTE", "order": 10 }
+]

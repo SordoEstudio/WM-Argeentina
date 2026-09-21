@@ -1,0 +1,115 @@
+---
+interface Props {
+  title: string;
+  body?: string;
+  primary: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  background?: 'white' | 'soft' | 'blue';
+}
+
+const { title, body, primary, secondary, background = 'soft' } = Astro.props;
+const isBlue = background === 'blue';
+---
+
+<section class={`cta-banner cta-banner--${background}`} aria-label="Próximos pasos">
+  <div class="container cta-inner">
+    <div class="cta-text">
+      <h2 class="cta-title">{title}</h2>
+      {body && <p class="cta-body">{body}</p>}
+    </div>
+    <div class="cta-actions">
+      <a href={primary.href} class={`btn ${isBlue ? 'btn-cta-primary' : 'btn-primary'}`}>
+        {primary.label}
+      </a>
+      {secondary && (
+        <a href={secondary.href} class={`btn ${isBlue ? 'btn-cta-secondary' : 'btn-outline'}`}>
+          {secondary.label}
+        </a>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-banner {
+    padding-block: 5rem;
+    margin-block: 2rem;
+  }
+
+  .cta-banner--white { background: var(--wm-bg); }
+  .cta-banner--soft  { background: var(--wm-bg-soft); }
+  .cta-banner--blue  { background: var(--wm-blue); }
+
+  .cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-text {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .cta-title {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .cta-banner--blue .cta-title { color: #fff; }
+  .cta-banner--white .cta-title,
+  .cta-banner--soft  .cta-title { color: var(--wm-blue); }
+
+  .cta-body {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 56ch;
+  }
+
+  .cta-banner--blue .cta-body { color: rgba(255 255 255 / 0.85); }
+  .cta-banner--white .cta-body,
+  .cta-banner--soft  .cta-body { color: var(--wm-text-muted); }
+
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    min-width: 200px;
+  }
+
+  /* Blue-background button variants */
+  .btn-cta-primary {
+    background: #fff;
+    color: var(--wm-blue);
+    border: 2px solid #fff;
+    font-weight: 600;
+  }
+
+  .btn-cta-primary:hover {
+    background: rgba(255 255 255 / 0.9);
+    border-color: rgba(255 255 255 / 0.9);
+  }
+
+  .btn-cta-secondary {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255 255 255 / 0.6);
+    font-weight: 500;
+  }
+
+  .btn-cta-secondary:hover {
+    border-color: #fff;
+    background: rgba(255 255 255 / 0.1);
+  }
+
+  @media (max-width: 680px) {
+    .cta-inner { flex-direction: column; align-items: flex-start; }
+    .cta-actions { width: 100%; min-width: unset; }
+  }
+</style>

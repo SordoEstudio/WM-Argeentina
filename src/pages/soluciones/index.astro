@@ -1,0 +1,115 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/layout/Cta.astro';
+import { getCollection } from 'astro:content';
+
+const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base
+  title="Soluciones"
+  description="10 líneas de soluciones para diagnóstico de laboratorio: hemostasia, hematología, inmunología, biología molecular y más."
+>
+  <section class="page-hero">
+    <div class="container">
+      <h1>Soluciones</h1>
+      <p class="lead">Cubrimos todo el ciclo de diagnóstico con sistemas completos para laboratorios, hospitales, bancos de sangre y veterinaria.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ul class="lines-grid" role="list">
+        {lines.map((line) => (
+          <li>
+            <a href={`/soluciones/${line.data.slug}`} class="line-card">
+              <h2 class="line-card__name">{line.data.name}</h2>
+              {line.data.summary !== 'TODO-CLIENTE' && (
+                <p class="line-card__summary">{line.data.summary}</p>
+              )}
+              <span class="line-card__cta" aria-hidden="true">Ver solución →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <Cta
+    title="¿Necesitás asesoramiento sobre nuestras soluciones?"
+    body="Hablá con nuestro equipo y encontrá la tecnología adecuada para tu institución."
+    primary={{ label: 'Contactar un especialista', href: '/contacto' }}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .section {
+    padding-block: 4rem;
+  }
+
+  .lines-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .line-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    background: var(--wm-bg-soft);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--wm-text);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .line-card:hover {
+    border-color: var(--wm-blue);
+    transform: translateY(-2px);
+  }
+
+  .line-card__name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--wm-blue);
+    margin: 0 0 0.5rem;
+  }
+
+  .line-card__summary {
+    font-size: 0.9375rem;
+    color: var(--wm-text-muted);
+    margin: 0 0 auto;
+    flex: 1;
+  }
+
+  .line-card__cta {
+    display: block;
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--wm-teal);
+  }
+</style>

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "novedad-ejemplo-01",
+    "slug": "novedad-ejemplo-01",
+    "section": "novedades",
+    "category": "TODO-CLIENTE",
+    "image": "/images/posts/placeholder.svg",
+    "date": "2026-01-15",
+    "title": "TODO-CLIENTE — Novedad de ejemplo",
+    "excerpt": "TODO-CLIENTE",
+    "body": "TODO-CLIENTE",
+    "tags": []
+  },
+  {
+    "id": "contenido-cientifico-ejemplo-01",
+    "slug": "contenido-cientifico-ejemplo-01",
+    "section": "cientifico",
+    "category": "TODO-CLIENTE",
+    "image": "/images/posts/placeholder.svg",
+    "date": "2026-02-10",
+    "title": "TODO-CLIENTE — Contenido científico de ejemplo",
+    "excerpt": "TODO-CLIENTE",
+    "body": "TODO-CLIENTE",
+    "tags": []
+  }
+]

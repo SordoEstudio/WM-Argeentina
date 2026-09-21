@@ -1,0 +1,63 @@
+---
+interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+interface Props {
+  items: BreadcrumbItem[];
+  siteUrl?: string;
+  light?: boolean;
+}
+const { items, siteUrl = '', light = false } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: item.name,
+    item: `${siteUrl}${item.href}`,
+  })),
+};
+---
+
+<nav aria-label="Ubicación">
+  <ol class:list={['breadcrumb', { 'breadcrumb--light': light }]} role="list">
+    {items.map((item, i) => (
+      <li>
+        {i < items.length - 1 ? (
+          <a href={item.href}>{item.name}</a>
+        ) : (
+          <span aria-current="page">{item.name}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<style>
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    opacity: 0.6;
+  }
+
+  .breadcrumb a { text-decoration: underline; text-underline-offset: 2px; }
+
+  /* Light variant for dark hero sections */
+  .breadcrumb--light { opacity: 0.85; }
+  .breadcrumb--light a { color: #fff; }
+  .breadcrumb--light span { color: rgba(255,255,255,0.7); }
+</style>

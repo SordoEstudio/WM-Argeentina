@@ -1,0 +1,344 @@
+---
+// Ficha única de producto (RF-14): misma URL accesible desde ambos recorridos.
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/layout/Cta.astro';
+import Breadcrumb from '../../components/catalog/Breadcrumb.astro';
+import ProductCompatList from '../../components/catalog/ProductCompatList.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((p) => ({ params: { slug: p.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const allProducts = await getCollection('products');
+const product = allProducts.find((p) => p.data.slug === slug);
+
+if (!product) return Astro.redirect('/productos', 301);
+
+const line = await getEntry('lines', product.data.lineId);
+const manufacturer = await getEntry('manufacturers', product.data.manufacturerId);
+
+const relatedProducts = allProducts.filter((p) => product.data.relatedIds.includes(p.data.id));
+const parentInstruments = allProducts.filter((p) =>
+  product.data.platformIds.includes(p.data.id),
+);
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const breadcrumb = [
+  { name: 'Productos', href: '/productos' },
+  ...(line ? [{ name: line.data.name, href: `/soluciones/${line.data.slug}` }] : []),
+  { name: product.data.name, href: `/productos/${slug}` },
+];
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.data.name,
+  description: product.data.summary ?? '',
+  ...(product.data.image ? { image: `${siteUrl}${product.data.image}` } : {}),
+  brand: manufacturer ? { '@type': 'Brand', name: manufacturer.data.name } : undefined,
+};
+---
+
+<Base
+  title={product.data.seo?.title ?? product.data.name}
+  description={product.data.seo?.description ?? product.data.summary ?? ''}
+  structuredData={productSchema}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumb items={breadcrumb} siteUrl={siteUrl} light />
+
+      <div class="hero-meta">
+        <span class="product-kind">{product.data.kind}</span>
+        {product.data.status === 'discontinued' && (
+          <span class="discontinued-badge">Descontinuado</span>
+        )}
+      </div>
+      <h1>{product.data.name}</h1>
+      {manufacturer && <p class="manufacturer">{manufacturer.data.name}</p>}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container product-layout">
+      <div class="product-main">
+        <!-- Imagen del producto (RF-17) -->
+        {product.data.image && (
+          <div class="product-image">
+            <img
+              src={product.data.image}
+              alt={product.data.image.includes('placeholder') ? '' : `Imagen de ${product.data.name}`}
+              width="320"
+              height="240"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        )}
+
+        <!-- Descripción -->
+        {product.data.description && product.data.description !== 'TODO-CLIENTE' ? (
+          <div class="product-description">
+            <p>{product.data.description}</p>
+          </div>
+        ) : (
+          <p class="placeholder">TODO-CLIENTE — Descripción del producto (P-12).</p>
+        )}
+
+        <!-- Aplicación -->
+        {product.data.application && product.data.application !== 'TODO-CLIENTE' && (
+          <div class="detail-block">
+            <h2>Aplicación</h2>
+            <p>{product.data.application}</p>
+          </div>
+        )}
+
+        <!-- Compatible con (instrumentos en los que se usa este producto) -->
+        <ProductCompatList
+          heading="Compatible con"
+          products={parentInstruments}
+        />
+
+        <!-- Productos relacionados -->
+        <ProductCompatList
+          heading="Productos relacionados"
+          products={relatedProducts}
+          showKind
+        />
+
+        <!-- Documentación (RF-17) -->
+        {product.data.documents.length > 0 && (
+          <div class="detail-block">
+            <h2>Documentación</h2>
+            <ul class="docs-list" role="list">
+              {product.data.documents.map((doc) => (
+                <li>
+                  <a href={doc.url} target="_blank" rel="noopener noreferrer" class="doc-link">
+                    {doc.title}
+                    <span class="doc-badge">{doc.type.toUpperCase()}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <!-- Sidebar con datos rápidos -->
+      <aside class="product-sidebar">
+        <div class="sidebar-card">
+          <h3>Información del producto</h3>
+          <dl class="product-specs">
+            {line && (
+              <>
+                <dt>Línea</dt>
+                <dd><a href={`/soluciones/${line.data.slug}`}>{line.data.name}</a></dd>
+              </>
+            )}
+            <dt>Categoría</dt>
+            <dd style="text-transform: capitalize">{product.data.kind}</dd>
+            {product.data.subcategory && product.data.subcategory !== 'TODO-CLIENTE' && (
+              <>
+                <dt>Subcategoría</dt>
+                <dd>{product.data.subcategory}</dd>
+              </>
+            )}
+            {product.data.presentation && product.data.presentation !== 'TODO-CLIENTE' && (
+              <>
+                <dt>Presentación</dt>
+                <dd>{product.data.presentation}</dd>
+              </>
+            )}
+            <dt>Compatibilidad</dt>
+            <dd>{product.data.compatibility === 'open' ? 'Sistema abierto' : 'Específica'}</dd>
+            <dt>Estado</dt>
+            <dd>{product.data.status === 'active' ? 'Activo' : 'Descontinuado'}</dd>
+          </dl>
+
+          <a href={`/contacto?solucion=${product.data.lineId}`} class="btn btn-primary sidebar-cta">
+            Consultar por este producto
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <Cta
+    title="¿Querés más información sobre este producto?"
+    body="Hablá con nuestro equipo técnico y encontrá la mejor opción para tu laboratorio."
+    primary={{ label: 'Contactar un especialista', href: `/contacto?solucion=${product.data.lineId}` }}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .product-kind {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wm-teal);
+  }
+
+  .discontinued-badge {
+    font-size: 0.75rem;
+    background: #ffd700;
+    color: #333;
+    padding: 0.125rem 0.625rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.5rem;
+  }
+
+  .manufacturer {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin: 0;
+  }
+
+  .section { padding-block: 4rem; }
+
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .product-layout {
+      grid-template-columns: 1fr 320px;
+      align-items: start;
+    }
+  }
+
+  .product-image {
+    margin-bottom: 2rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--wm-border);
+    background: var(--wm-bg-soft);
+    max-width: 320px;
+  }
+
+  .product-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .product-description {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 72ch;
+  }
+
+  .placeholder {
+    color: var(--wm-text-muted);
+    font-style: italic;
+  }
+
+  .detail-block {
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .detail-block h2 {
+    font-size: 1.125rem;
+    color: var(--wm-blue);
+    margin: 0 0 0.75rem;
+  }
+
+  .docs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .doc-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--wm-blue);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .doc-link:hover { text-decoration: underline; }
+
+  .doc-badge {
+    font-size: 0.7rem;
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  /* Sidebar */
+  .sidebar-card {
+    background: var(--wm-bg-soft);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-card h3 {
+    font-size: 1rem;
+    color: var(--wm-blue);
+    margin: 0 0 1rem;
+  }
+
+  .product-specs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1rem;
+    font-size: 0.9375rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .product-specs dt {
+    font-weight: 600;
+    color: var(--wm-text-muted);
+    white-space: nowrap;
+  }
+
+  .product-specs dd {
+    margin: 0;
+  }
+
+  .product-specs a {
+    color: var(--wm-blue);
+  }
+
+  .sidebar-cta {
+    width: 100%;
+    text-align: center;
+  }
+</style>

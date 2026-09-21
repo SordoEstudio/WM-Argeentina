@@ -1,0 +1,82 @@
+---
+/**
+ * ReviewBanner — barra superior visible solo con PUBLIC_REVIEW_MODE=true.
+ * Le explica al cliente cómo leer los tags de validación.
+ */
+const REVIEW = import.meta.env.PUBLIC_REVIEW_MODE === 'true';
+---
+
+{REVIEW && (
+  <div class="rb" role="note" aria-label="Modo revisión activo">
+    <div class="rb-inner">
+      <span class="rb-title">🔍 Modo revisión</span>
+      <span class="rb-sep">—</span>
+      <span class="rb-desc">
+        Los elementos marcados necesitan tu revisión antes de publicar.
+      </span>
+      <span class="rb-legend" aria-label="Leyenda">
+        <span class="rl rl--ok">✓ Confirmado</span>
+        <span class="rl rl--validar">! Validar texto</span>
+        <span class="rl rl--falta">✕ Falta contenido</span>
+      </span>
+    </div>
+  </div>
+)}
+
+<style>
+  .rb {
+    background: #0f172a;
+    color: #f1f5f9;
+    font-size: 0.8125rem;
+    padding: 0.5rem 1rem;
+    /* No sticky: se desplaza con el scroll para no interferir con el header */
+  }
+
+  .rb-inner {
+    max-width: 72rem;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .rb-title {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .rb-sep {
+    opacity: 0.4;
+  }
+
+  .rb-desc {
+    opacity: 0.85;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .rb-legend {
+    display: inline-flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+  }
+
+  .rl {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .rl--ok      { background: #d1fae5; color: #065f46; }
+  .rl--validar { background: #fef3c7; color: #78350f; }
+  .rl--falta   { background: #fee2e2; color: #991b1b; }
+</style>

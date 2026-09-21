@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Páginas sin indexación (noindex a nivel meta también)
+Disallow: /api/
+Disallow: /privacidad
+Disallow: /terminos
+
+Sitemap: https://www.wmargentina.com.ar/sitemap-index.xml

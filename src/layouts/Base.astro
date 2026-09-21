@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import ReviewBanner from '../components/review/ReviewBanner.astro';
+import site from '../data/site.json';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  /** 'noindex,nofollow' in non-production; leave undefined for production default */
+  robots?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  locale?: string;
+  hreflangAlternate?: { locale: string; href: string };
+  structuredData?: object | object[];
+}
+
+const {
+  title,
+  description = '',
+  canonical,
+  robots,
+  ogImage,
+  ogType = 'website',
+  locale = 'es',
+  hreflangAlternate,
+  structuredData,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonicalUrl = canonical ?? siteUrl + Astro.url.pathname;
+
+// Fuerza noindex en entornos que no sean producción
+const robotsValue =
+  robots ?? (import.meta.env.SITE_URL?.includes('localhost') ? 'noindex,nofollow' : 'index,follow');
+
+const fullTitle = title ? `${title} | WM Argentina` : 'WM Argentina';
+---
+
+<!doctype html>
+<html lang={locale} dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+
+    {description && <meta name="description" content={description} />}
+    <meta name="robots" content={robotsValue} />
+
+    <link rel="canonical" href={canonicalUrl} />
+
+    {hreflangAlternate && (
+      <>
+        <link rel="alternate" hreflang={locale} href={canonicalUrl} />
+        <link rel="alternate" hreflang={hreflangAlternate.locale} href={hreflangAlternate.href} />
+      </>
+    )}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={fullTitle} />
+    {description && <meta property="og:description" content={description} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'es_AR'} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- Favicon — TODO-PENDIENTE(P-01): reemplazar con favicon real -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+
+    {structuredData && (
+      Array.isArray(structuredData)
+        ? structuredData.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)
+        : <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+    <slot name="head" />
+  </head>
+  <body>
+    <ReviewBanner />
+    <Header locale={locale} />
+    <main id="main-content" data-pagefind-body>
+      <slot />
+    </main>
+    <Footer site={site} />
+  </body>
+</html>

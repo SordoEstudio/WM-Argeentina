@@ -1,0 +1,32 @@
+{
+  "name": "wm-argentina-web",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run check-refs && astro build && npx pagefind --site .vercel/output/static",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check-refs": "npx tsx scripts/check-refs.ts",
+    "type-check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.10",
+    "@iconify-json/lucide": "^1.2.135",
+    "astro": "^7.3.3",
+    "astro-icon": "^1.2.0"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "pagefind": "^1.5.2",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  }
+}

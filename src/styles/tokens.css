@@ -1,0 +1,33 @@
+/* WM Argentina — tokens de marca. Fuente: Manual de Marca (nov. 2021).
+   T-09/T-10: colores reales del vector del manual; fuente Ubuntu. Confirmar con el cliente (P-02, P-03). */
+:root {
+  /* Marca — valores reales del vector del manual (ver docs/06 §4) */
+  --wm-blue: #004f92;          /* principal: debe predominar */
+  --wm-teal: #009298;          /* secundario: fondos y elementos secundarios */
+
+  /* Declarados en el manual (A.07). Solo referencia documental: NO se usan en componentes */
+  --wm-blue-declared: #2a4f8e;
+  --wm-teal-declared: #4d8f95;
+
+  /* Subtonos para elementos decorativos (A.09) — derivados, provisorios */
+  --wm-blue-tint: #e6eef5;
+  --wm-teal-tint: #e5f3f4;
+
+  /* Neutros — NO definidos en el manual, provisorios (P-03) */
+  --wm-text: #1a2733;
+  --wm-text-muted: #4a5a68;
+  --wm-bg: #ffffff;
+  --wm-bg-soft: #f5f8fa;
+  --wm-border: #d5dfe6;
+
+  /* Tipografía — decisión T-10 (Ubuntu), a confirmar P-03 */
+  --font-sans: "Ubuntu", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+  /* Breakpoints de referencia (mobile-first) */
+  --bp-sm: 640px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
+
+  /* Forma y espacio */
+  --radius: 12px;
+  --container: 72rem;
+  --tap-min: 44px;
+}

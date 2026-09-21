@@ -1,0 +1,19 @@
+{
+  "contact": {
+    "phone": ["(54 11) 4982.8500", "(54 11) 4982.1455"],
+    "email": "TODO-CLIENTE",
+    "emailAreas": {
+      "clientes": "atencionalcliente@wmargentina.com.ar",
+      "tecnico": "stecnico@wmargentina.com.ar",
+      "pedidos": "pedidos@wmargentina.com.ar"
+    },
+    "address": "Ángel Peluffo 3944, CABA",
+    "hours": "Lun–Vie 8 a 17 hs"
+  },
+  "offices": [
+    { "name": "Casa Central", "address": "Ángel Peluffo 3944, CABA (C1202ABB)" },
+    { "name": "Mendoza", "address": "TODO-CLIENTE" },
+    { "name": "Tandil", "address": "TODO-CLIENTE" }
+  ],
+  "social": []
+}

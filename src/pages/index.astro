@@ -1,0 +1,518 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/layout/Cta.astro';
+import ContentTag from '../components/review/ContentTag.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection, getEntry } from 'astro:content';
+
+const linesRaw = await getCollection('lines');
+const lines = linesRaw.sort((a, b) => a.data.order - b.data.order);
+
+// Banners editables (RF-04, SPEC §5, D-24)
+const homePage = await getEntry('pages', 'home-es');
+const banners = (homePage?.data.blocks as {
+  homeBanners?: {
+    image?: string;
+    title: string;
+    text: string;
+    cta: { label: string; href: string }[];
+    order: number;
+    active: boolean;
+  }[];
+})?.homeBanners?.filter((b) => b.active).sort((a, b) => a.order - b.order) ?? [];
+
+const isTodo = (s: string) => s.startsWith('TODO');
+const isPlaceholderImg = (src?: string) => !src || src.includes('placeholder');
+
+const orgStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'WM Argentina',
+  url: Astro.site?.toString(),
+  description: 'Más de 30 años representando y distribuyendo tecnología de diagnóstico para laboratorios, hospitales, bancos de sangre y veterinaria en Argentina.',
+};
+---
+
+<Base
+  title="Soluciones para diagnóstico de laboratorio"
+  description="WM Argentina representa y distribuye tecnología de diagnóstico para laboratorios de análisis clínicos, hospitales, bancos de sangre y veterinaria en Argentina."
+  structuredData={orgStructuredData}
+>
+  <!-- Hero estático de marca — siempre visible -->
+  <section class="hero" aria-label="Inicio">
+    <div class="hero-deco" aria-hidden="true">
+      <img src="/images/brand/elementos-adorno.png" alt="" width="560" height="700" loading="eager" decoding="async" />
+    </div>
+
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <p class="hero-eyebrow">Diagnóstico de laboratorio en Argentina</p>
+        <h1 class="hero-title">
+          Detrás de cada diagnóstico,<br />hay una decisión que importa.
+        </h1>
+        <p class="hero-lead">
+          Acercamos tecnología y conocimiento para contribuir a diagnósticos
+          confiables y decisiones clínicas más seguras.
+        </p>
+        <div class="hero-actions">
+          <a href="/soluciones" class="btn btn-hero-primary">Conocer nuestras soluciones</a>
+          <a href="/contacto" class="btn btn-hero-outline">Contactar un especialista</a>
+        </div>
+      </div>
+      <div class="hero-brand-mark" aria-hidden="true">
+        <img src="/images/brand/isotipo-color.png" alt="" width="240" height="240" loading="eager" decoding="async" />
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="hero-stats">
+      <div class="container hero-stats-inner">
+        <div class="hero-stat">
+          <span class="stat-n">+30</span>
+          <span class="stat-l">años en el mercado</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="stat-n">Todo</span>
+          <span class="stat-l">el país</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="stat-n">12</span>
+          <span class="stat-l">
+            empresas representadas
+            <ContentTag status="validar" label="Validar N°" note="Confirmar número exacto (P-07)" />
+          </span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="stat-n">10</span>
+          <span class="stat-l">
+            líneas de soluciones
+            <ContentTag status="validar" label="Validar N°" note="Confirmar número exacto (P-10)" />
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banners editables (RF-04, SPEC §5) — debajo del hero -->
+  {banners.length > 0 && (
+    <section class="section-banners" aria-labelledby="banners-heading">
+      <div class="container">
+        <h2 id="banners-heading" class="sr-only">Destacados</h2>
+        <ContentTag
+          status="validar"
+          label={`${banners.length} banners — validar contenido`}
+          note="Confirmar cantidad, contenido e imágenes de cada banner (P-17, D-24)"
+        />
+        <div class="banners-grid">
+          {banners.map((banner) => (
+            <article
+              class:list={['banner-card', !isPlaceholderImg(banner.image) && 'banner-card--img']}
+              style={!isPlaceholderImg(banner.image) ? `background-image:url('${banner.image}')` : undefined}
+            >
+              <div class="banner-card-body">
+                <h3 class="banner-title">
+                  {isTodo(banner.title)
+                    ? <><span class="review-placeholder">{banner.title}</span><ContentTag status="falta" label="Falta título" /></>
+                    : banner.title
+                  }
+                </h3>
+                <p class="banner-text">
+                  {isTodo(banner.text)
+                    ? <><span class="review-placeholder">{banner.text}</span><ContentTag status="falta" label="Falta texto" /></>
+                    : banner.text
+                  }
+                </p>
+                <div class="banner-ctas">
+                  {banner.cta.map((c) => (
+                    <a href={c.href} class="btn btn-banner">{c.label}</a>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Soluciones (10 líneas) -->
+  <section class="section-lines" aria-labelledby="lines-heading">
+    <div class="container">
+      <h2 id="lines-heading" class="section-title">Nuestras soluciones</h2>
+      <p class="section-lead">Cubrimos todo el ciclo de diagnóstico con sistemas completos para cada especialidad.</p>
+      <ul class="lines-grid" role="list">
+        {lines.map((line) => (
+          <li>
+            <a href={`/soluciones/${line.data.slug}`} class="line-card">
+              <span class="line-card__name">{line.data.name}</span>
+              <Icon name="lucide:arrow-right" size={18} class="line-card__arrow" aria-hidden="true" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <Cta
+    title="Tecnología y conocimiento al servicio del diagnóstico."
+    body="Explorá todo nuestro catálogo o hablá con nuestro equipo para encontrar la solución indicada."
+    primary={{ label: 'Ver todas las soluciones', href: '/soluciones' }}
+    secondary={{ label: 'Contactar un especialista', href: '/contacto' }}
+  />
+</Base>
+
+<style>
+  /* ─── Hero ─────────────────────────────────────────────── */
+  .hero {
+    background-color: var(--wm-blue);
+    background-image:
+      linear-gradient(rgba(0, 79, 146, 0.87), rgba(0, 79, 146, 0.87)),
+      url('https://images.unsplash.com/photo-1576765608741-911f44c98546?w=1400&h=700&fit=crop&auto=format&q=75');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 64px);
+    min-height: calc(100dvh - 64px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-deco {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-deco img {
+    position: absolute;
+    top: -10%;
+    right: -8%;
+    width: 55%;
+    max-width: 520px;
+    opacity: 0.1;
+    transform: rotate(12deg);
+    mix-blend-mode: luminosity;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    align-content: center;
+    flex: 1;
+    padding-block: 4rem 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-inner {
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+    }
+  }
+
+  .hero-text {
+    max-width: 640px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    background: var(--wm-teal);
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.9rem;
+    border-radius: 999px;
+    margin: 0 0 1.25rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 1.25rem;
+  }
+
+  .hero-lead {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.65;
+    opacity: 0.88;
+    margin: 0 0 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    color: var(--wm-blue);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+    min-height: var(--tap-min);
+    white-space: nowrap;
+  }
+
+  .btn-hero-primary:hover {
+    background: var(--wm-teal-tint);
+  }
+
+  .btn-hero-outline {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: var(--tap-min);
+    white-space: nowrap;
+  }
+
+  .btn-hero-outline:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .hero-brand-mark {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-brand-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hero-brand-mark img {
+      width: 220px;
+      height: auto;
+      opacity: 0.9;
+      filter: drop-shadow(0 8px 32px rgba(0, 146, 152, 0.3));
+    }
+  }
+
+  /* Stats strip */
+  .hero-stats {
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-stats-inner {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-block: 1.25rem;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.5rem 2rem 0.5rem 0;
+    flex: 1;
+    min-width: 110px;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 2.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    margin-right: 2rem;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    .stat-divider { display: none; }
+    .hero-stat { min-width: 45%; padding: 0.5rem 0.75rem 0.5rem 0; }
+  }
+
+  .stat-n {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .stat-l {
+    font-size: 0.8125rem;
+    opacity: 0.75;
+    line-height: 1.3;
+  }
+
+  /* ─── Banners (RF-04) ───────────────────────────────────── */
+  .section-banners {
+    padding-block: 3rem;
+    background: var(--wm-bg-soft);
+  }
+
+  .banners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .banner-card {
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .banner-card--img {
+    background-size: cover;
+    background-position: center;
+    min-height: 300px;
+    justify-content: flex-end;
+  }
+
+  .banner-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .banner-card--img .banner-card-body {
+    flex: unset;
+    background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 55%, transparent 100%);
+    color: #fff;
+    padding-top: 3.5rem;
+  }
+
+  .banner-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--wm-blue);
+  }
+
+  .banner-card--img .banner-title {
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+
+  .banner-text {
+    margin: 0;
+    color: var(--wm-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .banner-card--img .banner-text {
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+
+  .banner-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .btn-banner {
+    display: inline-flex;
+    align-items: center;
+    background: var(--wm-blue);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s;
+    min-height: var(--tap-min);
+  }
+
+  .btn-banner:hover {
+    background: var(--wm-teal);
+  }
+
+  .review-placeholder {
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  /* ─── Soluciones ────────────────────────────────────────── */
+  .section-lines {
+    padding-block: 4rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--wm-blue);
+    margin: 0 0 0.5rem;
+  }
+
+  .section-lead {
+    color: var(--wm-text-muted);
+    margin: 0 0 2.5rem;
+    max-width: 60ch;
+  }
+
+  .lines-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .line-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: var(--wm-bg-soft);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--wm-text);
+    font-weight: 500;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: var(--tap-min);
+  }
+
+  .line-card:hover {
+    border-color: var(--wm-blue);
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+  }
+
+  .line-card__arrow {
+    color: var(--wm-teal);
+    flex-shrink: 0;
+  }
+</style>

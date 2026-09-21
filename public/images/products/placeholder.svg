@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none">
+  <rect width="480" height="360" fill="#f0f4f8"/>
+  <rect x="1" y="1" width="478" height="358" rx="3" stroke="#d0dce8" stroke-width="1"/>
+  <rect x="190" y="130" width="100" height="80" rx="6" fill="#d0dce8"/>
+  <rect x="210" y="145" width="60" height="45" rx="3" fill="#b8ccde"/>
+  <text x="240" y="250" font-family="Ubuntu, sans-serif" font-size="13" fill="#6b8099" text-anchor="middle">TODO-CLIENTE</text>
+  <text x="240" y="270" font-family="Ubuntu, sans-serif" font-size="11" fill="#9ab0c4" text-anchor="middle">Imagen del producto (P-12)</text>
+</svg>

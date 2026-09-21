@@ -1,0 +1,391 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection, getEntry } from 'astro:content';
+import { t } from '../lib/i18n';
+import ContentTag from '../components/review/ContentTag.astro';
+import { Icon } from 'astro-icon/components';
+
+const locale = 'es';
+const ui = t(locale);
+
+const manufacturers = (await getCollection('manufacturers')).sort((a, b) => a.data.order - b.data.order);
+const pageData = await getEntry('pages', 'su-socio-es');
+const blocks = pageData?.data.blocks as {
+  hero?: { title: string; lead: string };
+  whyWm?: { title: string; body: string }[];
+  stages?: { title: string; body: string }[];
+} ?? {};
+---
+
+<Base
+  title="Su Socio en Argentina"
+  description="WM Argentina es el socio estratégico para fabricantes internacionales que buscan ingresar y desarrollar el mercado argentino de diagnóstico."
+  locale={locale}
+  hreflangAlternate={{ locale: 'en', href: `${Astro.site?.toString().replace(/\/$/, '')}/en/your-partner-in-argentina` }}
+>
+  <!-- Hero -->
+  <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.72), rgba(0,79,146,0.72)), url('https://images.unsplash.com/photo-1764066531610-5457f1bc5419?w=1400&h=500&fit=crop&auto=format&q=80')">
+    <div class="container">
+      <!-- Selector de idioma (RF-50, RF-51) -->
+      <div class="lang-badge-wrap">
+        <a href="/en/your-partner-in-argentina" lang="en" hreflang="en" class="lang-badge">
+          <span aria-hidden="true">🌐</span> English version
+        </a>
+      </div>
+      <h1>{blocks.hero?.title ?? 'Su Socio en Argentina'}</h1>
+      {blocks.hero?.lead && !blocks.hero.lead.startsWith('TODO') && (
+        <p class="lead">{blocks.hero.lead}</p>
+      )}
+      {(blocks.hero as any)?.body && !(blocks.hero as any).body.startsWith('TODO') && (
+        <p class="hero-body">{(blocks.hero as any).body}</p>
+      )}
+      <a href="#formulario" class="btn btn-hero-cta">Evaluar una alianza con WM Argentina</a>
+    </div>
+  </section>
+
+  <!-- ¿Por qué WM Argentina? (6 tarjetas) -->
+  {blocks.whyWm && blocks.whyWm.length > 0 && (
+    <section class="section section--soft" aria-labelledby="why-heading">
+      <div class="container">
+        <h2 id="why-heading">¿Por qué WM Argentina?</h2>
+        <ul class="why-grid" role="list">
+          {blocks.whyWm.map((item) => (
+            <li class="why-card">
+              <h3>{item.title}</h3>
+              {item.body !== 'TODO-CLIENTE' && <p>{item.body}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- Etapas de acompañamiento -->
+  {blocks.stages && blocks.stages.length > 0 && (
+    <section class="section" aria-labelledby="stages-heading">
+      <div class="container">
+        <h2 id="stages-heading">Cómo acompañamos el desarrollo</h2>
+        <ol class="stages-list" role="list">
+          {blocks.stages.map((stage, i) => (
+            <li class="stage-item">
+              <span class="stage-number" aria-hidden="true">{i + 1}</span>
+              <div>
+                <h3 class="stage-title">{stage.title}</h3>
+                {stage.body !== 'TODO-CLIENTE' && <p class="stage-body">{stage.body}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- Mercados que conocemos -->
+  <section class="section section--soft" aria-labelledby="mercados-heading">
+    <div class="container">
+      <h2 id="mercados-heading">Mercados que conocemos</h2>
+      <ul class="mercados-grid" role="list">
+        {[
+          { label: 'Laboratorios',                icon: 'lucide:flask-conical' },
+          { label: 'Hospitales y clínicas',        icon: 'lucide:building-2'   },
+          { label: 'Bancos de sangre',             icon: 'lucide:droplets'     },
+          { label: 'Sector público',               icon: 'lucide:landmark'     },
+          { label: 'Diagnóstico veterinario',      icon: 'lucide:stethoscope'  },
+          { label: 'Industria farmacéutica',       icon: 'lucide:pill'         },
+          { label: 'Otros mercados relacionados',  icon: 'lucide:plus-circle'  },
+        ].map((m) => (
+          <li class="mercado-card">
+            <Icon name={m.icon} size={28} class="mercado-icon" aria-hidden="true" />
+            <span>{m.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Empresas representadas -->
+  <section class="section section--blue" aria-labelledby="manufacturers-heading">
+    <div class="container">
+      <h2 id="manufacturers-heading" class="section-title--white">
+        Empresas que confían en WM Argentina
+        <ContentTag status="validar" label="Validar lista" note="Las 7 empresas del sitio anterior son provisorias — confirmar y agregar las 5 restantes (P-07)" />
+      </h2>
+      <p class="section-lead--white">Logos y nombres definitivos pendientes de confirmación (P-07).</p>
+      <ul class="manufacturers-grid" role="list">
+        {manufacturers.map((m) => (
+          <li class:list={['manufacturer-card', m.data.provisional && 'manufacturer-card--provisional']}>
+            {m.data.logo
+              ? <img src={m.data.logo} alt={m.data.name} width="120" height="48" loading="lazy" decoding="async" class="manufacturer-logo" />
+              : <span class="manufacturer-name">{m.data.name}</span>
+            }
+            {m.data.provisional && (
+              <ContentTag
+                status={m.data.name.startsWith('Empresa Representada') ? 'falta' : 'validar'}
+                label={m.data.name.startsWith('Empresa Representada') ? 'Falta' : 'Validar'}
+                note={m.data.note}
+              />
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Formulario de contacto Su Socio -->
+  <section class="section" id="formulario" aria-labelledby="form-heading">
+    <div class="container form-layout">
+      <h2 id="form-heading">{ui.partner.formTitle}</h2>
+
+      <form
+        id="partner-form"
+        method="post"
+        action="/api/partner"
+        novalidate
+        aria-label="Formulario Su Socio en Argentina"
+      >
+        <input type="hidden" name="locale" value="es" />
+        <div style="display:none" aria-hidden="true">
+          <input type="text" name="_hp" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <fieldset class="form-fieldset">
+          <legend>Empresa</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="companyName">{ui.partner.fields.companyName} <span aria-label="obligatorio">*</span></label>
+              <input type="text" id="companyName" name="companyName" required />
+            </div>
+            <div class="field">
+              <label for="country">{ui.partner.fields.country} <span aria-label="obligatorio">*</span></label>
+              <input type="text" id="country" name="country" required autocomplete="country-name" />
+            </div>
+            <div class="field">
+              <label for="website">{ui.partner.fields.website}</label>
+              <input type="url" id="website" name="website" autocomplete="url" inputmode="url" />
+            </div>
+            <div class="field">
+              <label for="currentMarkets">{ui.partner.fields.currentMarkets}</label>
+              <input type="text" id="currentMarkets" name="currentMarkets" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-fieldset">
+          <legend>Contacto</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="contactName">{ui.partner.fields.contactName} <span aria-label="obligatorio">*</span></label>
+              <input type="text" id="contactName" name="contactName" required autocomplete="name" />
+            </div>
+            <div class="field">
+              <label for="contactRole">{ui.partner.fields.contactRole}</label>
+              <input type="text" id="contactRole" name="contactRole" autocomplete="organization-title" />
+            </div>
+            <div class="field">
+              <label for="contactEmail">{ui.partner.fields.contactEmail} <span aria-label="obligatorio">*</span></label>
+              <input type="email" id="contactEmail" name="contactEmail" required autocomplete="email" inputmode="email" />
+            </div>
+            <div class="field">
+              <label for="contactPhone">{ui.partner.fields.contactPhone}</label>
+              <input type="tel" id="contactPhone" name="contactPhone" autocomplete="tel" inputmode="tel" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-fieldset">
+          <legend>Tecnología</legend>
+          <div class="form-grid">
+            <div class="field">
+              <label for="area">{ui.partner.fields.area}</label>
+              <input type="text" id="area" name="area" />
+            </div>
+            <div class="field field--wide">
+              <label for="description">{ui.partner.fields.description} <span aria-label="obligatorio">*</span></label>
+              <textarea id="description" name="description" required rows="4" maxlength="2000"></textarea>
+            </div>
+            <div class="field">
+              <label for="presenceInArgentina">{ui.partner.fields.presenceInArgentina}</label>
+              <input type="text" id="presenceInArgentina" name="presenceInArgentina" />
+            </div>
+            <div class="field">
+              <label for="certifications">{ui.partner.fields.certifications}</label>
+              <input type="text" id="certifications" name="certifications" />
+            </div>
+            <div class="field">
+              <label for="commercialMarkets">{ui.partner.fields.commercialMarkets}</label>
+              <input type="text" id="commercialMarkets" name="commercialMarkets" />
+            </div>
+          </div>
+        </fieldset>
+
+        <div id="partner-status" role="status" aria-live="polite"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">{ui.partner.submitCta}</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById('partner-form') as HTMLFormElement | null;
+  const status = document.getElementById('partner-status');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('[type=submit]') as HTMLButtonElement;
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/partner', { method: 'POST', body: new FormData(form) });
+      const data = await res.json();
+      if (data.ok) {
+        form.reset();
+        if (status) { status.className = 'form-success'; status.textContent = 'Gracias por su consulta. Nos ponemos en contacto a la brevedad.'; }
+      } else {
+        if (status) { status.className = 'form-error'; status.textContent = 'Ocurrió un error. Por favor revisá los campos e intentá de nuevo.'; }
+        btn.disabled = false;
+      }
+    } catch {
+      if (status) { status.className = 'form-error'; status.textContent = 'Error de conexión. Por favor intentá de nuevo.'; }
+      btn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .page-hero { background-color: var(--wm-blue); background-size: cover; background-position: center; color: #fff; padding-block: 4rem 3rem; }
+  .hero-body { font-size: 1rem; opacity: 0.88; margin: 0.75rem 0 1.5rem; max-width: 60ch; line-height: 1.65; }
+  .btn-hero-cta { display: inline-flex; align-items: center; background: #fff; color: var(--wm-blue); font-weight: 600; font-size: 0.9375rem; padding: 0.75rem 1.75rem; border-radius: 8px; text-decoration: none; transition: background 0.15s; }
+  .page-hero h1 { font-size: clamp(1.75rem, 4vw, 2.75rem); margin: 0 0 0.75rem; }
+  .lead { font-size: 1.125rem; opacity: 0.9; margin: 0; max-width: 60ch; }
+  .lang-badge-wrap { display: flex; justify-content: flex-end; margin-bottom: 2rem; }
+  .lang-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: #fff; font-size: 0.875rem; font-weight: 500; padding: 0.4rem 1rem; border-radius: 999px; text-decoration: none; transition: background 0.15s; }
+  .lang-badge:hover { background: rgba(255,255,255,0.28); }
+  .section { padding-block: 4rem; }
+  .section--soft { background: var(--wm-bg-soft); }
+  .section--blue { background: var(--wm-blue); color: #fff; }
+  .section-title--white { color: #fff; font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 0.5rem; }
+  .section-lead--white { color: rgba(255,255,255,0.8); margin: 0 0 2rem; font-style: italic; }
+  .why-grid { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  @media (max-width: 900px) { .why-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } }
+  .why-card { background: var(--wm-bg); border: 1px solid var(--wm-border); border-radius: var(--radius); padding: 1.5rem; }
+  .why-card h3 { color: var(--wm-blue); margin: 0 0 0.5rem; font-size: 1rem; }
+  .why-card p { margin: 0; color: var(--wm-text-muted); font-size: 0.9375rem; }
+
+  .stages-list {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    position: relative;
+  }
+
+  .stages-list::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    left: calc(100% / 12);
+    right: calc(100% / 12);
+    height: 2px;
+    background: var(--wm-border);
+    z-index: 0;
+  }
+
+  .stage-item {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 0.75rem 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stage-number {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--wm-blue);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+    border: 3px solid var(--wm-bg);
+  }
+
+  .stage-title { margin: 0 0 0.375rem; color: var(--wm-blue); font-size: 0.9375rem; font-weight: 600; }
+  .stage-body { margin: 0; color: var(--wm-text-muted); font-size: 0.875rem; }
+
+  @media (max-width: 700px) {
+    .stages-list::before { display: none; }
+    .stages-list { flex-direction: column; }
+    .stage-item { align-items: flex-start; text-align: left; flex-direction: row; gap: 1rem; padding: 0 0 1rem; }
+    .stage-number { margin-bottom: 0; flex-shrink: 0; }
+  }
+  .mercados-grid {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .mercado-card {
+    flex: 0 0 calc(25% - 0.75rem);
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  @media (max-width: 760px) {
+    .mercado-card { flex: 0 0 calc(50% - 0.5rem); min-width: 0; }
+  }
+
+  @media (max-width: 400px) {
+    .mercado-card { flex: 0 0 100%; }
+  }
+
+  .mercado-icon {
+    color: var(--wm-teal);
+    flex-shrink: 0;
+  }
+
+  .manufacturers-grid { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+  .manufacturer-card { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius); padding: 1.25rem 1rem; text-align: center; font-weight: 500; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; min-height: 80px; }
+  .manufacturer-card--provisional { opacity: 0.85; }
+  .manufacturer-logo { max-width: 120px; max-height: 48px; width: auto; height: auto; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.9; }
+  .manufacturer-name { color: rgba(255,255,255,0.85); font-size: 0.9375rem; }
+  .form-layout { max-width: 800px; }
+  .form-fieldset { border: 1px solid var(--wm-border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+  .form-fieldset legend { font-weight: 600; color: var(--wm-blue); padding: 0 0.5rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; margin-top: 1rem; }
+  @media (min-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+  .field--wide { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: 0.375rem; }
+  label { font-weight: 500; font-size: 0.9375rem; }
+  label span { color: var(--wm-blue); }
+  input, select, textarea { border: 1px solid var(--wm-border); border-radius: 8px; padding: 0.625rem 0.875rem; font-family: var(--font-sans); font-size: 1rem; background: var(--wm-bg); color: var(--wm-text); width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--wm-blue); outline-offset: 1px; }
+  textarea { resize: vertical; min-height: 100px; }
+  .form-actions { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
+  .form-success { margin-top: 1rem; padding: 1rem; background: #e6f4ea; border-radius: var(--radius); color: #1a5c2a; }
+  .form-error { margin-top: 1rem; padding: 1rem; background: #fde8e8; border-radius: var(--radius); color: #9b1c1c; }
+</style>

@@ -1,0 +1,210 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/layout/Cta.astro';
+import Breadcrumb from '../../components/catalog/Breadcrumb.astro';
+import { getCollection, getEntry } from 'astro:content';
+import {
+  instrumentsByLine,
+  productsWithoutPlatform,
+  buildReverseCompat,
+} from '../../lib/catalog';
+
+export async function getStaticPaths() {
+  const lines = await getCollection('lines');
+  return lines.map((line) => ({ params: { linea: line.data.slug } }));
+}
+
+const { linea } = Astro.params;
+const line = await getEntry('lines', linea!);
+
+if (!line) {
+  return Astro.redirect('/soluciones', 301);
+}
+
+const allProducts = await getCollection('products');
+const instruments = instrumentsByLine(allProducts, line.data.id);
+const openProducts = productsWithoutPlatform(allProducts, line.data.id);
+const reverseCompat = buildReverseCompat(allProducts);
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const breadcrumb = [
+  { name: 'Soluciones', href: '/soluciones' },
+  { name: line.data.name, href: `/soluciones/${line.data.slug}` },
+];
+---
+
+<Base
+  title={line.data.name}
+  description={line.data.seo?.description ?? line.data.summary}
+>
+  <!-- Hero de la solución -->
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumb items={breadcrumb} siteUrl={siteUrl} light />
+      <h1>{line.data.name}</h1>
+      {line.data.summary !== 'TODO-CLIENTE' && (
+        <p class="lead">{line.data.summary}</p>
+      )}
+    </div>
+  </section>
+
+  <!-- A. Sistemas / Plataformas (instrumentos) -->
+  {instruments.length > 0 && (
+    <section class="section" aria-labelledby="instruments-heading">
+      <div class="container">
+        <h2 id="instruments-heading">Sistemas y plataformas</h2>
+        <ul class="products-grid" role="list">
+          {instruments.map((inst) => {
+            const compat = reverseCompat.get(inst.data.id)?.length ?? 0;
+            return (
+              <li>
+                <a href={`/soluciones/${linea}/${inst.data.slug}`} class="product-card">
+                  <span class="product-card__kind">Sistema</span>
+                  <h3 class="product-card__name">{inst.data.name}</h3>
+                  {compat > 0 && (
+                    <p class="product-card__meta">{compat} producto{compat !== 1 ? 's' : ''} compatible{compat !== 1 ? 's' : ''}</p>
+                  )}
+                  <span class="product-card__cta" aria-hidden="true">Ver sistema completo →</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- B. Productos sin instrumento (reactivos, controles, consumibles de sistema abierto) -->
+  {openProducts.length > 0 && (
+    <section class="section section--soft" aria-labelledby="open-heading">
+      <div class="container">
+        <h2 id="open-heading">Productos sin instrumento</h2>
+        <p class="section-lead">Reactivos, controles y consumibles compatibles con equipamiento de múltiples marcas.</p>
+        <ul class="products-grid" role="list">
+          {openProducts.map((p) => (
+            <li>
+              <a href={`/productos/${p.data.slug}`} class="product-card">
+                <span class="product-card__kind">{p.data.kind}</span>
+                <h3 class="product-card__name">{p.data.name}</h3>
+                {p.data.application && p.data.application !== 'TODO-CLIENTE' && (
+                  <p class="product-card__meta">{p.data.application}</p>
+                )}
+                <span class="product-card__cta" aria-hidden="true">Ver ficha →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {instruments.length === 0 && openProducts.length === 0 && (
+    <section class="section">
+      <div class="container">
+        <p class="empty-state">TODO-CLIENTE — Catálogo de esta línea en preparación (P-11, P-12).</p>
+      </div>
+    </section>
+  )}
+
+  <Cta
+    title="¿Tenés consultas sobre esta línea de soluciones?"
+    body="Nuestro equipo te asesora para encontrar el equipo y la configuración adecuada."
+    primary={{ label: 'Contactar un especialista', href: `/contacto?solucion=${line.data.slug}` }}
+  />
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 4rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .section {
+    padding-block: 4rem;
+  }
+
+  .section--soft {
+    background: var(--wm-bg-soft);
+  }
+
+  .section-lead {
+    color: var(--wm-text-muted);
+    max-width: 60ch;
+    margin: 0.5rem 0 2rem;
+  }
+
+  .products-grid {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--wm-text);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .product-card:hover {
+    border-color: var(--wm-blue);
+    transform: translateY(-2px);
+  }
+
+  .product-card__kind {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--wm-teal);
+    margin-bottom: 0.5rem;
+  }
+
+  .product-card__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--wm-blue);
+    margin: 0 0 0.5rem;
+  }
+
+  .product-card__meta {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin: 0 0 auto;
+  }
+
+  .product-card__cta {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--wm-teal);
+  }
+
+  .empty-state {
+    color: var(--wm-text-muted);
+    font-style: italic;
+  }
+</style>

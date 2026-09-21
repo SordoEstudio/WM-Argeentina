@@ -1,0 +1,8 @@
+[
+  { "id": "asesoramiento", "slug": "asesoramiento", "name": "Asesoramiento", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 1 },
+  { "id": "aplicaciones", "slug": "aplicaciones", "name": "Aplicaciones", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 2 },
+  { "id": "instalacion-puesta-en-marcha", "slug": "instalacion-puesta-en-marcha", "name": "Instalación y puesta en marcha", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 3 },
+  { "id": "capacitacion", "slug": "capacitacion", "name": "Capacitación", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 4 },
+  { "id": "servicio-tecnico", "slug": "servicio-tecnico", "name": "Servicio Técnico", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 5 },
+  { "id": "integracion-conectividad", "slug": "integracion-conectividad", "name": "Integración y conectividad", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 6 }
+]

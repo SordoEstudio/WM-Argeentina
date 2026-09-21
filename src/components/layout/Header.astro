@@ -1,0 +1,299 @@
+---
+import Logo from '../brand/Logo.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+
+const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.data.order);
+
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="header-logo" aria-label="WM Argentina — inicio">
+      <Logo showTagline={false} width={140} />
+    </a>
+
+    <button
+      class="nav-toggle"
+      aria-controls="main-nav"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="main-nav" aria-label="Navegación principal">
+      <ul class="nav-list" role="list">
+        <li><a href="/nosotros" class="nav-link">Nosotros</a></li>
+
+        <!-- Mega-menú Soluciones -->
+        <li class="has-mega">
+          <a href="/soluciones" class="nav-link">Soluciones</a>
+          <div class="mega-menu" role="region" aria-label="Soluciones">
+            <ul class="mega-list" role="list">
+              {lines.map((line) => (
+                <li>
+                  <a href={`/soluciones/${line.data.slug}`} class="mega-link">
+                    {line.data.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+
+        <li><a href="/productos" class="nav-link">Productos</a></li>
+        <li><a href="/servicios" class="nav-link">Servicios</a></li>
+        <li><a href="/novedades" class="nav-link">Novedades y Conocimiento</a></li>
+        <li><a href="/contacto" class="nav-link">Contacto</a></li>
+      </ul>
+
+      <!-- Buscador -->
+      <a href="/buscar" class="nav-search" aria-label="Buscar">
+        <Icon name="lucide:search" size={20} aria-hidden="true" />
+      </a>
+
+      <!-- CTA Su Socio -->
+      <a href="/su-socio-en-argentina" class="btn btn-partner nav-cta">Su Socio en Argentina</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('.nav-toggle') as HTMLButtonElement | null;
+  const nav = document.getElementById('main-nav');
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    nav?.classList.toggle('is-open');
+  });
+</script>
+
+<style>
+  .site-header {
+    background: var(--wm-bg);
+    border-bottom: 1px solid var(--wm-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 64px;
+  }
+
+  .header-logo {
+    flex-shrink: 0;
+    display: flex;
+  }
+
+  #main-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0.25rem 0.75rem;
+    color: var(--wm-text);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover {
+    background: var(--wm-bg-soft);
+    color: var(--wm-blue);
+  }
+
+  /* Mega-menu */
+  .has-mega {
+    position: relative;
+  }
+
+  .mega-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 1rem;
+    min-width: 260px;
+    z-index: 200;
+  }
+
+  .has-mega:hover .mega-menu,
+  .has-mega:focus-within .mega-menu {
+    display: block;
+  }
+
+  .mega-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .mega-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: var(--wm-text);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+  }
+
+  .mega-link:hover {
+    background: var(--wm-bg-soft);
+    color: var(--wm-blue);
+  }
+
+  .nav-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border-radius: 6px;
+    color: var(--wm-text);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nav-search:hover {
+    background: var(--wm-bg-soft);
+    color: var(--wm-blue);
+  }
+
+  .btn-partner {
+    flex-shrink: 0;
+    font-size: 0.9375rem;
+    padding: 0.5rem 1.25rem;
+    background: var(--wm-teal);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .btn-partner:hover {
+    background: var(--wm-blue);
+  }
+
+  .nav-cta {
+    flex-shrink: 0;
+  }
+
+  /* Hamburger button (hidden on desktop) */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--wm-text);
+    border-radius: 2px;
+    transition: transform 0.2s ease;
+  }
+
+  /* Mobile */
+  @media (max-width: 1023px) {
+    .nav-toggle {
+      display: flex;
+    }
+
+    #main-nav {
+      display: none;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--wm-bg);
+      border-bottom: 1px solid var(--wm-border);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    #main-nav.is-open {
+      display: flex;
+    }
+
+    .nav-list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .nav-link {
+      padding: 0.75rem;
+    }
+
+    .mega-menu {
+      position: static;
+      box-shadow: none;
+      border: none;
+      padding: 0 0 0 1rem;
+    }
+
+    .has-mega:hover .mega-menu,
+    .has-mega:focus-within .mega-menu {
+      display: block;
+    }
+
+    .nav-cta {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .nav-search {
+      align-self: flex-start;
+    }
+  }
+</style>
