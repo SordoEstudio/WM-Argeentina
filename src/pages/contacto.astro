@@ -11,7 +11,7 @@ const manufacturers = (await getCollection('manufacturers')).sort((a, b) => a.da
   title="Contacto"
   description="Contactá al equipo de WM Argentina para consultas comerciales sobre soluciones de diagnóstico."
 >
-  <section class="page-hero">
+  <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.75), rgba(0,79,146,0.75)), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1400&h=500&fit=crop&auto=format&q=80')">
     <div class="container">
       <h1>Contacto</h1>
       <p class="lead">Consultanos sobre nuestros sistemas y productos. Un especialista se va a poner en contacto con vos.</p>
@@ -204,7 +204,9 @@ const manufacturers = (await getCollection('manufacturers')).sort((a, b) => a.da
 
 <style>
   .page-hero {
-    background: var(--wm-blue);
+    background-color: var(--wm-blue);
+    background-size: cover;
+    background-position: center;
     color: #fff;
     padding-block: 4rem;
   }

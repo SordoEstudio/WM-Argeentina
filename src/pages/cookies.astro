@@ -1,0 +1,206 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Política de Cookies" robots="noindex,nofollow">
+  <section class="page-hero">
+    <div class="container">
+      <h1>Política de Cookies</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container legal-layout">
+
+      <div class="legal-notice" role="note">
+        <strong>Borrador para revisión.</strong> Basado en Ley 25.326 de Protección de Datos Personales y normativa de la AAIP. Revisar con asesor legal antes de publicar. Los datos marcados <mark class="legal-todo">así</mark> están pendientes del cliente.
+      </div>
+
+      <p class="legal-updated">Última actualización: <mark class="legal-todo">TODO-CLIENTE (fecha)</mark></p>
+
+      <h2>1. ¿Qué son las cookies?</h2>
+      <p>
+        Son pequeños archivos que un sitio web guarda en su navegador para recordar información sobre su visita.
+      </p>
+
+      <h2>2. Cookies que utilizamos</h2>
+      <p>En la actualidad este sitio utiliza las siguientes cookies:</p>
+
+      <div class="cookie-table-wrap">
+        <table class="cookie-table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Finalidad</th>
+              <th>¿Se puede desactivar?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Técnicas / necesarias</td>
+              <td>Permiten el funcionamiento básico del sitio (navegación, seguridad)</td>
+              <td>No, son imprescindibles</td>
+            </tr>
+            <tr>
+              <td>De análisis <mark class="legal-todo">TODO-CLIENTE (P-28): herramienta a confirmar</mark></td>
+              <td>Nos ayudan a entender cómo se usa el sitio, de forma agregada</td>
+              <td>Sí</td>
+            </tr>
+            <tr>
+              <td><mark class="legal-todo">TODO-CLIENTE (P-28): otras cookies a definir</mark></td>
+              <td><mark class="legal-todo">TODO-CLIENTE</mark></td>
+              <td><mark class="legal-todo">TODO-CLIENTE</mark></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="legal-note">
+        Esta tabla se completa según la herramienta de analítica que finalmente se use (P-28). Si no se usa ninguna,
+        se elimina la fila correspondiente.
+      </p>
+
+      <h2>3. Base legal</h2>
+      <p>
+        La Ley 25.326 alcanza a las cookies en la medida en que permitan identificar, directa o indirectamente,
+        a una persona o a su dispositivo. Por eso tratamos su uso con el mismo estándar de consentimiento que el
+        resto de los datos personales, aun cuando hoy no exista en Argentina una ley específica de cookies como
+        en la Unión Europea.
+      </p>
+
+      <h2>4. Su consentimiento</h2>
+      <p>
+        Al ingresar al sitio, un aviso le permite aceptar todas las cookies, rechazar las no esenciales o
+        configurar sus preferencias.
+      </p>
+
+      <h2>5. Cómo desactivarlas</h2>
+      <p>
+        Además del panel de este sitio, puede eliminar o bloquear cookies desde la configuración de su navegador.
+        Tenga en cuenta que desactivar cookies técnicas puede afectar el funcionamiento del sitio.
+      </p>
+
+      <h2>6. Cambios</h2>
+      <p>
+        Podemos actualizar esta política. La fecha de la última actualización se indica al pie de esta página.
+      </p>
+
+      <p class="legal-links">
+        Ver también: <a href="/privacidad">Política de Privacidad</a> · <a href="/terminos">Términos y Condiciones de Uso</a>
+      </p>
+
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 3rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 0;
+  }
+
+  .section { padding-block: 4rem; }
+
+  .legal-layout {
+    max-width: 720px;
+  }
+
+  .legal-notice {
+    background: #fff8e1;
+    border-left: 4px solid #f59e0b;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    color: #78350f;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+
+  .legal-updated {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .legal-layout h2 {
+    font-size: 1.125rem;
+    color: var(--wm-blue);
+    margin: 2rem 0 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .legal-layout h2:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .legal-layout p {
+    line-height: 1.7;
+    color: var(--wm-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .legal-layout a {
+    color: var(--wm-blue);
+  }
+
+  .legal-todo {
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 3px;
+    padding: 0.1em 0.35em;
+    font-size: 0.875em;
+    font-style: normal;
+  }
+
+  .legal-note {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    font-style: italic;
+  }
+
+  .legal-links {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--wm-border);
+    font-size: 0.9375rem;
+  }
+
+  .cookie-table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .cookie-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .cookie-table th,
+  .cookie-table td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--wm-border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .cookie-table th {
+    background: var(--wm-bg-soft);
+    font-weight: 600;
+    color: var(--wm-blue);
+    white-space: nowrap;
+  }
+
+  .cookie-table tr:nth-child(even) td {
+    background: var(--wm-bg-soft);
+  }
+</style>

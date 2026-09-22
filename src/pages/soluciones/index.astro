@@ -10,7 +10,7 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
   title="Soluciones"
   description="10 líneas de soluciones para diagnóstico de laboratorio: hemostasia, hematología, inmunología, biología molecular y más."
 >
-  <section class="page-hero">
+  <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.75), rgba(0,79,146,0.75)), url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1400&h=500&fit=crop&auto=format&q=80')">
     <div class="container">
       <h1>Soluciones</h1>
       <p class="lead">Cubrimos todo el ciclo de diagnóstico con sistemas completos para laboratorios, hospitales, bancos de sangre y veterinaria.</p>
@@ -44,7 +44,9 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
 
 <style>
   .page-hero {
-    background: var(--wm-blue);
+    background-color: var(--wm-blue);
+    background-size: cover;
+    background-position: center;
     color: #fff;
     padding-block: 4rem;
   }

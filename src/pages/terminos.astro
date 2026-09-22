@@ -2,23 +2,161 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="Términos de uso" robots="noindex,nofollow">
+<Base title="Términos y Condiciones de Uso" robots="noindex,nofollow">
   <section class="page-hero">
     <div class="container">
-      <h1>Términos de uso</h1>
+      <h1>Términos y Condiciones de Uso</h1>
     </div>
   </section>
+
   <section class="section">
-    <div class="container content-layout">
-      <p class="placeholder">TODO-CLIENTE (D-19, P-27) — Texto legal de términos de uso pendiente de validación por el cliente.</p>
+    <div class="container legal-layout">
+
+      <div class="legal-notice" role="note">
+        <strong>Borrador para revisión.</strong> Basado en Ley 24.240 de Defensa del Consumidor y legislación argentina aplicable. Revisar con asesor legal antes de publicar. Los datos marcados <mark class="legal-todo">así</mark> están pendientes del cliente.
+      </div>
+
+      <p class="legal-updated">Última actualización: <mark class="legal-todo">TODO-CLIENTE (fecha)</mark></p>
+
+      <h2>1. Objeto</h2>
+      <p>
+        Este sitio web es un canal informativo y comercial de
+        <mark class="legal-todo">TODO-CLIENTE (P-06): razón social de WM Argentina</mark>
+        (en adelante, "WM Argentina"), dedicado a presentar sus soluciones, productos y servicios de tecnología
+        para diagnóstico. El sitio no constituye una tienda en línea: no permite la compra ni el pago de productos,
+        y toda comercialización se gestiona directamente con nuestro equipo comercial.
+      </p>
+
+      <h2>2. Aceptación</h2>
+      <p>
+        El acceso y uso de este sitio implica la aceptación de estos Términos y Condiciones. Si no está de acuerdo,
+        le pedimos que no utilice el sitio.
+      </p>
+
+      <h2>3. Carácter informativo del contenido</h2>
+      <p>
+        La información sobre líneas, instrumentos y productos publicada en el sitio tiene carácter general e informativo.
+        No reemplaza la ficha técnica oficial de cada producto, ni el criterio profesional de quien deba utilizarlo,
+        ni constituye asesoramiento médico o diagnóstico. Ante cualquier decisión clínica o técnica, consulte siempre
+        la documentación oficial del fabricante y a un profesional habilitado.
+      </p>
+
+      <h2>4. Propiedad intelectual</h2>
+      <p>
+        Los contenidos de este sitio (textos, imágenes, marca WM Argentina, logotipos e isotipo) son de propiedad de
+        WM Argentina o de terceros que autorizaron su uso, y están protegidos por la normativa de propiedad intelectual
+        e industrial vigente. Queda prohibida su reproducción total o parcial sin autorización previa y por escrito.
+      </p>
+
+      <h2>5. Enlaces a terceros</h2>
+      <p>
+        Este sitio puede contener enlaces a sitios de fabricantes, redes sociales u otros terceros. WM Argentina no
+        controla ni se responsabiliza por el contenido o las políticas de privacidad de esos sitios.
+      </p>
+
+      <h2>6. Formularios y veracidad de los datos</h2>
+      <p>
+        Al completar un formulario de este sitio, usted declara que los datos aportados son veraces y se compromete a
+        mantenerlos actualizados. WM Argentina no se responsabiliza por consecuencias derivadas de datos falsos,
+        inexactos o incompletos.
+      </p>
+
+      <h2>7. Disponibilidad del sitio</h2>
+      <p>
+        WM Argentina procura mantener el sitio disponible y actualizado, pero no garantiza su funcionamiento
+        ininterrumpido ni libre de errores, y podrá modificar, suspender o discontinuar contenidos o funcionalidades
+        sin previo aviso.
+      </p>
+
+      <h2>8. Limitación de responsabilidad</h2>
+      <p>
+        En la medida permitida por la ley, WM Argentina no será responsable por daños derivados del uso o la
+        imposibilidad de uso del sitio, salvo en los casos de dolo o culpa grave que la normativa argentina no
+        permita limitar.
+      </p>
+
+      <h2>9. Legislación aplicable y jurisdicción</h2>
+      <p>
+        Estos Términos se rigen por las leyes de la República Argentina, incluyendo la Ley 24.240 de Defensa del
+        Consumidor en lo que resulte aplicable. Para cualquier controversia, las partes se someten a la competencia
+        de los tribunales ordinarios de
+        <mark class="legal-todo">TODO-CLIENTE (P-30): jurisdicción (CABA u otra, a confirmar)</mark>.
+      </p>
+
+      <h2>10. Contacto</h2>
+      <p>
+        Ante dudas sobre estos Términos, puede escribirnos a
+        <mark class="legal-todo">TODO-CLIENTE (P-27): mail de contacto</mark>.
+      </p>
+
     </div>
   </section>
 </Base>
 
 <style>
-  .page-hero { background: var(--wm-blue); color: #fff; padding-block: 3rem; }
-  .page-hero h1 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0; }
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 3rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 0;
+  }
+
   .section { padding-block: 4rem; }
-  .content-layout { max-width: 720px; }
-  .placeholder { color: var(--wm-text-muted); font-style: italic; }
+
+  .legal-layout {
+    max-width: 720px;
+  }
+
+  .legal-notice {
+    background: #fff8e1;
+    border-left: 4px solid #f59e0b;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    color: #78350f;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+
+  .legal-updated {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .legal-layout h2 {
+    font-size: 1.125rem;
+    color: var(--wm-blue);
+    margin: 2rem 0 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .legal-layout h2:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .legal-layout p {
+    line-height: 1.7;
+    color: var(--wm-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .legal-layout a {
+    color: var(--wm-blue);
+  }
+
+  .legal-todo {
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 3px;
+    padding: 0.1em 0.35em;
+    font-size: 0.875em;
+    font-style: normal;
+  }
 </style>

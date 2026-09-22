@@ -8,17 +8,160 @@ import Base from '../layouts/Base.astro';
       <h1>Política de privacidad</h1>
     </div>
   </section>
+
   <section class="section">
-    <div class="container content-layout">
-      <p class="placeholder">TODO-CLIENTE (D-19, P-27) — Texto legal de política de privacidad y tratamiento de datos personales pendiente de validación por el cliente.</p>
+    <div class="container legal-layout">
+
+      <div class="legal-notice" role="note">
+        <strong>Borrador para revisión.</strong> Basado en Ley 25.326 de Protección de Datos Personales, Decreto 1558/2001 y normativa de la AAIP. Revisar con asesor legal antes de publicar. Los datos marcados <mark class="legal-todo">así</mark> están pendientes del cliente.
+      </div>
+
+      <p class="legal-updated">Última actualización: <mark class="legal-todo">TODO-CLIENTE (fecha)</mark></p>
+
+      <h2>1. Responsable del tratamiento</h2>
+      <p>
+        El responsable del tratamiento de los datos personales recabados a través de este sitio es
+        <mark class="legal-todo">TODO-CLIENTE (P-06): razón social de WM Argentina / CUIT</mark>,
+        con domicilio en <mark class="legal-todo">TODO-CLIENTE (P-06): dirección de la sede central</mark>.
+        Para cualquier consulta relacionada con esta política o para ejercer sus derechos, puede escribir a
+        <mark class="legal-todo">TODO-CLIENTE (P-27): mail de contacto para temas de privacidad</mark>.
+      </p>
+
+      <h2>2. Datos que recabamos</h2>
+      <p>
+        A través de los formularios de este sitio (Contacto, Su Socio en Argentina y Trabajá con Nosotros) podemos recabar:
+        nombre y apellido, institución o empresa, cargo, provincia, correo electrónico, teléfono y el contenido del mensaje
+        o consulta que usted nos envíe. En el caso de postulaciones laborales, también puede incluir su currículum y los
+        datos personales que este contenga.
+      </p>
+
+      <h2>3. Finalidad</h2>
+      <p>
+        Utilizamos estos datos exclusivamente para responder su consulta comercial, técnica o laboral, gestionar la relación
+        comercial con clientes y proveedores, y evaluar postulaciones a búsquedas laborales. No utilizamos sus datos para
+        fines distintos a los informados en el formulario donde fueron proporcionados.
+      </p>
+
+      <h2>4. Base de licitud</h2>
+      <p>
+        El tratamiento se basa en el consentimiento libre, expreso e informado que usted otorga al completar y enviar
+        voluntariamente cualquiera de los formularios del sitio (art. 5, Ley 25.326).
+      </p>
+
+      <h2>5. Conservación</h2>
+      <p>
+        Conservamos sus datos mientras sean necesarios para la finalidad para la que fueron recabados y, en el caso de
+        postulaciones no seleccionadas, por <mark class="legal-todo">TODO-CLIENTE (P-22): plazo a definir</mark>,
+        salvo que usted solicite antes su eliminación.
+      </p>
+
+      <h2>6. Comunicación a terceros</h2>
+      <p>
+        No cedemos sus datos a terceros, salvo obligación legal. Los datos pueden ser almacenados y procesados por
+        proveedores tecnológicos que prestan servicios de hosting o infraestructura (por ejemplo, Vercel Inc.), lo que
+        puede implicar una transferencia internacional de datos. En tal caso, adoptamos los recaudos exigidos por el
+        art. 12 de la Ley 25.326 y la normativa de la AAIP para garantizar un nivel de protección adecuado.
+      </p>
+
+      <h2>7. Sus derechos</h2>
+      <p>
+        De acuerdo con los arts. 14 a 16 de la Ley 25.326, usted tiene derecho a acceder, rectificar, actualizar y
+        solicitar la supresión de sus datos personales de forma gratuita, escribiendo a
+        <mark class="legal-todo">TODO-CLIENTE (P-27): mail de contacto</mark>.
+        La Agencia de Acceso a la Información Pública (AAIP), Órgano de Control de la Ley 25.326, es la autoridad
+        ante la cual puede presentar reclamos si considera que sus derechos no fueron respetados
+        (<a href="https://www.argentina.gob.ar/aaip" target="_blank" rel="noopener noreferrer">www.argentina.gob.ar/aaip</a>).
+      </p>
+
+      <h2>8. Seguridad</h2>
+      <p>
+        Adoptamos medidas técnicas y organizativas razonables para proteger sus datos personales contra pérdida,
+        alteración, uso o acceso no autorizado.
+      </p>
+
+      <h2>9. Menores de edad</h2>
+      <p>
+        Este sitio no está dirigido a menores de 18 años. Si detectamos que hemos recabado datos de un menor sin
+        la autorización correspondiente, procederemos a eliminarlos.
+      </p>
+
+      <h2>10. Cookies</h2>
+      <p>El uso de cookies en este sitio se describe en nuestra <a href="/cookies">Política de Cookies</a>.</p>
+
+      <h2>11. Cambios a esta política</h2>
+      <p>
+        Podemos actualizar esta política para reflejar cambios legales, técnicos o comerciales. La fecha de la
+        última actualización se indica al pie de esta página.
+      </p>
+
     </div>
   </section>
 </Base>
 
 <style>
-  .page-hero { background: var(--wm-blue); color: #fff; padding-block: 3rem; }
-  .page-hero h1 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0; }
+  .page-hero {
+    background: var(--wm-blue);
+    color: #fff;
+    padding-block: 3rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 0;
+  }
+
   .section { padding-block: 4rem; }
-  .content-layout { max-width: 720px; }
-  .placeholder { color: var(--wm-text-muted); font-style: italic; }
+
+  .legal-layout {
+    max-width: 720px;
+  }
+
+  .legal-notice {
+    background: #fff8e1;
+    border-left: 4px solid #f59e0b;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    color: #78350f;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+
+  .legal-updated {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .legal-layout h2 {
+    font-size: 1.125rem;
+    color: var(--wm-blue);
+    margin: 2rem 0 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--wm-border);
+  }
+
+  .legal-layout h2:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .legal-layout p {
+    line-height: 1.7;
+    color: var(--wm-text);
+    margin: 0 0 0.75rem;
+  }
+
+  .legal-layout a {
+    color: var(--wm-blue);
+  }
+
+  .legal-todo {
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 3px;
+    padding: 0.1em 0.35em;
+    font-size: 0.875em;
+    font-style: normal;
+  }
 </style>
