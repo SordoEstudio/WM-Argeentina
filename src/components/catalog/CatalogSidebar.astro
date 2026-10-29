@@ -41,22 +41,10 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
   {/* ── Panel: por analito ──────────────────────────────────────────── */}
   <div class="sidebar-panel" data-via="analito">
     <p class="sidebar-panel-title">Analito</p>
-
-    <div class="sidebar-search-wrap">
-      <input
-        class="sidebar-search"
-        data-panel="analito"
-        type="search"
-        placeholder="Buscar analito…"
-        autocomplete="off"
-        aria-label="Filtrar analitos"
-      />
-    </div>
-
-    {orderedLines.map((line, i) => {
+    {orderedLines.map((line) => {
       const analytes = index.analytesByLine[line.id];
       return analytes?.length ? (
-        <details class="sidebar-details" open={i === 0}>
+        <details class="sidebar-details">
           <summary class="sidebar-details-summary">{line.name}</summary>
           <div class="sidebar-details-body">
             {analytes.map((analyte) => (
@@ -73,10 +61,10 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
   {/* ── Panel: por instrumento ──────────────────────────────────────── */}
   <div class="sidebar-panel" data-via="instrumento">
     <p class="sidebar-panel-title">Instrumento</p>
-    {FAMILY_ORDER.map((fam, i) => {
+    {FAMILY_ORDER.map((fam) => {
       const instrs = instrumentFamilies.get(fam);
       return instrs?.length ? (
-        <details class="sidebar-details" open={i === 0}>
+        <details class="sidebar-details">
           <summary class="sidebar-details-summary">{fam}</summary>
           <div class="sidebar-details-body">
             {instrs.map((instr) => (
@@ -93,31 +81,17 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
   {/* ── Panel: por aplicación ───────────────────────────────────────── */}
   <div class="sidebar-panel" data-via="aplicacion">
     <p class="sidebar-panel-title">Aplicación clínica</p>
-
-    <div class="sidebar-search-wrap">
-      <input
-        class="sidebar-search"
-        data-panel="aplicacion"
-        type="search"
-        placeholder="Buscar aplicación…"
-        autocomplete="off"
-        aria-label="Filtrar aplicaciones"
-      />
-    </div>
-
-    <div class="sidebar-aplicacion-list">
-      {index.applications.map((slug) => (
-        <button class="sidebar-item" data-via="aplicacion" data-q={slug} type="button">
-          {APPLICATION_LABELS[slug] ?? slug}
-        </button>
-      ))}
-    </div>
+    {index.applications.map((slug) => (
+      <button class="sidebar-item" data-via="aplicacion" data-q={slug} type="button">
+        {APPLICATION_LABELS[slug] ?? slug}
+      </button>
+    ))}
   </div>
 
   {/* ── Panel: ver todo (checkboxes) ───────────────────────────────── */}
   <div class="sidebar-panel" data-via="todo">
 
-    <details class="sidebar-details" open>
+    <details class="sidebar-details">
       <summary class="sidebar-details-summary">Tipo</summary>
       <div class="sidebar-details-body">
         {Object.entries(kindLabels).map(([value, label]) => (
@@ -172,33 +146,14 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
 </aside>
 
 <script>
-  // Filter sidebar items by text within a panel
-  document.querySelectorAll<HTMLInputElement>('.sidebar-search').forEach((input) => {
-    input.addEventListener('input', () => {
-      const val = input.value.trim().toLowerCase();
-      const panel = input.dataset.panel;
-      if (!panel) return;
-
-      const panelEl = document.querySelector(`.sidebar-panel[data-via="${panel}"]`);
-      if (!panelEl) return;
-
-      panelEl.querySelectorAll<HTMLElement>('.sidebar-item').forEach((item) => {
-        const text = item.textContent?.toLowerCase() ?? '';
-        const matches = !val || text.includes(val);
-        item.hidden = !matches;
-
-        // auto-open parent details if there's a match
-        if (matches && val) {
-          item.closest('details')?.setAttribute('open', '');
-        }
-      });
-
-      // hide empty details groups
-      panelEl.querySelectorAll('details').forEach((d) => {
-        const hasVisible = Array.from(d.querySelectorAll<HTMLElement>('.sidebar-item')).some(
-          (b) => !b.hidden
-        );
-        d.hidden = !hasVisible && val.length > 0;
+  // Accordion: opening one <details> closes siblings in the same panel
+  document.querySelectorAll('.sidebar-panel').forEach((panel) => {
+    panel.querySelectorAll('details').forEach((det) => {
+      det.addEventListener('toggle', () => {
+        if (!(det as HTMLDetailsElement).open) return;
+        panel.querySelectorAll('details').forEach((other) => {
+          if (other !== det) (other as HTMLDetailsElement).open = false;
+        });
       });
     });
   });
@@ -221,26 +176,6 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
     color: var(--wm-text-muted);
     margin: 0 0 0.5rem;
   }
-
-  /* ── Search filter ──────────────────────────────────────────────── */
-  .sidebar-search-wrap {
-    margin-bottom: 0.5rem;
-  }
-
-  .sidebar-search {
-    width: 100%;
-    padding: 0.375rem 0.625rem;
-    border: 1px solid var(--wm-border);
-    border-radius: 6px;
-    font-size: 0.8125rem;
-    font-family: var(--font-sans);
-    color: var(--wm-text);
-    background: var(--wm-bg);
-    outline: none;
-    transition: border-color 0.12s;
-  }
-
-  .sidebar-search:focus { border-color: var(--wm-blue); }
 
   /* ── Collapsible groups ─────────────────────────────────────────── */
   .sidebar-details {
@@ -308,12 +243,6 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
 
   .sidebar-item:hover { background: var(--wm-blue-tint); color: var(--wm-blue); }
   .sidebar-item.is-active { background: var(--wm-blue); color: #fff; }
-
-  /* ── Aplicacion flat list ───────────────────────────────────────── */
-  .sidebar-aplicacion-list {
-    display: flex;
-    flex-direction: column;
-  }
 
   /* ── Checkboxes ─────────────────────────────────────────────────── */
   .sidebar-check-label {

@@ -66,6 +66,7 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
   interface SearchItem { id: string; slug: string; name: string; summary: string; analytes: string[]; kind: string; }
 
   let instrumentSlugToId: Map<string, string> = new Map();
+  let textFilter = '';
 
   function readState(): { via: string | null; q: string | null; filters: FilterEntry[] } {
     const params = new URLSearchParams(location.search);
@@ -189,6 +190,14 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
         }
       }
 
+      // additional text filter from tabs search bar
+      if (visible && textFilter) {
+        const name = (card.dataset.name ?? '').toLowerCase();
+        const summary = (card.dataset.summary ?? '').toLowerCase();
+        const analytes = (card.dataset.analytes ?? '').toLowerCase();
+        visible = name.includes(textFilter) || summary.includes(textFilter) || analytes.includes(textFilter);
+      }
+
       card.hidden = !visible;
       if (visible) visibleCount++;
     });
@@ -232,14 +241,20 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
     if (pushHistory) history.pushState({}, '', buildURL(via, q, filters));
   }
 
+  function clearGridSearch(): void {
+    textFilter = '';
+    const el = document.getElementById('catalog-grid-search') as HTMLInputElement | null;
+    if (el) el.value = '';
+  }
+
   // ── Event listeners ──────────────────────────────────────────────────────
 
   document.addEventListener('click', (e) => {
     const chip = (e.target as Element)?.closest<HTMLElement>('.entry-chip');
-    if (chip) { applyState(chip.dataset.via ?? null, null, [], true); return; }
+    if (chip) { clearGridSearch(); applyState(chip.dataset.via ?? null, null, [], true); return; }
 
     const tab = (e.target as Element)?.closest<HTMLElement>('.catalog-tab');
-    if (tab) { applyState(tab.dataset.via ?? null, null, [], true); return; }
+    if (tab) { clearGridSearch(); applyState(tab.dataset.via ?? null, null, [], true); return; }
 
     const item = (e.target as Element)?.closest<HTMLElement>('.sidebar-item');
     if (item) {
@@ -330,6 +345,13 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
       setTimeout(() => { searchResults.hidden = true; }, 200);
     });
   }
+
+  // Grid search (tabs bar)
+  document.getElementById('catalog-grid-search')?.addEventListener('input', (e) => {
+    textFilter = ((e.target as HTMLInputElement).value ?? '').trim().toLowerCase();
+    const { via, q, filters } = readState();
+    if (via) applyState(via, q, filters, false);
+  });
 
   window.addEventListener('popstate', () => {
     const { via, q, filters } = readState();
