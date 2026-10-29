@@ -1,0 +1,68 @@
+---
+interface ActiveFilter {
+  label: string;
+  via: string;
+  q: string;
+}
+
+interface Props {
+  filters: ActiveFilter[];
+}
+
+const { filters } = Astro.props;
+---
+
+<div id="active-filters" aria-label="Filtros activos" aria-live="polite">
+  {filters.map((f) => (
+    <button
+      class="active-filter-remove"
+      data-via={f.via}
+      data-q={f.q}
+      type="button"
+      aria-label={`Quitar filtro: ${f.label}`}
+    >
+      {f.label}
+      <span aria-hidden="true">×</span>
+    </button>
+  ))}
+</div>
+
+<style>
+  #active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    min-height: 0;
+    padding-block: 0.5rem;
+  }
+
+  #active-filters:empty { padding: 0; }
+
+  .active-filter-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+    border: 1px solid var(--wm-blue);
+    border-radius: 2rem;
+    font-size: 0.8125rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    cursor: pointer;
+    min-height: var(--tap-min);
+    transition: background 0.15s;
+  }
+
+  .active-filter-remove:hover {
+    background: var(--wm-blue);
+    color: #fff;
+  }
+
+  .active-filter-remove span {
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.7;
+  }
+</style>

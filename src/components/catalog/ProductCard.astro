@@ -1,0 +1,216 @@
+---
+import type { CatalogProduct } from '../../lib/catalog';
+
+interface Props {
+  product: CatalogProduct;
+}
+
+const { product } = Astro.props;
+
+const kindLabels: Record<string, string> = {
+  instrument:  'Instrumento',
+  reagent:     'Reactivo',
+  consumable:  'Consumible',
+  control:     'Control',
+  calibrator:  'Calibrador',
+  software:    'Software',
+  accessory:   'Accesorio',
+};
+
+const kindLabel = kindLabels[product.kind] ?? product.kind;
+
+const dataApplications = product.applications.join(',');
+const dataAnalytes = product.analytes.join(',');
+const dataPlatformIds = product.platformIds.join(',');
+---
+
+<a
+  class="product-card"
+  href={`/productos/${product.slug}`}
+  data-id={product.id}
+  data-slug={product.slug}
+  data-kind={product.kind}
+  data-line={product.lineId}
+  data-manufacturer={product.manufacturerId}
+  data-applications={dataApplications}
+  data-analytes={dataAnalytes}
+  data-platform-ids={dataPlatformIds}
+  data-compatibility={product.compatibility}
+  data-name={product.name}
+  data-summary={product.summary}
+>
+  <!-- Vista cards -->
+  <div class="product-card__card">
+    <div class="product-card__img">
+      {product.image
+        ? <img src={product.image} alt="" width="160" height="120" loading="lazy" decoding="async" />
+        : <span class="product-card__img-placeholder">{product.kind.charAt(0).toUpperCase()}</span>
+      }
+    </div>
+    <div class="product-card__body">
+      <span class={`product-card__badge product-card__badge--${product.kind}`}>{kindLabel}</span>
+      <p class="product-card__name">{product.name}</p>
+      {product.summary && <p class="product-card__summary">{product.summary}</p>}
+      <p class="product-card__brand">{product.manufacturerName}</p>
+      {product.analytes.length > 0 && (
+        <div class="product-card__analytes">
+          {product.analytes.map((a) => <span class="analyte-tag">{a}</span>)}
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Vista lista -->
+  <div class="product-card__list">
+    <span class={`product-card__badge product-card__badge--${product.kind}`}>{kindLabel}</span>
+    <span class="product-card__list-name">{product.name}</span>
+    <span class="product-card__list-app">{product.applications[0] ?? ''}</span>
+    <span class="product-card__list-brand">{product.manufacturerName}</span>
+  </div>
+</a>
+
+<style>
+  .product-card {
+    display: block;
+    text-decoration: none;
+    color: var(--wm-text);
+    border-radius: var(--radius);
+    transition: box-shadow 0.15s;
+  }
+
+  /* ── Card view ─────────────────────────────────────────────── */
+  .product-card__card {
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--wm-bg);
+  }
+
+  .product-card:hover .product-card__card {
+    box-shadow: 0 2px 12px rgba(0,79,146,0.12);
+    border-color: var(--wm-blue);
+  }
+
+  .product-card__img {
+    height: 120px;
+    background: var(--wm-bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .product-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0.5rem;
+  }
+
+  .product-card__img-placeholder {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--wm-border);
+  }
+
+  .product-card__body {
+    padding: 0.75rem;
+  }
+
+  .product-card__name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0.25rem 0 0.25rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-card__summary {
+    font-size: 0.8125rem;
+    color: var(--wm-text-muted);
+    margin: 0 0 0.375rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-card__brand {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--wm-teal);
+    margin: 0 0 0.375rem;
+  }
+
+  .product-card__analytes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .analyte-tag {
+    font-size: 0.6875rem;
+    background: var(--wm-bg-soft);
+    color: var(--wm-text-muted);
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
+  }
+
+  /* ── List view (hidden by default) ─────────────────────────── */
+  .product-card__list {
+    display: none;
+    grid-template-columns: 100px 1fr 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.625rem 1rem;
+    background: var(--wm-bg-soft);
+    border-radius: 8px;
+  }
+
+  .product-card:hover .product-card__list {
+    background: var(--wm-blue-tint);
+    color: var(--wm-blue);
+  }
+
+  .product-card__list-name { font-weight: 500; font-size: 0.9375rem; }
+
+  .product-card__list-app,
+  .product-card__list-brand {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+  }
+
+  .product-card__list-brand { color: var(--wm-teal); font-weight: 600; }
+
+  /* ── Badges ─────────────────────────────────────────────────── */
+  .product-card__badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .product-card__badge--instrument { background: var(--wm-blue-tint); color: var(--wm-blue); }
+  .product-card__badge--reagent    { background: var(--wm-teal-tint); color: var(--wm-teal); }
+  .product-card__badge--consumable,
+  .product-card__badge--control,
+  .product-card__badge--calibrator,
+  .product-card__badge--accessory,
+  .product-card__badge--software   { background: var(--wm-bg-soft); color: var(--wm-text-muted); border: 1px solid var(--wm-border); }
+
+  /* ── Toggle modes (applied by JS on #product-grid) ──────────── */
+  :global(#product-grid.is-list) .product-card__card { display: none; }
+  :global(#product-grid.is-list) .product-card__list { display: grid; }
+
+  @media (max-width: 639px) {
+    .product-card__list { grid-template-columns: 80px 1fr; }
+    .product-card__list-app { display: none; }
+  }
+</style>

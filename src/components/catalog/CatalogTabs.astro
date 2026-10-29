@@ -1,0 +1,113 @@
+---
+interface Props {
+  activeVia: string | null;
+}
+
+const { activeVia } = Astro.props;
+
+const tabs = [
+  { via: 'analito',     icon: '🔬', label: 'Por analito' },
+  { via: 'instrumento', icon: '⚙️', label: 'Por instrumento' },
+  { via: 'aplicacion',  icon: '🏥', label: 'Por aplicación' },
+  { via: 'todo',        icon: '📋', label: 'Ver todo' },
+] as const;
+---
+
+<nav id="catalog-tabs" aria-label="Modo de navegación del catálogo">
+  {tabs.map(({ via, icon, label }) => (
+    <button
+      class={`catalog-tab${activeVia === via ? ' is-active' : ''}`}
+      data-via={via}
+      type="button"
+      aria-current={activeVia === via ? 'page' : undefined}
+    >
+      <span aria-hidden="true">{icon}</span>
+      <span>{label}</span>
+    </button>
+  ))}
+
+  <div class="catalog-tabs-search">
+    <input
+      id="catalog-grid-search"
+      type="search"
+      placeholder="Filtrar productos…"
+      autocomplete="off"
+      aria-label="Filtrar productos visibles"
+    />
+  </div>
+</nav>
+
+<style>
+  #catalog-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-bottom: 2px solid var(--wm-border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: var(--navbar-h);
+    background: var(--wm-bg);
+    z-index: 20;
+  }
+
+  #catalog-tabs::-webkit-scrollbar { display: none; }
+
+  .catalog-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.625rem 1rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    background: transparent;
+    font-size: 0.875rem;
+    font-family: var(--font-sans);
+    color: var(--wm-text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: var(--tap-min);
+    transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .catalog-tab:hover { color: var(--wm-blue); }
+
+  .catalog-tab.is-active {
+    color: var(--wm-blue);
+    border-bottom-color: var(--wm-blue);
+    font-weight: 600;
+  }
+
+  /* Search — right side */
+  .catalog-tabs-search {
+    margin-left: auto;
+    padding-left: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  #catalog-grid-search {
+    padding: 0.3125rem 0.75rem;
+    border: 1px solid var(--wm-border);
+    border-radius: 2rem;
+    font-size: 0.8125rem;
+    font-family: var(--font-sans);
+    color: var(--wm-text);
+    background: var(--wm-bg-soft);
+    outline: none;
+    width: 160px;
+    transition: border-color 0.12s, width 0.2s;
+  }
+
+  #catalog-grid-search:focus {
+    border-color: var(--wm-blue);
+    background: var(--wm-bg);
+    width: 210px;
+  }
+
+  @media (max-width: 600px) {
+    #catalog-grid-search { width: 110px; }
+    #catalog-grid-search:focus { width: 140px; }
+  }
+</style>

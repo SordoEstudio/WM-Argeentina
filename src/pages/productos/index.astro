@@ -2,95 +2,385 @@
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/layout/Cta.astro';
 import { getCollection } from 'astro:content';
+import { buildCatalogIndex } from '../../lib/catalog';
+import CatalogEntry from '../../components/catalog/CatalogEntry.astro';
+import CatalogTabs from '../../components/catalog/CatalogTabs.astro';
+import CatalogSidebar from '../../components/catalog/CatalogSidebar.astro';
+import ActiveFilters from '../../components/catalog/ActiveFilters.astro';
+import ProductGrid from '../../components/catalog/ProductGrid.astro';
 
-const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.data.order);
-const allProducts = await getCollection('products');
-
-// Productos activos agrupados por línea
-const productsByLine = lines.map((line) => ({
-  line,
-  products: allProducts
-    .filter((p) => p.data.lineId === line.data.id && p.data.status === 'active')
-    .sort((a, b) => a.data.name.localeCompare(b.data.name, 'es')),
-}));
+const rawProducts = await getCollection('products');
+const rawManufacturers = await getCollection('manufacturers');
+const rawLines = await getCollection('lines');
+const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
 ---
 
 <Base
   title="Productos"
-  description="Catálogo de reactivos, controles, calibradores, consumibles e instrumentos de WM Argentina organizados por línea."
+  description="Catálogo de reactivos, controles, calibradores, consumibles e instrumentos de WM Argentina. Buscá por analito, instrumento o aplicación clínica."
 >
   <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.75), rgba(0,79,146,0.75)), url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1400&h=500&fit=crop&auto=format&q=80')">
     <div class="container">
       <h1>Productos</h1>
-      <p class="lead">Encontrá el producto que necesitás por línea o usá el buscador para buscar por nombre, analito o instrumento.</p>
+      <p class="lead">Encontrá el producto que necesitás por analito, instrumento o aplicación clínica.</p>
     </div>
   </section>
 
-  <!-- Filtro rápido por línea (client-side) -->
   <section class="section">
     <div class="container">
-      <div class="filter-bar">
-        <button class="filter-btn is-active" data-line="all">Todas</button>
-        {lines.map((line) => (
-          <button class="filter-btn" data-line={line.data.slug}>{line.data.name}</button>
-        ))}
+
+      <CatalogEntry products={index.products} />
+
+      <div id="catalog-view">
+        <CatalogTabs activeVia={null} />
+        <div class="catalog-layout">
+          <CatalogSidebar index={index} />
+          <div class="catalog-main">
+            <ActiveFilters filters={[]} />
+            <ProductGrid products={index.products} />
+          </div>
+        </div>
       </div>
 
-      {productsByLine.map(({ line, products }) => (
-        <div class="line-group" data-line-group={line.data.slug}>
-          <h2 class="line-heading">
-            <a href={`/soluciones/${line.data.slug}`}>{line.data.name}</a>
-          </h2>
-          {products.length > 0 ? (
-            <ul class="products-table" role="list">
-              {products.map((p) => (
-                <li>
-                  <a href={`/productos/${p.data.slug}`} class="product-row">
-                    <span class="product-row__kind">{p.data.kind}</span>
-                    <span class="product-row__name">{p.data.name}</span>
-                    {p.data.application && p.data.application !== 'TODO-CLIENTE' && (
-                      <span class="product-row__app">{p.data.application}</span>
-                    )}
-                    {p.data.status === 'discontinued' && (
-                      <span class="product-row__badge">Descontinuado</span>
-                    )}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p class="empty-line">TODO-CLIENTE — Catálogo de esta línea en preparación (P-12).</p>
-          )}
-        </div>
-      ))}
     </div>
   </section>
+
+  <!-- Mobile: backdrop overlay (JS removes hidden) -->
+  <div id="filter-drawer" aria-hidden="true" hidden></div>
+
+  <!-- Mobile: floating filter button (JS removes hidden) -->
+  <button id="filter-btn-mobile" type="button" hidden aria-expanded="false">
+    Filtrar <span id="filter-count-badge"></span>
+  </button>
 
   <Cta
     title="¿No encontraste lo que buscás?"
-    body="Hablá con nuestro equipo o buscá por nombre de analito o equipo."
+    body="Hablá con nuestro equipo o pedínos que te asesoremos en la solución correcta."
     primary={{ label: 'Contactar un especialista', href: '/contacto' }}
     secondary={{ label: 'Buscar por nombre o analito', href: '/buscar' }}
   />
 </Base>
 
 <script>
-  const btns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-  const groups = document.querySelectorAll<HTMLElement>('.line-group');
+  interface FilterEntry { dimension: string; q: string; }
+  interface SearchItem { id: string; slug: string; name: string; summary: string; analytes: string[]; kind: string; }
 
-  btns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const line = btn.dataset.line;
-      btns.forEach((b) => b.classList.remove('is-active'));
-      btn.classList.add('is-active');
-      groups.forEach((g) => {
-        g.hidden = line !== 'all' && g.dataset.lineGroup !== line;
-      });
+  let instrumentSlugToId: Map<string, string> = new Map();
+  let textFilter = '';
+
+  function readState(): { via: string | null; q: string | null; filters: FilterEntry[] } {
+    const params = new URLSearchParams(location.search);
+    const via = params.get('via');
+    const q = params.get('q') ? decodeURIComponent(params.get('q')!) : null;
+    const filters: FilterEntry[] = params.getAll('f').flatMap((s) => {
+      const idx = s.indexOf(':');
+      if (idx === -1) return [];
+      return [{ dimension: s.slice(0, idx), q: s.slice(idx + 1) }];
     });
+    return { via, q, filters };
+  }
+
+  function buildURL(via: string | null, q: string | null, filters: FilterEntry[]): string {
+    const params = new URLSearchParams();
+    if (via) params.set('via', via);
+    if (q) params.set('q', encodeURIComponent(q));
+    for (const f of filters) params.append('f', `${f.dimension}:${f.q}`);
+    const qs = params.toString();
+    return qs ? `${location.pathname}?${qs}` : location.pathname;
+  }
+
+  function getSidebarItemLabel(via: string, q: string): string {
+    const item = document.querySelector<HTMLElement>(`.sidebar-item[data-via="${via}"][data-q="${q}"]`);
+    return item?.textContent?.trim() ?? decodeURIComponent(q);
+  }
+
+  function getCheckLabel(dimension: string, q: string): string {
+    const input = document.querySelector<HTMLElement>(
+      `.sidebar-filter-check[data-dimension="${dimension}"][data-q="${q}"]`
+    );
+    return input?.closest('label')?.textContent?.trim() ?? q;
+  }
+
+  function buildActiveFiltersHTML(via: string, q: string | null, filters: FilterEntry[]): string {
+    const chips: string[] = [];
+    if (via !== 'todo' && q) {
+      const label = getSidebarItemLabel(via, q);
+      chips.push(
+        `<button class="active-filter-remove" data-via="${via}" data-q="${q}" type="button" aria-label="Quitar filtro: ${label}">${label} <span aria-hidden="true">×</span></button>`
+      );
+    } else if (via === 'todo') {
+      for (const f of filters) {
+        const label = getCheckLabel(f.dimension, f.q);
+        const chipQ = `${f.dimension}:${f.q}`;
+        chips.push(
+          `<button class="active-filter-remove" data-via="todo" data-q="${chipQ}" type="button" aria-label="Quitar filtro: ${label}">${label} <span aria-hidden="true">×</span></button>`
+        );
+      }
+    }
+    return chips.join('');
+  }
+
+  function applyState(via: string | null, q: string | null, filters: FilterEntry[], pushHistory: boolean): void {
+    const entry = document.getElementById('catalog-entry');
+    const view = document.getElementById('catalog-view');
+
+    if (!via) {
+      if (entry) entry.hidden = false;
+      if (view) view.hidden = true;
+      if (pushHistory) history.pushState({}, '', buildURL(null, null, []));
+      return;
+    }
+
+    if (entry) entry.hidden = true;
+    if (view) view.hidden = false;
+
+    // Update tabs
+    document.querySelectorAll<HTMLElement>('.catalog-tab').forEach((tab) => {
+      const active = tab.dataset.via === via;
+      tab.classList.toggle('is-active', active);
+      if (active) tab.setAttribute('aria-current', 'page');
+      else tab.removeAttribute('aria-current');
+    });
+
+    // Show sidebar panel
+    document.querySelectorAll('.sidebar-panel').forEach((p) => p.classList.remove('is-active'));
+    document.querySelector(`.sidebar-panel[data-via="${via}"]`)?.classList.add('is-active');
+
+    // Sidebar items active state
+    document.querySelectorAll<HTMLElement>('.sidebar-item').forEach((item) => {
+      item.classList.toggle('is-active', item.dataset.via === via && item.dataset.q === q);
+    });
+
+    // Sync checkboxes for "todo" mode
+    if (via === 'todo') {
+      document.querySelectorAll<HTMLInputElement>('.sidebar-filter-check').forEach((input) => {
+        input.checked = filters.some(
+          (f) => f.dimension === input.dataset.dimension && f.q === input.dataset.q
+        );
+      });
+    }
+
+    // Filter cards
+    let visibleCount = 0;
+    document.querySelectorAll<HTMLElement>('.product-card').forEach((card) => {
+      let visible = true;
+
+      if (via === 'analito' && q) {
+        const analytes = card.dataset.analytes?.split(',') ?? [];
+        visible = analytes.includes(q);
+      } else if (via === 'instrumento' && q) {
+        const instrumentId = instrumentSlugToId.get(q);
+        if (instrumentId) {
+          const platformIds = card.dataset.platformIds?.split(',') ?? [];
+          visible = platformIds.includes(instrumentId) && card.dataset.id !== instrumentId;
+        } else {
+          visible = false;
+        }
+      } else if (via === 'aplicacion' && q) {
+        const applications = card.dataset.applications?.split(',') ?? [];
+        visible = applications.includes(q);
+      } else if (via === 'todo' && filters.length > 0) {
+        const byDim: Record<string, string[]> = {};
+        for (const f of filters) {
+          (byDim[f.dimension] ??= []).push(f.q);
+        }
+        for (const [dim, vals] of Object.entries(byDim)) {
+          const cardVal = card.dataset[dim];
+          if (!cardVal || !(vals as string[]).includes(cardVal)) { visible = false; break; }
+        }
+      }
+
+      // additional text filter from tabs search bar
+      if (visible && textFilter) {
+        const name = (card.dataset.name ?? '').toLowerCase();
+        const summary = (card.dataset.summary ?? '').toLowerCase();
+        const analytes = (card.dataset.analytes ?? '').toLowerCase();
+        visible = name.includes(textFilter) || summary.includes(textFilter) || analytes.includes(textFilter);
+      }
+
+      card.hidden = !visible;
+      if (visible) visibleCount++;
+    });
+
+    // Instrument context
+    const instrContext = document.getElementById('instrument-context');
+    if (instrContext) {
+      if (via === 'instrumento' && q) {
+        const instrCard = document.querySelector<HTMLElement>(
+          `.product-card[data-kind="instrument"][data-slug="${q}"]`
+        );
+        if (instrCard) {
+          const nameEl = document.getElementById('instrument-context-name');
+          const summaryEl = document.getElementById('instrument-context-summary');
+          if (nameEl) nameEl.textContent = instrCard.dataset.name ?? '';
+          if (summaryEl) summaryEl.textContent = instrCard.dataset.summary ?? '';
+          instrContext.hidden = false;
+          instrContext.setAttribute('aria-hidden', 'false');
+        }
+      } else {
+        instrContext.hidden = true;
+        instrContext.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    const resultCount = document.getElementById('result-count');
+    if (resultCount) resultCount.textContent = `${visibleCount} producto${visibleCount !== 1 ? 's' : ''}`;
+
+    const emptyState = document.getElementById('empty-state');
+    if (emptyState) emptyState.hidden = visibleCount > 0;
+
+    const activeFiltersEl = document.getElementById('active-filters');
+    if (activeFiltersEl) activeFiltersEl.innerHTML = buildActiveFiltersHTML(via, q, filters);
+
+    const badge = document.getElementById('filter-count-badge');
+    if (badge) {
+      const count = via !== 'todo' && q ? 1 : filters.length;
+      badge.textContent = count > 0 ? String(count) : '';
+    }
+
+    if (pushHistory) history.pushState({}, '', buildURL(via, q, filters));
+  }
+
+  function clearGridSearch(): void {
+    textFilter = '';
+    const el = document.getElementById('catalog-grid-search') as HTMLInputElement | null;
+    if (el) el.value = '';
+  }
+
+  // ── Event listeners ──────────────────────────────────────────────────────
+
+  document.addEventListener('click', (e) => {
+    const chip = (e.target as Element)?.closest<HTMLElement>('.entry-chip');
+    if (chip) { clearGridSearch(); applyState(chip.dataset.via ?? null, null, [], true); return; }
+
+    const tab = (e.target as Element)?.closest<HTMLElement>('.catalog-tab');
+    if (tab) { clearGridSearch(); applyState(tab.dataset.via ?? null, null, [], true); return; }
+
+    const item = (e.target as Element)?.closest<HTMLElement>('.sidebar-item');
+    if (item) {
+      const { via } = readState();
+      applyState(item.dataset.via ?? via, item.dataset.q ?? null, [], true);
+      return;
+    }
+
+    const removeBtn = (e.target as Element)?.closest<HTMLElement>('.active-filter-remove');
+    if (removeBtn) {
+      const chipVia = removeBtn.dataset.via;
+      const chipQ = removeBtn.dataset.q ?? '';
+      if (chipVia !== 'todo') {
+        applyState(chipVia ?? null, null, [], true);
+      } else {
+        const { filters } = readState();
+        applyState('todo', null, filters.filter((f) => `${f.dimension}:${f.q}` !== chipQ), true);
+      }
+      return;
+    }
+
+    const viewBtn = (e.target as Element)?.closest<HTMLElement>('.view-toggle');
+    if (viewBtn) {
+      const viewVal = viewBtn.dataset.view ?? 'list';
+      localStorage.setItem('wm-catalog-view', viewVal);
+      document.getElementById('product-grid')?.classList.toggle('is-list', viewVal === 'list');
+      document.querySelectorAll<HTMLElement>('.view-toggle').forEach((b) => {
+        b.classList.toggle('is-active', b.dataset.view === viewVal);
+      });
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    if (!(e.target as Element)?.closest('.sidebar-filter-check')) return;
+    const newFilters: FilterEntry[] = Array.from(
+      document.querySelectorAll<HTMLInputElement>('.sidebar-filter-check:checked')
+    ).map((c) => ({ dimension: c.dataset.dimension ?? '', q: c.dataset.q ?? '' }));
+    applyState('todo', null, newFilters, true);
+  });
+
+  const filterBtn = document.getElementById('filter-btn-mobile');
+  const filterDrawer = document.getElementById('filter-drawer');
+  const mobileSidebar = document.getElementById('catalog-sidebar');
+
+  if (filterBtn && filterDrawer && mobileSidebar) {
+    filterBtn.addEventListener('click', () => {
+      const isOpen = mobileSidebar.classList.toggle('is-mobile-open');
+      filterDrawer.classList.toggle('is-open', isOpen);
+      filterBtn.setAttribute('aria-expanded', String(isOpen));
+      filterDrawer.setAttribute('aria-hidden', String(!isOpen));
+    });
+    filterDrawer.addEventListener('click', () => {
+      mobileSidebar.classList.remove('is-mobile-open');
+      filterDrawer.classList.remove('is-open');
+      filterBtn.setAttribute('aria-expanded', 'false');
+      filterDrawer.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  const searchInput = document.getElementById('catalog-search') as HTMLInputElement | null;
+  const searchResults = document.getElementById('catalog-search-results');
+  const searchDataEl = document.getElementById('catalog-search-data');
+
+  if (searchInput && searchResults && searchDataEl) {
+    const searchData: SearchItem[] = JSON.parse(searchDataEl.textContent ?? '[]');
+
+    searchInput.addEventListener('input', () => {
+      const val = searchInput.value.trim().toLowerCase();
+      if (!val) { searchResults.hidden = true; return; }
+      const matches = searchData.filter((p) =>
+        p.name.toLowerCase().includes(val) ||
+        p.summary.toLowerCase().includes(val) ||
+        p.analytes.join(' ').toLowerCase().includes(val)
+      ).slice(0, 8);
+      searchResults.innerHTML = matches.map((p) =>
+        `<li><a href="/productos/${p.slug}">${p.name}<span class="result-kind">${p.kind}</span></a></li>`
+      ).join('');
+      searchResults.hidden = matches.length === 0;
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        (searchResults.querySelector<HTMLAnchorElement>('a'))?.click();
+      }
+    });
+
+    searchInput.addEventListener('blur', () => {
+      setTimeout(() => { searchResults.hidden = true; }, 200);
+    });
+  }
+
+  // Grid search (tabs bar)
+  document.getElementById('catalog-grid-search')?.addEventListener('input', (e) => {
+    textFilter = ((e.target as HTMLInputElement).value ?? '').trim().toLowerCase();
+    const { via, q, filters } = readState();
+    if (via) applyState(via, q, filters, false);
+  });
+
+  window.addEventListener('popstate', () => {
+    const { via, q, filters } = readState();
+    applyState(via, q, filters, false);
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll<HTMLElement>('.product-card[data-kind="instrument"]').forEach((card) => {
+      if (card.dataset.slug && card.dataset.id) {
+        instrumentSlugToId.set(card.dataset.slug, card.dataset.id);
+      }
+    });
+
+    const { via, q, filters } = readState();
+    applyState(via, q, filters, false);
+
+    const savedView = localStorage.getItem('wm-catalog-view') ?? 'list';
+    document.getElementById('product-grid')?.classList.toggle('is-list', savedView === 'list');
+    document.querySelectorAll<HTMLElement>('.view-toggle').forEach((b) => {
+      b.classList.toggle('is-active', b.dataset.view === savedView);
+    });
+
+    document.getElementById('filter-btn-mobile')?.removeAttribute('hidden');
+    document.getElementById('filter-drawer')?.removeAttribute('hidden');
   });
 </script>
 
 <style>
+  /* ── Hero ────────────────────────────────────────────────────────────────── */
   .page-hero {
     background-color: var(--wm-blue);
     background-size: cover;
@@ -106,113 +396,124 @@ const productsByLine = lines.map((line) => ({
 
   .lead { font-size: 1.125rem; opacity: 0.9; margin: 0; max-width: 60ch; }
 
-  .section { padding-block: 4rem; }
+  .section { padding-block: 3rem; }
 
-  .filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 3rem;
-  }
-
-  .filter-btn {
-    padding: 0.375rem 1rem;
-    border: 1px solid var(--wm-border);
-    border-radius: 2rem;
-    background: var(--wm-bg);
-    color: var(--wm-text);
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    cursor: pointer;
-    min-height: var(--tap-min);
-    transition: background 0.15s, border-color 0.15s;
-  }
-
-  .filter-btn:hover,
-  .filter-btn.is-active {
-    background: var(--wm-blue);
-    color: #fff;
-    border-color: var(--wm-blue);
-  }
-
-  .line-group {
-    margin-bottom: 3rem;
-  }
-
-  .line-heading {
-    font-size: 1.25rem;
-    color: var(--wm-blue);
-    margin: 0 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--wm-blue-tint);
-  }
-
-  .line-heading a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .line-heading a:hover { text-decoration: underline; }
-
-  .products-table {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .product-row {
+  /* ── Catalog layout ──────────────────────────────────────────────────────── */
+  .catalog-layout {
     display: grid;
-    grid-template-columns: 100px 1fr auto auto;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    background: var(--wm-bg-soft);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--wm-text);
-    transition: background 0.15s;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    padding-block: 1.5rem;
+    align-items: start;
   }
 
-  .product-row:hover {
-    background: var(--wm-blue-tint);
-    color: var(--wm-blue);
-  }
-
-  .product-row__kind {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: capitalize;
-    color: var(--wm-teal);
-  }
-
-  .product-row__name { font-weight: 500; }
-
-  .product-row__app {
-    font-size: 0.875rem;
-    color: var(--wm-text-muted);
-  }
-
-  .product-row__badge {
-    font-size: 0.75rem;
-    background: #fff3cd;
-    color: #856404;
-    padding: 0.125rem 0.5rem;
-    border-radius: 4px;
-    white-space: nowrap;
-  }
-
-  .empty-line {
-    color: var(--wm-text-muted);
-    font-style: italic;
-    font-size: 0.9375rem;
-  }
-
-  @media (max-width: 639px) {
-    .product-row {
+  @media (max-width: 768px) {
+    .catalog-layout {
       grid-template-columns: 1fr;
     }
+
+    :global(#catalog-sidebar) {
+      display: none;
+    }
   }
+
+  /* ── Mobile sidebar as bottom sheet ─────────────────────────────────────── */
+  /* :global() needed — #catalog-sidebar rendered in CatalogSidebar.astro */
+  @media (max-width: 768px) {
+    :global(#catalog-sidebar) {
+      display: block !important;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 70vh;
+      overflow-y: auto;
+      background: var(--wm-bg);
+      border-top: 2px solid var(--wm-blue);
+      border-radius: var(--radius) var(--radius) 0 0;
+      z-index: 201;
+      padding: 1.25rem 1.25rem 2.5rem;
+      transform: translateY(110%);
+      transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    :global(#catalog-sidebar.is-mobile-open) {
+      transform: translateY(0);
+    }
+  }
+
+  /* ── Backdrop ────────────────────────────────────────────────────────────── */
+  #filter-drawer {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    #filter-drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 200;
+    }
+
+    #filter-drawer.is-open {
+      display: block;
+    }
+  }
+
+  /* ── Mobile filter button ────────────────────────────────────────────────── */
+  #filter-btn-mobile {
+    display: none;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--wm-blue);
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.75rem 1.25rem;
+    z-index: 100;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: var(--tap-min);
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 12px rgba(0, 79, 146, 0.35);
+  }
+
+  @media (max-width: 768px) {
+    #filter-btn-mobile { display: flex; }
+  }
+
+  #filter-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    background: #fff;
+    color: var(--wm-blue);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0 0.25rem;
+  }
+
+  #filter-count-badge:empty { display: none; }
+
+  /* ── Catalog main ────────────────────────────────────────────────────────── */
+  .catalog-main {
+    min-width: 0;
+  }
+
+  /* ── No-JS fallback: both sections visible without JS ──────────────────── */
+  /* JS hides/shows via .hidden attribute set by applyState() */
+
+  /* ── Transitions ─────────────────────────────────────────────────────────── */
+  /* #catalog-entry is in CatalogEntry.astro → :global() */
+  :global(#catalog-entry),
+  #catalog-view { transition: opacity 180ms; }
 </style>
