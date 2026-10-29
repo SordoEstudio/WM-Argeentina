@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
 export type ProductEntry = Awaited<ReturnType<typeof getCollection<'products'>>>[number];
 
@@ -88,4 +89,89 @@ export interface SearchIndexEntry {
   manufacturerId: string;
   application: string;
   analytes: string[];
+}
+
+// ── Catalog UI types ────────────────────────────────────────────────────────
+
+export interface CatalogProduct {
+  id: string;
+  slug: string;
+  name: string;
+  kind: string;
+  lineId: string;
+  lineName: string;
+  manufacturerId: string;
+  manufacturerName: string;
+  applications: string[];
+  analytes: string[];
+  platformIds: string[];
+  compatibility: string;
+  subcategory: string;
+  summary: string;
+  image: string;
+  status: string;
+}
+
+export interface CatalogIndex {
+  products: CatalogProduct[];
+  instruments: CatalogProduct[];
+  analytes: string[];
+  analytesByLine: Record<string, string[]>;
+  applications: string[];
+  manufacturers: Array<{ id: string; name: string }>;
+  lines: Array<{ id: string; name: string; order: number }>;
+}
+
+export function buildCatalogIndex(
+  rawProducts: CollectionEntry<'products'>[],
+  rawManufacturers: CollectionEntry<'manufacturers'>[],
+  rawLines: CollectionEntry<'lines'>[]
+): CatalogIndex {
+  const mfgMap = new Map(rawManufacturers.map((m) => [m.data.id, m.data.name]));
+  const lineMap = new Map(rawLines.map((l) => [l.data.id, l.data.name]));
+
+  const products: CatalogProduct[] = rawProducts
+    .filter((p) => p.data.status === 'active')
+    .map((p) => ({
+      id: p.data.id,
+      slug: p.data.slug,
+      name: p.data.name,
+      kind: p.data.kind,
+      lineId: p.data.lineId,
+      lineName: lineMap.get(p.data.lineId) ?? p.data.lineId,
+      manufacturerId: p.data.manufacturerId,
+      manufacturerName: mfgMap.get(p.data.manufacturerId) ?? p.data.manufacturerId,
+      applications: p.data.application
+        ? p.data.application.split(', ').filter(Boolean)
+        : [],
+      analytes: p.data.analytes ?? [],
+      platformIds: p.data.platformIds ?? [],
+      compatibility: p.data.compatibility ?? '',
+      subcategory: p.data.subcategory ?? '',
+      summary: p.data.summary ?? '',
+      image: p.data.image ?? '',
+      status: p.data.status,
+    }));
+
+  const analytesByLine: Record<string, string[]> = {};
+  for (const p of products) {
+    if (p.analytes.length === 0) continue;
+    if (!analytesByLine[p.lineId]) analytesByLine[p.lineId] = [];
+    for (const a of p.analytes) {
+      if (!analytesByLine[p.lineId].includes(a)) analytesByLine[p.lineId].push(a);
+    }
+  }
+  for (const key of Object.keys(analytesByLine)) analytesByLine[key].sort();
+
+  return {
+    products,
+    instruments: products.filter((p) => p.kind === 'instrument'),
+    analytes: [...new Set(products.flatMap((p) => p.analytes))].filter(Boolean).sort(),
+    analytesByLine,
+    applications: [...new Set(products.flatMap((p) => p.applications))].filter(Boolean).sort(),
+    manufacturers: rawManufacturers.map((m) => ({ id: m.data.id, name: m.data.name })),
+    lines: rawLines
+      .map((l) => ({ id: l.data.id, name: l.data.name, order: l.data.order }))
+      .sort((a, b) => a.order - b.order),
+  };
 }
