@@ -172,7 +172,15 @@ const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.lengt
 
   /* show/hide panels — must live here so scoped hash matches */
   .sidebar-panel { display: none; }
-  .sidebar-panel.is-active { display: block; }
+  .sidebar-panel.is-active {
+    display: block;
+    animation: panelIn var(--t-enter) ease-out both;
+  }
+
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: none; }
+  }
 
   .sidebar-panel-title {
     font-size: 0.6875rem;

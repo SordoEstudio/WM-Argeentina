@@ -31,7 +31,7 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
 
       <CatalogEntry products={index.products} />
 
-      <div id="catalog-view">
+      <div id="catalog-view" data-skeleton>
         <CatalogTabs activeVia={null} />
         <div class="catalog-layout">
           <CatalogSidebar index={index} />
@@ -67,6 +67,41 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
 
   let instrumentSlugToId: Map<string, string> = new Map();
   let textFilter = '';
+  let initialized = false;
+
+  function getTransitionMs(): number {
+    const v = getComputedStyle(document.documentElement)
+      .getPropertyValue('--t-enter').trim();
+    return parseInt(v, 10) || 0;
+  }
+
+  function hideWithFade(el: HTMLElement): void {
+    if (!initialized) { el.hidden = true; return; }
+    const ms = getTransitionMs();
+    if (ms === 0) { el.hidden = true; return; }
+    el.style.transition = `opacity ${ms}ms`;
+    el.style.opacity = '0';
+    el.style.pointerEvents = 'none';
+    setTimeout(() => {
+      el.hidden = true;
+      el.style.transition = '';
+      el.style.opacity = '';
+      el.style.pointerEvents = '';
+    }, ms);
+  }
+
+  function showWithFade(el: HTMLElement): void {
+    if (!initialized) { el.hidden = false; return; }
+    const ms = getTransitionMs();
+    el.hidden = false;
+    if (ms === 0) return;
+    el.style.opacity = '0';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.style.transition = `opacity ${ms}ms`;
+      el.style.opacity = '';
+      setTimeout(() => { el.style.transition = ''; }, ms);
+    }));
+  }
 
   function readState(): { via: string | null; q: string | null; filters: FilterEntry[] } {
     const params = new URLSearchParams(location.search);
@@ -125,14 +160,14 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
     const view = document.getElementById('catalog-view');
 
     if (!via) {
-      if (entry) entry.hidden = false;
-      if (view) view.hidden = true;
+      if (entry && entry.hidden) showWithFade(entry);
+      if (view  && !view.hidden)  hideWithFade(view);
       if (pushHistory) history.pushState({}, '', buildURL(null, null, []));
       return;
     }
 
-    if (entry) entry.hidden = true;
-    if (view) view.hidden = false;
+    if (entry && !entry.hidden) hideWithFade(entry);
+    if (view  &&  view.hidden)  showWithFade(view);
 
     // Update tabs
     document.querySelectorAll<HTMLElement>('.catalog-tab').forEach((tab) => {
@@ -241,6 +276,21 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
     if (pushHistory) history.pushState({}, '', buildURL(via, q, filters));
   }
 
+  function applyWithTransition(
+    via: string | null, q: string | null, filters: FilterEntry[], push: boolean
+  ): void {
+    const grid = document.getElementById('product-grid');
+    if (!grid || grid.classList.contains('is-filtering') || getTransitionMs() === 0) {
+      applyState(via, q, filters, push);
+      return;
+    }
+    grid.classList.add('is-filtering');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      applyState(via, q, filters, push);
+      grid.classList.remove('is-filtering');
+    }));
+  }
+
   function clearGridSearch(): void {
     textFilter = '';
     const el = document.getElementById('catalog-grid-search') as HTMLInputElement | null;
@@ -251,15 +301,15 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
 
   document.addEventListener('click', (e) => {
     const chip = (e.target as Element)?.closest<HTMLElement>('.entry-chip');
-    if (chip) { clearGridSearch(); applyState(chip.dataset.via ?? null, null, [], true); return; }
+    if (chip) { clearGridSearch(); applyWithTransition(chip.dataset.via ?? null, null, [], true); return; }
 
     const tab = (e.target as Element)?.closest<HTMLElement>('.catalog-tab');
-    if (tab) { clearGridSearch(); applyState(tab.dataset.via ?? null, null, [], true); return; }
+    if (tab) { clearGridSearch(); applyWithTransition(tab.dataset.via ?? null, null, [], true); return; }
 
     const item = (e.target as Element)?.closest<HTMLElement>('.sidebar-item');
     if (item) {
       const { via } = readState();
-      applyState(item.dataset.via ?? via, item.dataset.q ?? null, [], true);
+      applyWithTransition(item.dataset.via ?? via, item.dataset.q ?? null, [], true);
       return;
     }
 
@@ -268,10 +318,10 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
       const chipVia = removeBtn.dataset.via;
       const chipQ = removeBtn.dataset.q ?? '';
       if (chipVia !== 'todo') {
-        applyState(chipVia ?? null, null, [], true);
+        applyWithTransition(chipVia ?? null, null, [], true);
       } else {
         const { filters } = readState();
-        applyState('todo', null, filters.filter((f) => `${f.dimension}:${f.q}` !== chipQ), true);
+        applyWithTransition('todo', null, filters.filter((f) => `${f.dimension}:${f.q}` !== chipQ), true);
       }
       return;
     }
@@ -292,7 +342,7 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
     const newFilters: FilterEntry[] = Array.from(
       document.querySelectorAll<HTMLInputElement>('.sidebar-filter-check:checked')
     ).map((c) => ({ dimension: c.dataset.dimension ?? '', q: c.dataset.q ?? '' }));
-    applyState('todo', null, newFilters, true);
+    applyWithTransition('todo', null, newFilters, true);
   });
 
   const filterBtn = document.getElementById('filter-btn-mobile');
@@ -376,6 +426,8 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
 
     document.getElementById('filter-btn-mobile')?.removeAttribute('hidden');
     document.getElementById('filter-drawer')?.removeAttribute('hidden');
+    document.getElementById('catalog-view')?.removeAttribute('data-skeleton');
+    initialized = true;
   });
 </script>
 
@@ -472,7 +524,7 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
     border: none;
     border-radius: 2rem;
     padding: 0.75rem 1.25rem;
-    z-index: 100;
+    z-index: 202;
     font-family: var(--font-sans);
     font-size: 0.9375rem;
     font-weight: 600;
@@ -482,6 +534,8 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
     gap: 0.5rem;
     box-shadow: 0 2px 12px rgba(0, 79, 146, 0.35);
   }
+
+  #filter-btn-mobile[aria-expanded="true"] { display: none; }
 
   @media (max-width: 768px) {
     #filter-btn-mobile { display: flex; }
@@ -512,8 +566,5 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
   /* ── No-JS fallback: both sections visible without JS ──────────────────── */
   /* JS hides/shows via .hidden attribute set by applyState() */
 
-  /* ── Transitions ─────────────────────────────────────────────────────────── */
-  /* #catalog-entry is in CatalogEntry.astro → :global() */
-  :global(#catalog-entry),
-  #catalog-view { transition: opacity 180ms; }
+  /* ── Transitions handled inline via JS helpers ──────────────────────────── */
 </style>

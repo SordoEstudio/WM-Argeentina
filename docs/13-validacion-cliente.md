@@ -38,13 +38,11 @@ Estados: ⬜ pendiente · 🟨 recibido, falta validar · ✅ validado
 
 | # | Elemento | Provisorio (origen) | Qué entregarnos | Est. |
 |---|---|---|---|---|
-| 1.1 | **H1 de la hero** | "Detrás de cada diagnóstico, hay una decisión que importa." — *doc cliente 2026* | — | ✅ |
-| 1.2 | **Lead de la hero** | "Acercamos tecnología y conocimiento para contribuir a diagnósticos confiables y decisiones clínicas más seguras." — *doc cliente 2026* | — | ✅ |
-| 1.3 | **Banner 1** — imagen + título + texto + CTA | Imagen stock Unsplash (placeholder) | Imagen de alta resolución, título (máx. 8 palabras), texto (2–3 líneas), 1–2 botones con su texto y destino | ⬜ |
-| 1.4 | **Banner 2** | Imagen stock Unsplash (placeholder) | Ídem banner 1 | ⬜ |
-| 1.5 | **Banner 3** | "¿Fabricante internacional?" + link a Su Socio — provisorio | Confirmar si va este tercer banner, o reemplazar con contenido definitivo | ⬜ |
-| 1.6 | Claim de trayectoria | "+30 años" — confirmado | — | ✅ |
-| 1.7 | Claim del sitio anterior | "Mejorando la vida a cada instante" — *sitio actual, sin confirmar* | Confirmar si este claim sigue o se reemplaza | ⬜ |
+| 1.1 | **Banner 1** — imagen + título + texto + CTA | Imagen placeholder de ejemplo | Imagen de alta resolución, título (máx. 8 palabras), texto (2–3 líneas), 1–2 botones con su texto y destino | ⬜ |
+| 1.2 | **Banner 2** | Imagen placeholder de ejemplo | Ídem banner 1 | ⬜ |
+| 1.3 | **Banner 3** (opcional) | — | Ídem, o confirmar si van solo 2 banners | ⬜ |
+| 1.4 | Claim de trayectoria | "+30 años" ✅ confirmado en documento nuevo | — | ✅ |
+| 1.5 | Claim del sitio anterior | "Mejorando la vida a cada instante" — *sitio actual, sin confirmar* | Confirmar si este claim sigue o se reemplaza | ⬜ |
 
 ---
 
@@ -52,14 +50,13 @@ Estados: ⬜ pendiente · 🟨 recibido, falta validar · ✅ validado
 
 | # | Elemento | Provisorio (origen) | Qué entregarnos | Est. |
 |---|---|---|---|---|
-| 2.1 | Texto de presentación / historia | Texto provisorio — sin historia real | Texto actualizado con hitos, fundación, crecimiento | ⬜ |
-| 2.2 | **Misión** | *"Acercamos tecnología y conocimiento al diagnóstico argentino, construyendo relaciones de largo plazo..."* — **doc cliente 2026, cargado en el sitio** | — | ✅ |
-| 2.3 | **Visión** | *"Ser el socio estratégico de referencia para clientes y compañías internacionales en el mercado argentino de diagnóstico..."* — **doc cliente 2026, cargado en el sitio** | — | ✅ |
-| 2.4 | **Propósito** *(nuevo campo)* | *"Contribuir a que la comunidad médica y bioquímica disponga de tecnología confiable..."* — **doc cliente 2026, cargado en el sitio** | — | ✅ |
-| 2.5 | **Valores** (6) | Calidad · Cliente · Servicio · Conocimiento · Confianza · Compromiso — **doc cliente 2026, cargado en el sitio con iconos** | Confirmar textos de cada valor (actualmente redactados por el equipo web) | 🟨 |
-| 2.6 | Certificaciones y habilitaciones | Sin texto real | Listado de certificaciones vigentes (nombre, organismo, número si corresponde) | ⬜ |
-| 2.7 | Presencia en todo el país | Texto genérico | Dato verificable: provincias donde operan, cantidad de clientes o laboratorios atendidos | ⬜ |
-| 2.8 | Fotos institucionales | Imágenes stock Unsplash (placeholder) | Fotos de sede central, equipo, instalaciones, servicio técnico — alta resolución (mínimo 1200 px de ancho) | ⬜ |
+| 2.1 | Texto de presentación / historia | *"Nacimos hace [X] años con el firme propósito de brindar un aporte significativo a la investigación científica…"* — *sitio actual, cifra de años reemplazada por "+30 años"* | Versión actualizada del texto, o confirmar que el texto provisorio es válido | ⬜ |
+| 2.2 | **Misión** | *"Acercar a los profesionales de la salud la más alta tecnología para el diagnóstico y tratamiento, impulsando la transparencia y la honestidad en la concreción de los negocios."* — *sitio actual* | Confirmar si es el texto vigente o enviar versión nueva | ⬜ |
+| 2.3 | **Visión** | *"Ser una empresa argentina referente en el sector de la salud, reconocida por su gestión eficiente y transparente."* — *sitio actual* | Confirmar si es el texto vigente o enviar versión nueva | ⬜ |
+| 2.4 | **Valores** | Dinamismo · Cercanía · Compromiso (texto del sitio actual) | Confirmar si estos valores y sus textos son los vigentes | ⬜ |
+| 2.5 | Certificaciones y habilitaciones | Sin texto real | Listado de certificaciones vigentes (nombre, organismo, número si corresponde) | ⬜ |
+| 2.6 | Presencia en todo el país | Texto genérico | Dato verificable: provincias donde operan, cantidad de clientes o laboratorios atendidos | ⬜ |
+| 2.7 | Fotos institucionales | Imágenes placeholder | Fotos de sede central, equipo, instalaciones, servicio técnico — alta resolución (mínimo 1200 px de ancho) | ⬜ |
 
 ---
 
@@ -139,62 +136,58 @@ Los 6 servicios están identificados. Falta el texto de cada uno.
 
 ## 8. Su Socio en Argentina (`/su-socio-en-argentina`)
 
-> La página existe también en inglés en `/en/your-partner-in-argentina` con estructura idéntica.
-
 ### 8.1 Contenido de la página
 
-| # | Elemento | Estado actual | Qué entregarnos | Est. |
+| # | Elemento | Provisorio (origen) | Qué entregarnos | Est. |
 |---|---|---|---|---|
-| 8.1 | **Hero** — título y lead | Cargado desde doc cliente 2026 | Confirmar que título y lead son definitivos | 🟨 |
-| 8.2 | Hero — texto del cuerpo | Cargado desde doc cliente 2026 | Confirmar o enviar versión final | 🟨 |
-| 8.3 | **6 tarjetas "¿Por qué WM Argentina?"** — títulos | Confirmados en doc cliente 2026: +30 años, Cobertura nacional, Mercado público y privado, Especialización técnica, Soporte local de excelencia, Experiencia con compañías internacionales | — títulos cargados | 🟨 |
-| 8.4 | **¿Por qué WM Argentina?** — textos de cada tarjeta | TODO-CLIENTE (no enviados) | Texto descriptivo para cada una de las 6 tarjetas (3–5 líneas) | ⬜ |
-| 8.5 | **Etapas del proceso** — nombres | Ingreso al mercado · Desarrollo comercial · Lanzamiento · Implementación · Soporte · Crecimiento | Confirmar nombres definitivos | 🟨 |
-| 8.6 | **Etapas del proceso** — descripción de cada etapa | TODO-CLIENTE (sin descripción) | Texto de 2–4 líneas por etapa | ⬜ |
-| 8.7 | **Mercados que conocemos** | 7 mercados cargados: Laboratorios, Hospitales, Bancos de sangre, Sector público, Veterinario, Farmacéutico, Otros | Confirmar lista, agregar o quitar mercados | 🟨 |
-| 8.8 | Versión en inglés — traducción | Borrador sin revisión profesional (traducción automática) | Confirmación o corrección por hablante nativo o traducción profesional | ⬜ |
+| 8.1 | Texto "Cómo acompañamos el desarrollo" | Texto del documento de contenido | Confirmar si es el texto final o enviar versión revisada | ⬜ |
+| 8.2 | **Etapas del proceso** (Ingreso al mercado · Desarrollo comercial · Lanzamiento · Implementación · Soporte · Crecimiento) | Nombres del documento, sin descripción de etapa | Descripción de cada etapa (2–4 líneas cada una) | ⬜ |
+| 8.3 | Servicios regulatorios | Mencionados sin detalle en el documento | Descripción exacta de los servicios regulatorios que ofrece WM | ⬜ |
+| 8.4 | "Otros mercados relacionados con nuestras nuevas áreas" | Frase genérica del documento | Qué mercados son | ⬜ |
+| 8.5 | 6 tarjetas "¿Por qué WM Argentina?" | Texto del documento | Confirmar si el texto es definitivo | ⬜ |
+| 8.6 | Versión en inglés | Traducción borrador sin revisión profesional | Confirmar quién traduce/valida el inglés y cuándo | ⬜ |
 
 ### 8.2 Formulario de contacto (Su Socio)
 
 | # | Elemento | Provisorio | Qué entregarnos | Est. |
 |---|---|---|---|---|
-| 8.9 | Campos obligatorios | Empresa, país, nombre, email, descripción del proyecto | Confirmar o modificar | ⬜ |
-| 8.10 | Mail destinatario | — | A qué dirección llegan estas consultas | ⬜ |
-| 8.11 | Idioma de respuesta | — | ¿Se responde en inglés por defecto o según el idioma del contacto? | ⬜ |
+| 8.7 | Campos obligatorios | Empresa, país, nombre, email, descripción del proyecto | Confirmar o modificar | ⬜ |
+| 8.8 | Mail destinatario | — | A qué dirección llegan estas consultas | ⬜ |
+| 8.9 | Idioma de respuesta | — | ¿Se responde en inglés por defecto o según el idioma del contacto? | ⬜ |
 
 ### 8.3 Empresas representadas (12 en total)
 
-Las 7 empresas del sitio anterior tienen logos cargados provisionalmente (tomados del sitio anterior wmargentina.com.ar, versión blanca sobre fondo azul). Necesitamos confirmar y agregar las 5 restantes.
+Las 7 empresas identificadas en el sitio actual se cargan como **PROVISORIAS** — necesitan confirmación y pueden haber cambiado. El documento nuevo menciona 12 en total: necesitamos las 5 restantes.
 
-| # | Empresa | Logo en sitio | Confirmar representación | Logo definitivo | País | Línea(s) | Est. |
-|---|---|---|---|---|---|---|---|
-| 1 | Alifax | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 2 | Horiba | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 3 | Instrumentation Laboratory | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 4 | Liaison | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 5 | Biokit | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 6 | Medical System | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 7 | Ortho | Logo del sitio anterior (provisional) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 8 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 9 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 10 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 11 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 12 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| # | Empresa | Estado | Logo (color + B/N) | País | Sitio web | Línea(s) | Autorizan uso logo | Est. |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Alifax | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 2 | Horiba | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3 | Instrumentation Laboratory | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 4 | Liaison | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 5 | Biokit | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 6 | Medical System | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 7 | Ortho | PROVISORIA — sitio anterior | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 8 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 9 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 10 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 11 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 12 | *(a completar)* | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 ---
 
 ## 9. Trabajá con Nosotros (`/trabaja-con-nosotros`)
 
-| # | Elemento | Estado actual | Qué entregarnos | Est. |
+| # | Elemento | Provisorio (origen) | Qué entregarnos | Est. |
 |---|---|---|---|---|
-| 9.1 | **Texto de cultura de la empresa** | Cargado del doc cliente 2026 — "Nuestro trabajo acerca tecnología a bioquímicos..." | Confirmar que es el texto definitivo | 🟨 |
-| 9.2 | Áreas profesionales | TODO-CLIENTE (sin contenido) | Lista de áreas y descripción de cada una | ⬜ |
-| 9.3 | Búsquedas abiertas vigentes | Sin datos (sección muestra "No hay búsquedas abiertas") | Lista de puestos activos, o confirmar que no hay al lanzamiento | ⬜ |
-| 9.4 | Texto sección "Desarrollo profesional" | TODO-CLIENTE | Texto sobre crecimiento y desarrollo en WM Argentina | ⬜ |
-| 9.5 | Campos del formulario | Nombre, email, área de interés, mensaje | Confirmar o modificar | ⬜ |
-| 9.6 | CV adjunto | No implementado | ¿Se puede adjuntar CV? ¿Qué formatos se aceptan? | ⬜ |
+| 9.1 | Texto de cultura de la empresa | Texto del documento de contenido | Confirmar o enviar versión final | ⬜ |
+| 9.2 | Áreas profesionales | Listado del documento | Confirmar o actualizar | ⬜ |
+| 9.3 | Búsquedas abiertas vigentes | Sin datos | Lista de puestos activos (o confirmar que no hay al momento del lanzamiento) | ⬜ |
+| 9.4 | Texto sección "Desarrollo" | Del documento | Confirmar o actualizar | ⬜ |
+| 9.5 | Campos del formulario | Sin definir | Lista de campos y cuáles son obligatorios | ⬜ |
+| 9.6 | CV adjunto | — | ¿Se puede adjuntar CV? ¿Qué formatos se aceptan? | ⬜ |
 | 9.7 | Destino de las postulaciones | — | A qué mail llegan | ⬜ |
-| 9.8 | "Base de Talentos" — retención de datos | — | Por cuánto tiempo se guardan los datos de personas no seleccionadas | ⬜ |
+| 9.8 | "Base de Talentos" — retención de datos | — | Por cuánto tiempo se guardan los datos de personas que no quedan seleccionadas | ⬜ |
 
 ---
 
@@ -234,20 +227,18 @@ Las 7 empresas del sitio anterior tienen logos cargados provisionalmente (tomado
 
 ## Resumen de estado
 
-> Última actualización: 2026-09-21
-
-| Sección | Tenemos confirmado | Falta / provisorio | Bloquea publicación |
+| Sección | Tenemos (provisorio) | Falta | Bloquea publicación |
 |---|---|---|---|
-| 0 · Datos globales | Dirección, tel, mails del sitio anterior (provisorios) | Confirmar dirección, sedes Mendoza/Tandil, mails, redes | Sí |
-| 1 · Home | H1 ✅, lead ✅, claim +30 años ✅ | Contenido banners 1–3, imágenes reales hero | Sí |
-| 2 · Nosotros | Misión ✅, Visión ✅, Propósito ✅, Valores (6) 🟨 | Textos de valores, historia, fotos, certificaciones | Sí |
-| 3 · Soluciones | Lista tentativa de 10 líneas | Nombres definitivos, descripciones, imágenes | Sí |
+| 0 · Datos globales | Dirección, tel, mails del sitio anterior | Sedes completas, mails confirmados, redes | Sí |
+| 1 · Home | Estructura | Banners reales, claim confirmado | Sí |
+| 2 · Nosotros | Misión/Visión/Valores del sitio anterior | Texto actualizado, fotos, certificaciones | Sí |
+| 3 · Soluciones | Lista tentativa de 10 | Nombres definitivos, descripciones, imágenes | Sí |
 | 4 · Catálogo | Estructura + datos ficticios | Todo el contenido real | Sí |
-| 5 · Servicios | 6 títulos e íconos | Texto de cada servicio | Sí |
-| 6 · Novedades | Estructura | Tipos y contenido inicial (mín. 3–5 publicaciones) | Sí |
+| 5 · Servicios | 6 títulos | Texto de cada servicio | Sí |
+| 6 · Novedades | Estructura | Tipos y contenido inicial | Sí |
 | 7 · Contacto | Estructura del formulario | Tipos de consulta, destinatarios | Sí |
-| 8 · Su Socio | Estructura completa ES + EN 🟨, hero y etapas 🟨, logos provisorios 🟨 | Textos tarjetas ¿Por qué WM?, descripciones etapas, 5 empresas faltantes, logos definitivos, validación inglés | Sí |
-| 9 · Trabajá | Texto cultura ✅ | Áreas, búsquedas, campos form, destino | Sí |
-| 10 · Legales | Páginas en blanco | Texto legal completo (privacidad, términos, cookies) | Sí |
-| 11 · Marca | Tokens de color y tipografía (provisorios) | Logo vectorial definitivo, fotos institucionales | Sí |
-| 12 · Técnico | — | DNS, plan de migración, responsables del cliente | Sí |
+| 8 · Su Socio | Texto borrador, 7 empresas provisorias | Copy final, inglés validado, 12 empresas con logos | Sí |
+| 9 · Trabajá | Texto borrador | Campos, destino, búsquedas vigentes | Sí |
+| 10 · Legales | Páginas en blanco | Texto legal completo | Sí |
+| 11 · Marca | Tokens de color y tipografía | Logo vectorial, fotos institucionales | Sí |
+| 12 · Técnico | — | DNS, plan de migración, responsables | Sí |

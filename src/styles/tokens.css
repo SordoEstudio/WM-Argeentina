@@ -33,4 +33,13 @@
 
   /* Layout */
   --navbar-h: 64px;
+
+  /* Durations */
+  --t-fast:  120ms;
+  --t-med:   200ms;
+  --t-enter: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --t-fast: 0ms; --t-med: 0ms; --t-enter: 0ms; }
 }

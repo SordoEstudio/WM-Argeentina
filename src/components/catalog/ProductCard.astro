@@ -1,11 +1,20 @@
 ---
 import type { CatalogProduct } from '../../lib/catalog';
+import fs from 'node:fs';
+import path from 'node:path';
 
 interface Props {
   product: CatalogProduct;
 }
 
 const { product } = Astro.props;
+
+function imageExists(imgPath: string | undefined | null): boolean {
+  if (!imgPath) return false;
+  return fs.existsSync(path.join(process.cwd(), 'public', imgPath));
+}
+
+const hasImage = imageExists(product.image);
 
 const kindLabels: Record<string, string> = {
   instrument:  'Instrumento',
@@ -42,8 +51,8 @@ const dataPlatformIds = product.platformIds.join(',');
   <!-- Vista cards -->
   <div class="product-card__card">
     <div class="product-card__img">
-      {product.image
-        ? <img src={product.image} alt="" width="160" height="120" loading="lazy" decoding="async" />
+      {hasImage
+        ? <img src={product.image!} alt="" width="160" height="120" loading="lazy" decoding="async" />
         : <span class="product-card__img-placeholder">{product.kind.charAt(0).toUpperCase()}</span>
       }
     </div>
@@ -211,6 +220,7 @@ const dataPlatformIds = product.platformIds.join(',');
 
   @media (max-width: 639px) {
     .product-card__list { grid-template-columns: 80px 1fr; }
-    .product-card__list-app { display: none; }
+    .product-card__list-app   { display: none; }
+    .product-card__list-brand { display: none; }
   }
 </style>

@@ -5,6 +5,8 @@ import Cta from '../../components/layout/Cta.astro';
 import Breadcrumb from '../../components/catalog/Breadcrumb.astro';
 import ProductCompatList from '../../components/catalog/ProductCompatList.astro';
 import { getCollection, getEntry } from 'astro:content';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -27,6 +29,10 @@ const parentInstruments = allProducts.filter((p) =>
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
 
+const hasImage = product.data.image
+  ? fs.existsSync(path.join(process.cwd(), 'public', product.data.image))
+  : false;
+
 const breadcrumb = [
   { name: 'Productos', href: '/productos' },
   ...(line ? [{ name: line.data.name, href: `/soluciones/${line.data.slug}` }] : []),
@@ -38,7 +44,7 @@ const productSchema = {
   '@type': 'Product',
   name: product.data.name,
   description: product.data.summary ?? '',
-  ...(product.data.image ? { image: `${siteUrl}${product.data.image}` } : {}),
+  ...(hasImage ? { image: `${siteUrl}${product.data.image}` } : {}),
   brand: manufacturer ? { '@type': 'Brand', name: manufacturer.data.name } : undefined,
 };
 ---
@@ -67,11 +73,11 @@ const productSchema = {
     <div class="container product-layout">
       <div class="product-main">
         <!-- Imagen del producto (RF-17) -->
-        {product.data.image && (
+        {hasImage && (
           <div class="product-image">
             <img
-              src={product.data.image}
-              alt={product.data.image.includes('placeholder') ? '' : `Imagen de ${product.data.name}`}
+              src={product.data.image!}
+              alt={`Imagen de ${product.data.name}`}
               width="320"
               height="240"
               loading="lazy"
