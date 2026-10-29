@@ -38,6 +38,12 @@ const { products } = Astro.props;
   </div>
 
   <div id="product-grid" class="catalog-grid is-list">
+    <div class="skeleton-card" aria-hidden="true"></div>
+    <div class="skeleton-card" aria-hidden="true"></div>
+    <div class="skeleton-card" aria-hidden="true"></div>
+    <div class="skeleton-card" aria-hidden="true"></div>
+    <div class="skeleton-card" aria-hidden="true"></div>
+    <div class="skeleton-card" aria-hidden="true"></div>
     {products.map((product) => (
       <ProductCard product={product} />
     ))}
@@ -110,6 +116,33 @@ const { products } = Astro.props;
 
   /* Hidden cards */
   :global(.product-card[hidden]) { display: none !important; }
+
+  /* Filter dim transition */
+  #product-grid { transition: opacity var(--t-med); }
+  #product-grid.is-filtering { opacity: 0.5; }
+
+  /* Skeleton cards */
+  .skeleton-card {
+    display: none;
+    border-radius: var(--radius);
+    height: 260px;
+    background: linear-gradient(
+      90deg,
+      var(--wm-bg-soft) 25%,
+      var(--wm-border) 50%,
+      var(--wm-bg-soft) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes skeletonShimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  :global(#catalog-view[data-skeleton]) #product-grid .skeleton-card { display: block; }
+  :global(#catalog-view[data-skeleton]) #product-grid .product-card  { visibility: hidden; }
 
   /* Instrument context */
   #instrument-context {
