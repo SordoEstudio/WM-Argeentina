@@ -1,6 +1,6 @@
 // FormSink — abstraction layer for persisting form submissions.
 // Fase 1: devSink (logs only, never persists).
-// Fase 2: cmsSink (saves to CMS Harvi — requires H-01 documentation).
+// Fase 2: cmsSink (saves to CMS Harvi via public API).
 //
 // The build MUST fail if FORM_SINK=dev in production (checked in each API endpoint).
 
@@ -21,11 +21,30 @@ const devSink: FormSink = {
   },
 };
 
-// Fase 2: implement cmsSink using CMS_WRITE_TOKEN + CMS_URL (see docs/07-integracion-cms-y-deploy.md)
-// TODO-PENDIENTE(D-09) No inventar la API del CMS hasta tener su documentación.
+const CMS_FORM_SLUGS: Record<SubmissionMeta['kind'], string> = {
+  contact: 'contacto',
+  partner: 'partner-inquiry',
+  careers: 'careers',
+};
+
 const cmsSink: FormSink = {
-  async save() {
-    throw new Error('cmsSink not implemented yet (D-09): waiting for CMS API documentation.');
+  async save(kind, payload, meta) {
+    const api = import.meta.env.CMS_API;
+    const clientSlug = import.meta.env.CMS_CLIENT_SLUG;
+    if (!api || !clientSlug) {
+      throw new Error('cmsSink: CMS_API and CMS_CLIENT_SLUG must be set when FORM_SINK=cms');
+    }
+    const formSlug = CMS_FORM_SLUGS[kind];
+    const url = `${api}/forms/${formSlug}/submit?clientSlug=${clientSlug}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload as object, _meta: meta }),
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => '');
+      throw new Error(`cmsSink: CMS returned ${res.status} — ${text}`);
+    }
   },
 };
 

@@ -22,54 +22,56 @@
     "slug": "instrumentation-laboratory",
     "name": "Instrumentation Laboratory",
     "logo": "https://www.wmargentina.com.ar/wp-content/themes/WMArgentina/images/marcas/WMA-logos-bco_LAB.png",
+    "country": "Estados Unidos",
     "order": 3,
-    "provisional": true,
-    "note": "TODO-CLIENTE: confirmar representación vigente, logo y líneas (P-07)"
+    "provisional": false
   },
   {
-    "id": "liaison",
-    "slug": "liaison",
-    "name": "Liaison",
-    "logo": "https://www.wmargentina.com.ar/wp-content/themes/WMArgentina/images/marcas/WMA-logos-bco_LIA.png",
+    "id": "diasorin",
+    "slug": "diasorin",
+    "name": "DiaSorin",
+    "logo": "",
+    "country": "Italia",
     "order": 4,
-    "provisional": true,
-    "note": "TODO-CLIENTE: confirmar representación vigente, logo y líneas (P-07)"
+    "provisional": false,
+    "note": "Fabricante de plataformas LIAISON (LIAISON XL, LIAISON XS)"
+  },
+  {
+    "id": "iline-microsystems",
+    "slug": "iline-microsystems",
+    "name": "iLine Microsystems",
+    "logo": "",
+    "country": "España",
+    "order": 5,
+    "provisional": false,
+    "note": "Fabricante del sistema microINR point-of-care"
   },
   {
     "id": "biokit",
     "slug": "biokit",
     "name": "Biokit",
     "logo": "https://www.wmargentina.com.ar/wp-content/themes/WMArgentina/images/marcas/WMA-logos-bco_BIO.png",
-    "order": 5,
+    "order": 6,
     "provisional": true,
-    "note": "TODO-CLIENTE: confirmar representación vigente, logo y líneas (P-07)"
+    "note": "TODO-CLIENTE: confirmar representación vigente (P-07)"
   },
   {
     "id": "medical-system",
     "slug": "medical-system",
     "name": "Medical System",
     "logo": "https://www.wmargentina.com.ar/wp-content/themes/WMArgentina/images/marcas/WMA-logos-bco_MEDI.png",
-    "order": 6,
+    "order": 7,
     "provisional": true,
-    "note": "TODO-CLIENTE: confirmar representación vigente, logo y líneas (P-07)"
+    "note": "TODO-CLIENTE: confirmar representación vigente (P-07)"
   },
   {
     "id": "ortho",
     "slug": "ortho",
     "name": "Ortho",
     "logo": "https://www.wmargentina.com.ar/wp-content/themes/WMArgentina/images/marcas/WMA-logos-bco_ORTHO.png",
-    "order": 7,
-    "provisional": true,
-    "note": "TODO-CLIENTE: confirmar representación vigente, logo y líneas (P-07)"
-  },
-  {
-    "id": "empresa-representada-08",
-    "slug": "empresa-representada-08",
-    "name": "Empresa Representada 08",
-    "logo": "",
     "order": 8,
     "provisional": true,
-    "note": "TODO-CLIENTE: empresa a confirmar (P-07)"
+    "note": "TODO-CLIENTE: confirmar representación vigente (P-07)"
   },
   {
     "id": "empresa-representada-09",

@@ -1,8 +1,50 @@
 [
-  { "id": "asesoramiento", "slug": "asesoramiento", "name": "Asesoramiento", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 1 },
-  { "id": "aplicaciones", "slug": "aplicaciones", "name": "Aplicaciones", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 2 },
-  { "id": "instalacion-puesta-en-marcha", "slug": "instalacion-puesta-en-marcha", "name": "Instalación y puesta en marcha", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 3 },
-  { "id": "capacitacion", "slug": "capacitacion", "name": "Capacitación", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 4 },
-  { "id": "servicio-tecnico", "slug": "servicio-tecnico", "name": "Servicio Técnico", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 5 },
-  { "id": "integracion-conectividad", "slug": "integracion-conectividad", "name": "Integración y conectividad", "summary": "TODO-CLIENTE", "body": "TODO-CLIENTE", "order": 6 }
+  {
+    "id": "asesoramiento",
+    "slug": "asesoramiento",
+    "name": "Asesoramiento",
+    "summary": "Analizamos las necesidades del laboratorio y recomendamos la solución más adecuada.",
+    "body": "Analizamos las necesidades del laboratorio y recomendamos la solución más adecuada según el volumen de trabajo, el perfil de ensayos y los recursos disponibles.",
+    "order": 1
+  },
+  {
+    "id": "aplicaciones",
+    "slug": "aplicaciones",
+    "name": "Aplicaciones",
+    "summary": "Acompañamos la implementación técnica de los equipos y reactivos.",
+    "body": "Nuestro equipo de aplicaciones acompaña la implementación técnica de los equipos y reactivos, garantizando resultados confiables desde el primer día.",
+    "order": 2
+  },
+  {
+    "id": "instalacion-puesta-en-marcha",
+    "slug": "instalacion-puesta-en-marcha",
+    "name": "Instalación y puesta en marcha",
+    "summary": "Realizamos la instalación, calificación y puesta en marcha de los instrumentos.",
+    "body": "Realizamos la instalación, calificación y puesta en marcha de los instrumentos, asegurando que operen en condiciones óptimas.",
+    "order": 3
+  },
+  {
+    "id": "capacitacion",
+    "slug": "capacitacion",
+    "name": "Capacitación",
+    "summary": "Formamos al personal de laboratorio en el uso correcto de los equipos y métodos.",
+    "body": "Formamos al personal de laboratorio en el uso correcto de los equipos y métodos, con capacitaciones presenciales y virtuales según requerimiento.",
+    "order": 4
+  },
+  {
+    "id": "servicio-tecnico",
+    "slug": "servicio-tecnico",
+    "name": "Servicio Técnico",
+    "summary": "Servicio técnico propio con cobertura nacional y repuestos originales.",
+    "body": "Contamos con servicio técnico propio con cobertura nacional, repuestos originales y tiempos de respuesta acordados para minimizar el impacto en la operación.",
+    "order": 5
+  },
+  {
+    "id": "integracion-conectividad",
+    "slug": "integracion-conectividad",
+    "name": "Integración y conectividad",
+    "summary": "Facilitamos la integración de instrumentos con sistemas de gestión de laboratorio (LIS/HIS).",
+    "body": "Facilitamos la integración de los instrumentos con los sistemas de gestión de laboratorio (LIS/HIS) para un flujo de trabajo continuo y sin errores de transcripción.",
+    "order": 6
+  }
 ]

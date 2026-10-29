@@ -47,20 +47,20 @@
         "body": "En WM Argentina construimos relaciones de largo plazo con compañías internacionales. Más de 30 años en el mercado del diagnóstico nos permiten comprender sus actores, particularidades y oportunidades."
       },
       "whyWm": [
-        { "title": "+30 años de experiencia",                   "body": "TODO-CLIENTE — Ampliar descripción" },
-        { "title": "Cobertura nacional",                        "body": "TODO-CLIENTE — Ampliar descripción" },
-        { "title": "Mercado público y privado",                 "body": "TODO-CLIENTE — Ampliar descripción" },
-        { "title": "Especialización técnica",                   "body": "TODO-CLIENTE — Ampliar descripción" },
-        { "title": "Soporte local de excelencia",              "body": "TODO-CLIENTE — Ampliar descripción" },
-        { "title": "Experiencia con compañías internacionales", "body": "TODO-CLIENTE — Ampliar descripción" }
+        { "title": "+30 años de experiencia",      "body": "Trayectoria sostenida en distribución y representación de tecnología para diagnóstico médico en Argentina." },
+        { "title": "Cobertura nacional",            "body": "Red comercial y de servicio técnico en todo el país, con presencia directa en CABA, GBA y las principales ciudades del interior." },
+        { "title": "Gestión regulatoria ANMAT",     "body": "Experiencia en trámites de autorización, habilitación y seguimiento post-comercialización ante ANMAT." },
+        { "title": "Equipo técnico especializado",  "body": "Bioquímicos, técnicos y especialistas en aplicaciones que garantizan la implementación correcta de cada tecnología." },
+        { "title": "Relaciones institucionales",    "body": "Vínculos consolidados con hospitales públicos, clínicas privadas, laboratorios de referencia y organismos del sector." },
+        { "title": "Desarrollo comercial activo",   "body": "No solo distribuimos: desarrollamos el mercado, formamos a los usuarios y construimos presencia de marca." }
       ],
       "stages": [
-        { "title": "Ingreso al mercado", "body": "TODO-CLIENTE" },
-        { "title": "Desarrollo comercial", "body": "TODO-CLIENTE" },
-        { "title": "Lanzamiento", "body": "TODO-CLIENTE" },
-        { "title": "Implementación", "body": "TODO-CLIENTE" },
-        { "title": "Soporte", "body": "TODO-CLIENTE" },
-        { "title": "Crecimiento", "body": "TODO-CLIENTE" }
+        { "title": "Evaluación inicial",    "body": "Analizamos su tecnología, el encaje con el mercado argentino y el panorama regulatorio aplicable." },
+        { "title": "Estrategia de ingreso", "body": "Definimos el plan de lanzamiento, canales, segmentos objetivo y hoja de ruta ANMAT." },
+        { "title": "Gestión regulatoria",   "body": "Gestionamos los trámites de habilitación de productos ante ANMAT y los organismos correspondientes." },
+        { "title": "Lanzamiento comercial", "body": "Presentación a clientes clave, soporte en demostraciones y formación de usuarios." },
+        { "title": "Implementación y soporte", "body": "Instalación, puesta en marcha y capacitación técnica continua. Servicio post-venta dedicado." },
+        { "title": "Crecimiento sostenido", "body": "Expansión de la base de clientes, seguimiento de satisfacción y exploración de nuevos segmentos." }
       ]
     }
   },
@@ -74,20 +74,20 @@
         "body": "At WM Argentina we build long-term relationships with international companies. Over 30 years in the diagnostics market give us a deep understanding of its players, particularities and opportunities."
       },
       "whyWm": [
-        { "title": "30+ years of experience",                          "body": "TODO-CLIENTE — Expand description" },
-        { "title": "Nationwide coverage",                              "body": "TODO-CLIENTE — Expand description" },
-        { "title": "Public and private market",                        "body": "TODO-CLIENTE — Expand description" },
-        { "title": "Technical expertise",                              "body": "TODO-CLIENTE — Expand description" },
-        { "title": "Excellence in local support",                      "body": "TODO-CLIENTE — Expand description" },
-        { "title": "Experience with international companies",          "body": "TODO-CLIENTE — Expand description" }
+        { "title": "30+ years of experience",      "body": "Sustained track record in distribution and representation of medical diagnostic technology in Argentina." },
+        { "title": "Nationwide coverage",           "body": "Commercial and technical service network across the country, with direct presence in Buenos Aires and major inland cities." },
+        { "title": "ANMAT regulatory expertise",    "body": "Experience in product authorization, registration and post-market surveillance procedures before ANMAT." },
+        { "title": "Specialized technical team",    "body": "Biochemists, technicians and application specialists ensuring the correct implementation of every technology." },
+        { "title": "Institutional relationships",   "body": "Established ties with public hospitals, private clinics, reference laboratories and sector organizations." },
+        { "title": "Active commercial development", "body": "We don't just distribute: we develop the market, train users and build brand presence." }
       ],
       "stages": [
-        { "title": "Market entry", "body": "TODO-CLIENTE" },
-        { "title": "Commercial development", "body": "TODO-CLIENTE" },
-        { "title": "Launch", "body": "TODO-CLIENTE" },
-        { "title": "Implementation", "body": "TODO-CLIENTE" },
-        { "title": "Support", "body": "TODO-CLIENTE" },
-        { "title": "Growth", "body": "TODO-CLIENTE" }
+        { "title": "Initial assessment",    "body": "We analyze your technology, its fit with the Argentine market, and the applicable regulatory landscape." },
+        { "title": "Entry strategy",        "body": "We define the launch plan, channels, target segments, and ANMAT roadmap." },
+        { "title": "Regulatory management", "body": "We handle product registration and authorization procedures before ANMAT." },
+        { "title": "Commercial launch",     "body": "Presentation to key customers, support in demonstrations and user training." },
+        { "title": "Implementation & support", "body": "Installation, start-up and ongoing technical training. Dedicated after-sales service." },
+        { "title": "Sustained growth",      "body": "Expansion of the customer base, satisfaction follow-up and exploration of new segments." }
       ]
     }
   }

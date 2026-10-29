@@ -1,26 +1,60 @@
 [
   {
-    "id": "novedad-ejemplo-01",
-    "slug": "novedad-ejemplo-01",
+    "id": "acl-top-750-cts-laboratorios-alta-complejidad",
+    "slug": "acl-top-750-cts-laboratorios-alta-complejidad",
     "section": "novedades",
-    "category": "TODO-CLIENTE",
-    "image": "/images/posts/placeholder.svg",
-    "date": "2026-01-15",
-    "title": "TODO-CLIENTE — Novedad de ejemplo",
-    "excerpt": "TODO-CLIENTE",
-    "body": "TODO-CLIENTE",
-    "tags": []
+    "category": "Producto",
+    "date": "2026-09-15",
+    "title": "ACL TOP 750 CTS: automatización completa en hemostasia para laboratorios de alta complejidad",
+    "excerpt": "Conocé las prestaciones del analizador de hemostasia de mayor throughput de la línea ACL TOP, disponible en Argentina a través de WM Argentina.",
+    "body": "<p>El ACL TOP 750 CTS representa la solución de mayor capacidad de la familia ACL TOP de Instrumentation Laboratory. Con tecnología de detección óptica y mecánica simultánea, permite al laboratorio ejecutar el panel completo de hemostasia —coagulación, detección de inhibidores y pruebas de función plaquetaria— sin interrupciones de flujo de trabajo.</p><h2>Características principales</h2><ul><li>Throughput de hasta 750 tests/hora</li><li>Sistema de transporte continuo (CTS) integrado</li><li>Cargador de muestras de 160 posiciones</li><li>Menú completo HemosIL disponible desde el primer día</li></ul><p>WM Argentina brinda instalación, capacitación y soporte post-venta en todo el país.</p>",
+    "tags": ["hemostasia", "ACL-TOP", "coagulometro"],
+    "manufacturerId": "instrumentation-laboratory"
   },
   {
-    "id": "contenido-cientifico-ejemplo-01",
-    "slug": "contenido-cientifico-ejemplo-01",
+    "id": "wm-argentina-congreso-bioquimica-2026",
+    "slug": "wm-argentina-congreso-bioquimica-2026",
+    "section": "eventos",
+    "category": "Evento",
+    "date": "2026-09-02",
+    "title": "WM Argentina presente en el 23° Congreso Argentino de Bioquímica",
+    "excerpt": "Participamos del congreso con un stand propio y presentaciones técnicas sobre hemostasia avanzada e inmunoensayos de alta sensibilidad.",
+    "body": "<p>Del 18 al 20 de septiembre participamos del 23° Congreso Argentino de Bioquímica en el Centro de Convenciones Buenos Aires. Nuestro equipo estuvo presente con un stand que presentó las últimas incorporaciones del catálogo: la plataforma LIAISON XL de DiaSorin y los nuevos reactivos HemosIL para detección de anticoagulante lúpico.</p><p>Agradecemos a todos los bioquímicos y profesionales que se acercaron a compartir sus desafíos técnicos con nosotros. Hasta el próximo año.</p>",
+    "tags": ["congreso", "bioquimica", "evento"]
+  },
+  {
+    "id": "diasorin-liaison-xl-inmunologia-alta-sensibilidad",
+    "slug": "diasorin-liaison-xl-inmunologia-alta-sensibilidad",
+    "section": "novedades",
+    "category": "Producto",
+    "date": "2026-08-10",
+    "title": "DiaSorin LIAISON XL: ampliación del menú analítico para inmunología de alta sensibilidad",
+    "excerpt": "El LIAISON XL incorpora nuevos ensayos para marcadores tumorales y enfermedades autoinmunes, consolidándose como plataforma de referencia en inmunología clínica.",
+    "body": "<p>DiaSorin amplió el menú del LIAISON XL con cuatro nuevos ensayos de quimioluminiscencia (CLIA) orientados a la detección de anticuerpos en enfermedades autoinmunes sistémicas y marcadores tumorales de alta especificidad.</p><p>Los nuevos ensayos disponibles en Argentina incluyen Anti-dsDNA, Anti-CCP, CEA y CA 19-9, todos procesables en la misma plataforma sin recalibración de posición.</p>",
+    "tags": ["inmunologia", "LIAISON", "DiaSorin"],
+    "manufacturerId": "diasorin"
+  },
+  {
+    "id": "microinr-point-of-care-terapia-anticoagulante",
+    "slug": "microinr-point-of-care-terapia-anticoagulante",
     "section": "cientifico",
-    "category": "TODO-CLIENTE",
-    "image": "/images/posts/placeholder.svg",
-    "date": "2026-02-10",
-    "title": "TODO-CLIENTE — Contenido científico de ejemplo",
-    "excerpt": "TODO-CLIENTE",
-    "body": "TODO-CLIENTE",
-    "tags": []
+    "category": "Contenido científico",
+    "date": "2026-07-22",
+    "title": "microINR: diagnóstico point-of-care para el seguimiento de la terapia anticoagulante oral",
+    "excerpt": "El sistema microINR de iLine Microsystems permite determinar el INR en 60 segundos con una gota de sangre capilar, en el punto de atención al paciente.",
+    "body": "<p>La monitorización del tratamiento con anticoagulantes orales —warfarina, acenocumarol— requiere determinaciones periódicas del INR. La tecnología point-of-care (POC) del sistema microINR permite realizarlas fuera del laboratorio central.</p><h2>Tecnología MCA</h2><p>El microINR utiliza tecnología de Magnetoelasticidad Capilar Activa (MCA), una técnica de detección mecánica que no requiere reactivos líquidos ni calibración diaria.</p>",
+    "tags": ["POCT", "INR", "anticoagulacion"],
+    "manufacturerId": "iline-microsystems"
+  },
+  {
+    "id": "wm-argentina-expansion-interior-pais",
+    "slug": "wm-argentina-expansion-interior-pais",
+    "section": "novedades",
+    "category": "Institucional",
+    "date": "2026-06-05",
+    "title": "WM Argentina refuerza su presencia en el interior del país",
+    "excerpt": "Incorporamos nuevos representantes regionales en el NOA y Cuyo, ampliando nuestra cobertura de servicio técnico y comercial.",
+    "body": "<p>Como parte de nuestro plan de expansión 2026, sumamos representantes técnico-comerciales en Tucumán y Mendoza, dos de las provincias con mayor concentración de laboratorios de mediana y alta complejidad fuera del AMBA.</p><p>Esta incorporación nos permite ofrecer tiempos de respuesta menores en servicio técnico, visitas presenciales de aplicaciones y soporte de guardias para equipos de hemostasia e inmunología en estas regiones.</p>",
+    "tags": ["institucional", "expansion", "servicio-tecnico"]
   }
 ]

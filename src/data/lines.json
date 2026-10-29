@@ -1,12 +1,12 @@
 [
-  { "id": "anatomia-patologica", "slug": "anatomia-patologica", "name": "Anatomía Patológica", "summary": "TODO-CLIENTE", "order": 1 },
-  { "id": "hemostasia", "slug": "hemostasia", "name": "Hemostasia", "summary": "TODO-CLIENTE", "order": 2 },
-  { "id": "quimica-seca", "slug": "quimica-seca", "name": "Química Seca", "summary": "TODO-CLIENTE", "order": 3 },
-  { "id": "hematologia", "slug": "hematologia", "name": "Hematología", "summary": "TODO-CLIENTE", "order": 4 },
-  { "id": "inmunologia", "slug": "inmunologia", "name": "Inmunología", "summary": "TODO-CLIENTE", "order": 5 },
-  { "id": "biologia-molecular", "slug": "biologia-molecular", "name": "Biología Molecular", "summary": "TODO-CLIENTE", "order": 6 },
-  { "id": "banco-de-sangre", "slug": "banco-de-sangre", "name": "Banco de Sangre", "summary": "TODO-CLIENTE", "order": 7 },
-  { "id": "diagnostico-veterinario", "slug": "diagnostico-veterinario", "name": "Diagnóstico Veterinario", "summary": "TODO-CLIENTE", "order": 8 },
-  { "id": "cadena-de-frio", "slug": "cadena-de-frio", "name": "Cadena de Frío", "summary": "TODO-CLIENTE", "order": 9 },
-  { "id": "sistemas-informaticos", "slug": "sistemas-informaticos", "name": "Sistemas Informáticos", "summary": "TODO-CLIENTE", "order": 10 }
+  { "id": "anatomia-patologica", "slug": "anatomia-patologica", "name": "Anatomía Patológica", "summary": "Sistemas de diagnóstico histológico y citológico para patología quirúrgica y citopatología.", "order": 1 },
+  { "id": "hemostasia",          "slug": "hemostasia",          "name": "Hemostasia",          "summary": "Coagulómetros y reactivos para el diagnóstico integral de la coagulación, trombofilia y monitorización anticoagulante.", "order": 2 },
+  { "id": "quimica-seca",        "slug": "quimica-seca",        "name": "Química Seca",        "summary": "Analizadores de química clínica por tecnología de película seca para laboratorios de urgencias y punto de atención.", "order": 3 },
+  { "id": "hematologia",         "slug": "hematologia",         "name": "Hematología",         "summary": "Analizadores de células sanguíneas para el hemograma completo y diferencial leucocitario automatizado.", "order": 4 },
+  { "id": "inmunologia",         "slug": "inmunologia",         "name": "Inmunología",         "summary": "Plataformas de inmunoensayo por quimioluminiscencia para hormonas, marcadores tumorales, enfermedades infecciosas y autoinmunidad.", "order": 5 },
+  { "id": "biologia-molecular",  "slug": "biologia-molecular",  "name": "Biología Molecular",  "summary": "Sistemas de diagnóstico molecular (PCR, hibridación) para detección de agentes infecciosos y marcadores genéticos.", "order": 6 },
+  { "id": "banco-de-sangre",     "slug": "banco-de-sangre",     "name": "Banco de Sangre",     "summary": "Equipos y reactivos para tipificación de grupos sanguíneos, pruebas de compatibilidad e inmunotematología.", "order": 7 },
+  { "id": "diagnostico-veterinario", "slug": "diagnostico-veterinario", "name": "Diagnóstico Veterinario", "summary": "Soluciones de diagnóstico clínico para medicina veterinaria: química, hematología y serología animal.", "order": 8 },
+  { "id": "cadena-de-frio",      "slug": "cadena-de-frio",      "name": "Cadena de Frío",      "summary": "Equipamiento y sistemas de monitorización para el mantenimiento de la cadena de frío en laboratorios y biobanco.", "order": 9 },
+  { "id": "sistemas-informaticos", "slug": "sistemas-informaticos", "name": "Sistemas Informáticos", "summary": "Software de gestión de laboratorio (LIS), middleware de conectividad e integración con HIS hospitalarios.", "order": 10 }
 ]
