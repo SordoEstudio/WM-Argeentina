@@ -1,0 +1,181 @@
+---
+import type { CatalogProduct } from '../../lib/catalog';
+
+interface Props {
+  products: CatalogProduct[];
+}
+
+const { products } = Astro.props;
+
+const searchData = products.map((p) => ({
+  id: p.id,
+  slug: p.slug,
+  name: p.name,
+  summary: p.summary,
+  analytes: p.analytes,
+  kind: p.kind,
+}));
+---
+
+<div id="catalog-entry">
+  <div class="entry-search-wrap">
+    <input
+      id="catalog-search"
+      type="search"
+      placeholder="Buscar por nombre, analito o instrumento…"
+      autocomplete="off"
+      aria-label="Buscar productos"
+      aria-controls="catalog-search-results"
+      aria-autocomplete="list"
+    />
+    <ul id="catalog-search-results" role="listbox" hidden aria-label="Resultados de búsqueda"></ul>
+  </div>
+
+  <p class="entry-heading">¿Qué estás buscando?</p>
+  <p class="entry-sub">Elegí cómo querés explorar el catálogo</p>
+
+  <div class="entry-chips">
+    <button class="entry-chip" data-via="analito" type="button">
+      <span class="entry-chip__icon" aria-hidden="true">🔬</span>
+      <span class="entry-chip__title">Por analito</span>
+      <span class="entry-chip__sub">INR, Dímero D, vWF…</span>
+    </button>
+    <button class="entry-chip" data-via="instrumento" type="button">
+      <span class="entry-chip__icon" aria-hidden="true">⚙️</span>
+      <span class="entry-chip__title">Por instrumento</span>
+      <span class="entry-chip__sub">Reactivos para mi equipo</span>
+    </button>
+    <button class="entry-chip" data-via="aplicacion" type="button">
+      <span class="entry-chip__icon" aria-hidden="true">🏥</span>
+      <span class="entry-chip__title">Por aplicación clínica</span>
+      <span class="entry-chip__sub">Trombofilia, APS, TAO…</span>
+    </button>
+    <button class="entry-chip" data-via="todo" type="button">
+      <span class="entry-chip__icon" aria-hidden="true">📋</span>
+      <span class="entry-chip__title">Ver todo el catálogo</span>
+      <span class="entry-chip__sub">Sin filtro previo</span>
+    </button>
+  </div>
+</div>
+
+<script type="application/json" id="catalog-search-data" set:html={JSON.stringify(searchData)}></script>
+
+<style>
+  #catalog-entry {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 3rem 1rem 4rem;
+    text-align: center;
+  }
+
+  /* Search */
+  .entry-search-wrap {
+    position: relative;
+    margin-bottom: 2.5rem;
+  }
+
+  #catalog-search {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    border: 2px solid var(--wm-border);
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    color: var(--wm-text);
+    background: var(--wm-bg);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  #catalog-search:focus { border-color: var(--wm-blue); }
+
+  #catalog-search-results {
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    left: 0;
+    right: 0;
+    background: var(--wm-bg);
+    border: 1px solid var(--wm-border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    list-style: none;
+    margin: 0;
+    padding: 0.375rem 0;
+    z-index: 50;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  #catalog-search-results li a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    text-decoration: none;
+    color: var(--wm-text);
+    font-size: 0.9375rem;
+    transition: background 0.1s;
+  }
+
+  #catalog-search-results li a:hover,
+  #catalog-search-results li a:focus { background: var(--wm-blue-tint); color: var(--wm-blue); }
+
+  #catalog-search-results .result-kind {
+    font-size: 0.75rem;
+    color: var(--wm-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Heading */
+  .entry-heading {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--wm-blue);
+    margin: 0 0 0.25rem;
+  }
+
+  .entry-sub {
+    font-size: 0.9375rem;
+    color: var(--wm-text-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  /* Chips */
+  .entry-chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .entry-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 1.25rem 1rem;
+    border: 2px solid var(--wm-border);
+    border-radius: var(--radius);
+    background: var(--wm-bg);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    text-align: center;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: var(--tap-min);
+  }
+
+  .entry-chip:hover,
+  .entry-chip:focus-visible {
+    border-color: var(--wm-blue);
+    background: var(--wm-blue-tint);
+    outline: none;
+  }
+
+  .entry-chip__icon { font-size: 1.75rem; line-height: 1; }
+  .entry-chip__title { font-size: 0.9375rem; font-weight: 700; color: var(--wm-text); }
+  .entry-chip__sub   { font-size: 0.8125rem; color: var(--wm-text-muted); }
+
+  @media (max-width: 480px) {
+    .entry-chips { grid-template-columns: 1fr; }
+  }
+</style>
