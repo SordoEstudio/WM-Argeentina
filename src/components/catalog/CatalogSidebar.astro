@@ -1,0 +1,247 @@
+---
+import type { CatalogIndex } from '../../lib/catalog';
+import { APPLICATION_LABELS } from '../../data/applicationLabels';
+
+interface Props {
+  index: CatalogIndex;
+}
+
+const { index } = Astro.props;
+
+const kindLabels: Record<string, string> = {
+  instrument:  'Instrumento',
+  reagent:     'Reactivo',
+  consumable:  'Consumible',
+  control:     'Control',
+  calibrator:  'Calibrador',
+  software:    'Software',
+  accessory:   'Accesorio',
+};
+
+function instrumentFamily(name: string): string {
+  if (/^ACL TOP|^ACL Elite|^ACL AcuStar/.test(name)) return 'Familia ACL TOP';
+  if (/^microINR/.test(name)) return 'Familia microINR';
+  return 'Otros';
+}
+
+// Group instruments by family preserving line order
+const instrumentFamilies: Map<string, typeof index.instruments> = new Map();
+for (const instr of index.instruments) {
+  const fam = instrumentFamily(instr.name);
+  const existing = instrumentFamilies.get(fam) ?? [];
+  existing.push(instr);
+  instrumentFamilies.set(fam, existing);
+}
+const FAMILY_ORDER = ['Familia ACL TOP', 'Familia microINR', 'Otros'];
+
+// Build ordered analytesByLine using index.lines order
+const orderedLines = index.lines.filter((l) => index.analytesByLine[l.id]?.length > 0);
+---
+
+<aside id="catalog-sidebar" aria-label="Filtros del catálogo">
+
+  {/* Panel: por analito */}
+  <div class="sidebar-panel" data-via="analito">
+    <p class="sidebar-panel-title">Analito</p>
+    {orderedLines.map((line) => {
+      const analytes = index.analytesByLine[line.id];
+      return analytes?.length ? (
+        <div class="sidebar-group">
+          <h4 class="sidebar-group-title">{line.name}</h4>
+          {analytes.map((analyte) => (
+            <button
+              class="sidebar-item"
+              data-via="analito"
+              data-q={encodeURIComponent(analyte)}
+              type="button"
+            >
+              {analyte}
+            </button>
+          ))}
+        </div>
+      ) : null;
+    })}
+  </div>
+
+  {/* Panel: por instrumento */}
+  <div class="sidebar-panel" data-via="instrumento">
+    <p class="sidebar-panel-title">Instrumento</p>
+    {FAMILY_ORDER.map((fam) => {
+      const instrs = instrumentFamilies.get(fam);
+      return instrs?.length ? (
+        <div class="sidebar-group">
+          <h4 class="sidebar-group-title">{fam}</h4>
+          {instrs.map((instr) => (
+            <button
+              class="sidebar-item"
+              data-via="instrumento"
+              data-q={instr.slug}
+              type="button"
+            >
+              {instr.name}
+            </button>
+          ))}
+        </div>
+      ) : null;
+    })}
+  </div>
+
+  {/* Panel: por aplicación */}
+  <div class="sidebar-panel" data-via="aplicacion">
+    <p class="sidebar-panel-title">Aplicación clínica</p>
+    {index.applications.map((slug) => (
+      <button
+        class="sidebar-item"
+        data-via="aplicacion"
+        data-q={slug}
+        type="button"
+      >
+        {APPLICATION_LABELS[slug] ?? slug}
+      </button>
+    ))}
+  </div>
+
+  {/* Panel: ver todo (checkboxes) */}
+  <div class="sidebar-panel" data-via="todo">
+
+    <div class="sidebar-group">
+      <h4 class="sidebar-group-title">Tipo</h4>
+      {Object.entries(kindLabels).map(([value, label]) => (
+        <label class="sidebar-check-label">
+          <input
+            type="checkbox"
+            class="sidebar-filter-check"
+            data-dimension="kind"
+            data-q={value}
+          />
+          {label}
+        </label>
+      ))}
+    </div>
+
+    <div class="sidebar-group">
+      <h4 class="sidebar-group-title">Línea</h4>
+      {index.lines.map((line) => (
+        <label class="sidebar-check-label">
+          <input
+            type="checkbox"
+            class="sidebar-filter-check"
+            data-dimension="line"
+            data-q={line.id}
+          />
+          {line.name}
+        </label>
+      ))}
+    </div>
+
+    <div class="sidebar-group">
+      <h4 class="sidebar-group-title">Marca</h4>
+      {index.manufacturers.map((mfg) => (
+        <label class="sidebar-check-label">
+          <input
+            type="checkbox"
+            class="sidebar-filter-check"
+            data-dimension="manufacturer"
+            data-q={mfg.id}
+          />
+          {mfg.name}
+        </label>
+      ))}
+    </div>
+
+    <div class="sidebar-group">
+      <h4 class="sidebar-group-title">Compatibilidad</h4>
+      <label class="sidebar-check-label">
+        <input
+          type="checkbox"
+          class="sidebar-filter-check"
+          data-dimension="compatibility"
+          data-q="open"
+        />
+        Sistema abierto
+      </label>
+      <label class="sidebar-check-label">
+        <input
+          type="checkbox"
+          class="sidebar-filter-check"
+          data-dimension="compatibility"
+          data-q="specific"
+        />
+        Específica
+      </label>
+    </div>
+
+  </div>
+
+</aside>
+
+<style>
+  #catalog-sidebar {
+    min-width: 0;
+  }
+
+  .sidebar-panel-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--wm-text-muted);
+    margin: 0 0 0.75rem;
+    padding: 0 0.75rem;
+  }
+
+  .sidebar-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .sidebar-group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--wm-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.25rem;
+    padding: 0 0.75rem;
+  }
+
+  .sidebar-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.375rem 0.75rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: var(--font-sans);
+    color: var(--wm-text);
+    cursor: pointer;
+    min-height: var(--tap-min);
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .sidebar-item:hover { background: var(--wm-blue-tint); color: var(--wm-blue); }
+  .sidebar-item.is-active { background: var(--wm-blue); color: #fff; }
+
+  .sidebar-check-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3125rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--wm-text);
+    cursor: pointer;
+    min-height: var(--tap-min);
+    border-radius: 6px;
+    transition: background 0.12s;
+  }
+
+  .sidebar-check-label:hover { background: var(--wm-blue-tint); }
+
+  .sidebar-filter-check {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--wm-blue);
+    flex-shrink: 0;
+  }
+</style>
