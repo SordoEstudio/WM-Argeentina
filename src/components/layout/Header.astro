@@ -83,9 +83,9 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
       </ul>
 
       <!-- Buscador -->
-      <a href="/buscar" class="nav-search" aria-label="Buscar">
+      <button id="search-toggle" class="nav-search" type="button" aria-label="Buscar" aria-expanded="false">
         <Icon name="lucide:search" size={20} aria-hidden="true" />
-      </a>
+      </button>
 
       <!-- CTA Su Socio -->
       <a href="/su-socio-en-argentina" class="btn btn-partner nav-cta">Su Socio en Argentina</a>
@@ -93,13 +93,122 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
   </div>
 </header>
 
+<div id="global-search-panel" role="search" aria-label="Buscar en el sitio" hidden>
+  <div class="container">
+    <div class="gsp-row">
+      <Icon name="lucide:search" size={18} aria-hidden="true" class="gsp-icon" />
+      <input
+        id="global-search-input"
+        type="search"
+        placeholder="Buscar productos, analitos, instrumentos…"
+        autocomplete="off"
+        aria-label="Buscar"
+        aria-controls="global-search-results"
+        aria-expanded="false"
+      />
+      <button id="search-close" type="button" aria-label="Cerrar búsqueda">
+        <Icon name="lucide:x" size={18} aria-hidden="true" />
+      </button>
+    </div>
+    <div id="global-search-results" role="region" aria-live="polite"></div>
+  </div>
+</div>
+
 <script>
-  const toggle = document.querySelector('.nav-toggle') as HTMLButtonElement | null;
+  const navToggle = document.querySelector('.nav-toggle') as HTMLButtonElement | null;
   const nav = document.getElementById('main-nav');
-  toggle?.addEventListener('click', () => {
-    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
+  navToggle?.addEventListener('click', () => {
+    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+    navToggle.setAttribute('aria-expanded', String(!expanded));
     nav?.classList.toggle('is-open');
+  });
+
+  /* ── Global search overlay ──────────────────────────────────────────── */
+  const searchToggleBtn = document.getElementById('search-toggle') as HTMLButtonElement | null;
+  const searchPanel = document.getElementById('global-search-panel') as HTMLElement | null;
+  const searchInput = document.getElementById('global-search-input') as HTMLInputElement | null;
+  const searchClose = document.getElementById('search-close') as HTMLButtonElement | null;
+  const searchResults = document.getElementById('global-search-results') as HTMLElement | null;
+
+  interface SearchEntry { id: string; slug: string; name: string; kind: string; lineId: string; application: string; analytes: string[]; }
+  let searchData: SearchEntry[] | null = null;
+
+  const KIND_LABELS: Record<string, string> = {
+    instrument: 'Instrumento', reagent: 'Reactivo', control: 'Control',
+    calibrator: 'Calibrador', consumable: 'Consumible', software: 'Software', accessory: 'Accesorio',
+  };
+
+  async function loadSearchData(): Promise<SearchEntry[]> {
+    if (searchData) return searchData;
+    const res = await fetch('/search-data.json');
+    searchData = await res.json() as SearchEntry[];
+    return searchData;
+  }
+
+  function openPanel(): void {
+    if (!searchPanel) return;
+    searchPanel.hidden = false;
+    searchToggleBtn?.setAttribute('aria-expanded', 'true');
+    searchInput?.focus();
+  }
+
+  function closePanel(): void {
+    if (!searchPanel) return;
+    searchPanel.hidden = true;
+    searchToggleBtn?.setAttribute('aria-expanded', 'false');
+    if (searchInput) searchInput.value = '';
+    if (searchResults) searchResults.innerHTML = '';
+    searchInput?.setAttribute('aria-expanded', 'false');
+  }
+
+  function renderResults(hits: SearchEntry[]): void {
+    if (!searchResults) return;
+    if (hits.length === 0) {
+      searchResults.innerHTML = '<p class="gsp-hint">Sin resultados.</p>';
+      searchInput?.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    const shown = hits.slice(0, 8);
+    let html = `<ul class="gsp-list" role="list">`;
+    for (const item of shown) {
+      const kind = KIND_LABELS[item.kind] ?? item.kind;
+      html += `<li><a href="/productos/${item.slug}" class="gsp-item"><span class="gsp-kind">${kind}</span><span class="gsp-name">${item.name}</span></a></li>`;
+    }
+    html += '</ul>';
+    if (hits.length > 8) {
+      html += `<p class="gsp-more"><a href="/buscar?q=${encodeURIComponent((searchInput?.value ?? '').trim())}">Ver los ${hits.length} resultados →</a></p>`;
+    }
+    searchResults.innerHTML = html;
+    searchInput?.setAttribute('aria-expanded', 'true');
+  }
+
+  async function handleInput(): Promise<void> {
+    const q = (searchInput?.value ?? '').trim().toLowerCase();
+    if (q.length < 2) {
+      if (searchResults) searchResults.innerHTML = '';
+      searchInput?.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    const data = await loadSearchData();
+    const hits = data.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.application.toLowerCase().includes(q) ||
+        item.analytes.some((a) => a.toLowerCase().includes(q))
+    );
+    renderResults(hits);
+  }
+
+  searchToggleBtn?.addEventListener('click', () => {
+    if (searchPanel?.hidden === false) { closePanel(); } else { openPanel(); loadSearchData(); }
+  });
+
+  searchClose?.addEventListener('click', closePanel);
+
+  searchInput?.addEventListener('input', () => { void handleInput(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !searchPanel?.hidden) closePanel();
   });
 </script>
 
@@ -237,6 +346,111 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
     background: var(--wm-bg-soft);
     color: var(--wm-blue);
   }
+
+  /* ── Global search panel ─────────────────────────────────────────────── */
+  #global-search-panel {
+    position: sticky;
+    top: var(--navbar-h);
+    z-index: 90;
+    background: var(--wm-bg);
+    border-bottom: 1px solid var(--wm-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding-block: 0.75rem;
+  }
+
+  .gsp-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .gsp-icon {
+    color: var(--wm-text-muted);
+    flex-shrink: 0;
+  }
+
+  #global-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--wm-text);
+    background: transparent;
+    min-width: 0;
+  }
+
+  #global-search-input::placeholder { color: var(--wm-text-muted); }
+
+  #search-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    border: none;
+    background: none;
+    border-radius: 6px;
+    color: var(--wm-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  #search-close:hover { background: var(--wm-bg-soft); color: var(--wm-blue); }
+
+  #global-search-results {
+    margin-top: 0.5rem;
+  }
+
+  .gsp-hint {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin: 0.25rem 0;
+  }
+
+  .gsp-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .gsp-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--wm-text);
+    transition: background 0.12s, color 0.12s;
+    min-height: var(--tap-min);
+  }
+
+  .gsp-item:hover { background: var(--wm-blue-tint); color: var(--wm-blue); }
+
+  .gsp-kind {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wm-teal);
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+
+  .gsp-name { font-size: 0.9375rem; }
+
+  .gsp-more {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+  }
+
+  .gsp-more a { color: var(--wm-blue); text-decoration: none; }
+  .gsp-more a:hover { text-decoration: underline; }
 
   .btn-partner {
     flex-shrink: 0;
