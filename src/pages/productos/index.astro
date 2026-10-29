@@ -31,7 +31,7 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
 
       <CatalogEntry products={index.products} />
 
-      <div id="catalog-view" hidden>
+      <div id="catalog-view">
         <CatalogTabs activeVia={null} />
         <div class="catalog-layout">
           <CatalogSidebar index={index} />
@@ -489,6 +489,9 @@ const index = buildCatalogIndex(rawProducts, rawManufacturers, rawLines);
   .catalog-main {
     min-width: 0;
   }
+
+  /* ── No-JS fallback: both sections visible without JS ──────────────────── */
+  /* JS hides/shows via .hidden attribute set by applyState() */
 
   /* ── Transitions ─────────────────────────────────────────────────────────── */
   #catalog-entry,
