@@ -1,0 +1,142 @@
+---
+import type { CatalogProduct } from '../../lib/catalog';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: CatalogProduct[];
+}
+
+const { products } = Astro.props;
+---
+
+<div class="catalog-main-inner">
+
+  <div id="instrument-context" hidden aria-hidden="true">
+    <p class="instrument-context-name" id="instrument-context-name"></p>
+    <p class="instrument-context-summary" id="instrument-context-summary"></p>
+  </div>
+
+  <div class="catalog-controls">
+    <span id="result-count" aria-live="polite">{products.length} productos</span>
+    <div class="view-toggles">
+      <button class="view-toggle" data-view="cards" type="button" aria-label="Vista tarjetas">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1" y="1" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="9" y="1" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="1" y="9" width="6" height="6" rx="1" fill="currentColor"/>
+          <rect x="9" y="9" width="6" height="6" rx="1" fill="currentColor"/>
+        </svg>
+      </button>
+      <button class="view-toggle is-active" data-view="list" type="button" aria-label="Vista lista">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1" y="2" width="14" height="2" rx="1" fill="currentColor"/>
+          <rect x="1" y="7" width="14" height="2" rx="1" fill="currentColor"/>
+          <rect x="1" y="12" width="14" height="2" rx="1" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="product-grid" class="catalog-grid is-list">
+    {products.map((product) => (
+      <ProductCard product={product} />
+    ))}
+  </div>
+
+  <p id="empty-state" hidden>No se encontraron productos. Intentá con otros filtros.</p>
+
+</div>
+
+<style>
+  .catalog-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  #result-count {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+  }
+
+  .view-toggles {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .view-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--wm-border);
+    border-radius: 6px;
+    background: var(--wm-bg);
+    color: var(--wm-text-muted);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+  }
+
+  .view-toggle:hover { border-color: var(--wm-blue); color: var(--wm-blue); }
+
+  .view-toggle.is-active {
+    background: var(--wm-blue);
+    border-color: var(--wm-blue);
+    color: #fff;
+  }
+
+  /* Grid layout */
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .catalog-grid.is-list {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 1023px) {
+    .catalog-grid:not(.is-list) { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 639px) {
+    .catalog-grid:not(.is-list) { grid-template-columns: 1fr; }
+  }
+
+  /* Hidden cards */
+  :global(.product-card[hidden]) { display: none !important; }
+
+  /* Instrument context */
+  #instrument-context {
+    background: var(--wm-blue-tint);
+    border: 1px solid var(--wm-blue);
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .instrument-context-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--wm-blue);
+    margin: 0 0 0.25rem;
+  }
+
+  .instrument-context-summary {
+    font-size: 0.875rem;
+    color: var(--wm-text-muted);
+    margin: 0;
+  }
+
+  #empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--wm-text-muted);
+    font-size: 0.9375rem;
+  }
+</style>
