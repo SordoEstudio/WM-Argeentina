@@ -16,7 +16,7 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
 <header class="site-header">
   <div class="container header-inner">
     <a href="/" class="header-logo" aria-label="WM Argentina — inicio">
-      <Logo showTagline={false} width={165} />
+      <Logo showTagline={false} width={175} />
     </a>
 
     <button
@@ -74,13 +74,13 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
         <li><a href="/contacto" class="nav-link">Contacto</a></li>
       </ul>
 
+      <!-- CTA Su Socio -->
+      <a href="/su-socio-en-argentina" class="btn btn-partner nav-cta">Su Socio en Argentina</a>
+
       <!-- Buscador -->
       <button id="search-toggle" class="nav-search" type="button" aria-label="Buscar" aria-expanded="false">
         <Icon name="lucide:search" size={20} aria-hidden="true" />
       </button>
-
-      <!-- CTA Su Socio -->
-      <a href="/su-socio-en-argentina" class="btn btn-partner nav-cta">Su Socio en Argentina</a>
     </nav>
   </div>
 </header>
