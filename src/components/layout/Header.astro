@@ -55,24 +55,16 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
             <p class="mega-section-title">Buscar por</p>
             <ul class="mega-list" role="list">
               <li>
-                <a href="/productos?via=analito" class="mega-link mega-link--icon">
-                  <span aria-hidden="true">🔬</span> Por analito
-                </a>
+                <a href="/productos?via=analito" class="mega-link">Por analito</a>
               </li>
               <li>
-                <a href="/productos?via=instrumento" class="mega-link mega-link--icon">
-                  <span aria-hidden="true">⚙️</span> Por instrumento
-                </a>
+                <a href="/productos?via=instrumento" class="mega-link">Por instrumento</a>
               </li>
               <li>
-                <a href="/productos?via=aplicacion" class="mega-link mega-link--icon">
-                  <span aria-hidden="true">🏥</span> Por aplicación clínica
-                </a>
+                <a href="/productos?via=aplicacion" class="mega-link">Por aplicación clínica</a>
               </li>
               <li>
-                <a href="/productos?via=todo" class="mega-link mega-link--icon">
-                  <span aria-hidden="true">📋</span> Ver todo el catálogo
-                </a>
+                <a href="/productos?via=todo" class="mega-link">Ver todo el catálogo</a>
               </li>
             </ul>
           </div>
@@ -337,13 +329,18 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
     width: var(--tap-min);
     height: var(--tap-min);
     border-radius: 6px;
-    color: var(--wm-text);
+    border: 1px solid var(--wm-border);
+    background: transparent;
+    color: var(--wm-text-muted);
     text-decoration: none;
     flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
 
   .nav-search:hover {
     background: var(--wm-bg-soft);
+    border-color: var(--wm-blue);
     color: var(--wm-blue);
   }
 
