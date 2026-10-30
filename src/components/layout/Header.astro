@@ -19,6 +19,11 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
       <Logo showTagline={false} width={175} />
     </a>
 
+    <!-- Buscador global (visible en header en mobile y desktop) -->
+    <button id="search-toggle" class="nav-search" type="button" aria-label="Buscar" aria-expanded="false">
+      <Icon name="lucide:search" size={20} aria-hidden="true" />
+    </button>
+
     <button
       class="nav-toggle"
       aria-controls="main-nav"
@@ -76,11 +81,6 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
 
       <!-- CTA Su Socio -->
       <a href="/su-socio-en-argentina" class="btn btn-partner nav-cta">Su Socio en Argentina</a>
-
-      <!-- Buscador -->
-      <button id="search-toggle" class="nav-search" type="button" aria-label="Buscar" aria-expanded="false">
-        <Icon name="lucide:search" size={20} aria-hidden="true" />
-      </button>
     </nav>
   </div>
 </header>
@@ -323,7 +323,6 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
   }
 
   .nav-search {
-    margin-left: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -343,6 +342,13 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
     background: var(--wm-bg-soft);
     border-color: var(--wm-blue);
     color: var(--wm-blue);
+  }
+
+  /* Desktop: render search after nav via flex order */
+  @media (min-width: 1024px) {
+    .nav-search {
+      order: 10;
+    }
   }
 
   /* ── Global search panel ─────────────────────────────────────────────── */
@@ -548,8 +554,13 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
       width: 100%;
     }
 
+    /* Search icon lives in the header bar on mobile, to the left of hamburger */
+    .nav-toggle {
+      margin-left: 0;
+    }
+
     .nav-search {
-      align-self: flex-start;
+      margin-left: auto;
     }
   }
 </style>

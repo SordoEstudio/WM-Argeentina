@@ -16,7 +16,7 @@ const { site } = Astro.props;
     <!-- Logo -->
     <div class="footer-brand">
       <a href="/" aria-label="WM Argentina — inicio" class="footer-logo-link">
-        <Logo variant="vertical-color" width={84} />
+        <Logo variant="isotipo" width={96} />
       </a>
     </div>
 
@@ -109,7 +109,7 @@ const { site } = Astro.props;
 
   @media (min-width: 1024px) {
     .footer-inner {
-      grid-template-columns: 150px 1.5fr 2.5fr 1fr;
+      grid-template-columns: 140px 1.5fr 2.5fr 1fr;
       align-items: start;
     }
   }
@@ -127,10 +127,17 @@ const { site } = Astro.props;
     justify-content: center;
     background: #fff;
     border-radius: 50%;
-    width: 116px;
-    height: 116px;
+    width: 120px;
+    height: 120px;
     line-height: 0;
     flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .footer-logo-link :global(img) {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
   }
 
   .footer-logo-name {
