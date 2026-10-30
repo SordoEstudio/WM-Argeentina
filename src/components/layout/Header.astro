@@ -16,7 +16,7 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
 <header class="site-header">
   <div class="container header-inner">
     <a href="/" class="header-logo" aria-label="WM Argentina — inicio">
-      <Logo showTagline={false} width={140} />
+      <Logo showTagline={false} width={165} />
     </a>
 
     <button
@@ -328,7 +328,7 @@ const lines = (await getCollection('lines')).sort((a, b) => a.data.order - b.dat
     justify-content: center;
     width: var(--tap-min);
     height: var(--tap-min);
-    border-radius: 6px;
+    border-radius: 50%;
     border: 1px solid var(--wm-border);
     background: transparent;
     color: var(--wm-text-muted);
