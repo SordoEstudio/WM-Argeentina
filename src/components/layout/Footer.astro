@@ -18,6 +18,7 @@ const { site } = Astro.props;
       <a href="/" aria-label="WM Argentina — inicio" class="footer-logo-link">
         <Logo variant="isotipo" width={72} />
       </a>
+      <span class="footer-logo-name">WM Argentina</span>
     </div>
 
     <!-- Contacto y sedes (D-06: datos provisorios del sitio actual) -->
@@ -37,10 +38,13 @@ const { site } = Astro.props;
         : site.contact?.email && <p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
       }
       {site.contact?.hours && (
-        <p class="footer-icon-row footer-muted">
-          <Icon name="lucide:clock" size={14} class="footer-icon" aria-hidden="true" />
-          {site.contact.hours}
-        </p>
+        <>
+          <p class="footer-subheading">Horarios</p>
+          <p class="footer-icon-row">
+            <Icon name="lucide:clock" size={14} class="footer-icon" aria-hidden="true" />
+            {site.contact.hours}
+          </p>
+        </>
       )}
     </div>
 
@@ -78,7 +82,7 @@ const { site } = Astro.props;
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <p>&copy; {new Date().getFullYear()} WM Argentina. Todos los derechos reservados.</p>
-      <p class="footer-credit">Desarrollado por Harvi Digital</p>
+      <p class="footer-credit">Desarrollado por <a href="https://harvi.digital" target="_blank" rel="noopener noreferrer" class="footer-credit-link">Harvi Digital</a></p>
     </div>
   </div>
 </footer>
@@ -106,9 +110,16 @@ const { site } = Astro.props;
 
   @media (min-width: 1024px) {
     .footer-inner {
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 150px 1.5fr 2.5fr 1fr;
       align-items: start;
     }
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
   .footer-logo-link {
@@ -121,6 +132,22 @@ const { site } = Astro.props;
     height: 116px;
     line-height: 0;
     flex-shrink: 0;
+  }
+
+  .footer-logo-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .footer-subheading {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wm-teal);
+    margin: 0.875rem 0 0.25rem;
   }
 
   .footer-heading {
@@ -204,5 +231,11 @@ const { site } = Astro.props;
   .footer-credit {
     opacity: 0.5 !important;
     font-size: 0.8125rem !important;
+  }
+
+  .footer-credit-link {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 </style>
