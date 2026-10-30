@@ -22,6 +22,7 @@ const sections = [
   <section class="page-hero" style="background-image: linear-gradient(rgba(0,79,146,0.75), rgba(0,79,146,0.75)), url('https://images.unsplash.com/photo-1576765608741-911f44c98546?w=1400&h=500&fit=crop&auto=format&q=80')">
     <div class="container">
       <h1>Novedades y Conocimiento</h1>
+      <p class="hero-lead">Casos de éxito, eventos y contenido científico del sector diagnóstico.</p>
     </div>
   </section>
 
@@ -135,7 +136,14 @@ const sections = [
 
   .page-hero h1 {
     font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin: 0 0 0.75rem;
+  }
+
+  .hero-lead {
     margin: 0;
+    font-size: 1.0625rem;
+    opacity: 0.85;
+    line-height: 1.5;
   }
 
   .section { padding-block: 4rem; }

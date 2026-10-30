@@ -88,7 +88,7 @@ const articleSchema = {
       <div class="container">
         <div class="post-body">
           {post.data.body !== 'TODO-CLIENTE' ? (
-            <p>{post.data.body}</p>
+            <Fragment set:html={post.data.body} />
           ) : (
             <p class="placeholder">TODO-CLIENTE — Contenido de la publicación (P-21).</p>
           )}

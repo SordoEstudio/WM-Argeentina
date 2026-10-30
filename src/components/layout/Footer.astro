@@ -16,7 +16,7 @@ const { site } = Astro.props;
     <!-- Logo -->
     <div class="footer-brand">
       <a href="/" aria-label="WM Argentina — inicio" class="footer-logo-link">
-        <Logo variant="vertical-color" width={180} />
+        <Logo variant="isotipo" width={96} />
       </a>
     </div>
 
@@ -37,10 +37,13 @@ const { site } = Astro.props;
         : site.contact?.email && <p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
       }
       {site.contact?.hours && (
-        <p class="footer-icon-row footer-muted">
-          <Icon name="lucide:clock" size={14} class="footer-icon" aria-hidden="true" />
-          {site.contact.hours}
-        </p>
+        <>
+          <p class="footer-subheading">Horarios</p>
+          <p class="footer-icon-row">
+            <Icon name="lucide:clock" size={14} class="footer-icon" aria-hidden="true" />
+            {site.contact.hours}
+          </p>
+        </>
       )}
     </div>
 
@@ -78,7 +81,7 @@ const { site } = Astro.props;
   <div class="footer-bottom">
     <div class="container footer-bottom-inner">
       <p>&copy; {new Date().getFullYear()} WM Argentina. Todos los derechos reservados.</p>
-      <p class="footer-credit">Desarrollado por Harvi Digital</p>
+      <p class="footer-credit">Desarrollado por <a href="https://harvi.digital" target="_blank" rel="noopener noreferrer" class="footer-credit-link">Harvi Digital</a></p>
     </div>
   </div>
 </footer>
@@ -106,17 +109,51 @@ const { site } = Astro.props;
 
   @media (min-width: 1024px) {
     .footer-inner {
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 140px 1.5fr 2.5fr 1fr;
       align-items: start;
     }
   }
 
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
   .footer-logo-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: #fff;
-    border-radius: var(--radius);
-    padding: 0.75rem 1rem;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
     line-height: 0;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .footer-logo-link :global(img) {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+  }
+
+  .footer-logo-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .footer-subheading {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.9);
+    margin: 0.875rem 0 0.25rem;
   }
 
   .footer-heading {
@@ -124,7 +161,7 @@ const { site } = Astro.props;
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--wm-teal);
+    color: rgba(255,255,255,0.9);
     margin: 0 0 0.75rem;
   }
 
@@ -141,7 +178,7 @@ const { site } = Astro.props;
   }
 
   .footer-icon {
-    color: var(--wm-teal);
+    color: #fff;
     flex-shrink: 0;
     margin-top: 0.2rem;
   }
@@ -200,5 +237,11 @@ const { site } = Astro.props;
   .footer-credit {
     opacity: 0.5 !important;
     font-size: 0.8125rem !important;
+  }
+
+  .footer-credit-link {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 </style>
